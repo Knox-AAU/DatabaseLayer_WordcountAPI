@@ -60,9 +60,9 @@ public class UploadController {
     public String commit() throws IOException, ParserException {
         // Compress HDT
         HDT hdt = HDTManager.generateHDT(
-                "test.ttl",         // Input RDF File
-                "Non-existant",          // Base URI
-                RDFNotation.parse("ntriples"), // Input Type
+                RDFOutput,         // Input RDF File
+                "",          // Base URI
+                RDFNotation.parse("TTL"), // Input Type
                 new HDTSpecification(),   // HDT Options
                 null              // Progress Listener
         );
