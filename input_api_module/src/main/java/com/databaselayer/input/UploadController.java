@@ -18,6 +18,7 @@ import org.rdfhdt.hdt.hdt.HDTManager;
 import org.rdfhdt.hdt.options.HDTSpecification;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
@@ -25,17 +26,40 @@ import java.io.*;
 @SpringBootApplication
 @RestController
 public class UploadController {
-    static final String HDTDataPath = "/etc/fuseki/databases/hdt/database.hdt";
-    static final String RDFDataPath = "/home/databaseInputApi/temp.nt";
-    static final String RDFOutput =    "/home/databaseInputApi/output.nt";
+    static final String pathToFiles = "/home/christoffer/Documents/hdt/";
+    static final String HDTDataPath =  pathToFiles + "swdf.hdt";
+    static final String RDFDataPath = pathToFiles + "temp.nt";
+    static final String RDFOutput =    pathToFiles + "output.nt";
+    static final String libPath = "'hdt-lib.jar:/home/christoffer/Documents/hdt/lib/*'";
     //Måske husk at slette index, når filen er blevet erstattet /todo
     // Takes a string (.ttl) and recompresses the HDT with the new information and restarts the server.
-    @PostMapping("/update")
-    public String uploadFile(@RequestBody String inputTriples) throws IOException {
+    @PostMapping(value = "/update", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public String uploadFile(@RequestBody String inputTriples) throws IOException, InterruptedException {
         // Decompress HDT
 
-        Process p = Runtime.getRuntime().exec("java -server -Xmx1024M -classpath 'lib/*'" +
-                " org.rdfhdt.hdt.tools.HDT2RDF "+ HDTDataPath +  " " + RDFDataPath);
+        Process p = Runtime.getRuntime().exec("java -server -Xmx1024M -classpath '/home/christoffer/Documents/hdt/hdt-lib.jar:/home/christoffer/Documents/hdt/lib/*' org.rdfhdt.hdt.tools.HDT2RDF /home/christoffer/Documents/hdt/swdf.hdt /home/christoffer/Documents/hdt/decompressed.rdf");
+
+        BufferedReader stdInput = new BufferedReader(new
+                InputStreamReader(p.getInputStream()));
+
+        BufferedReader stdError = new BufferedReader(new
+                InputStreamReader(p.getErrorStream()));
+
+// Read the output from the command
+        System.out.println("Here is the standard output of the command:\n");
+        String s = null;
+        while ((s = stdInput.readLine()) != null) {
+            System.out.println(s);
+        }
+
+// Read any errors from the attempted command
+        System.out.println("Here is the standard error of the command (if any):\n");
+        while ((s = stdError.readLine()) != null) {
+            System.out.println(s);
+        }
+
+        p.waitFor();
+
         // QueryBuilder to access Decompressed HDT
         Model model = ModelFactory.createDefaultModel();
         model.read(new FileInputStream(RDFDataPath),null,"N-TRIPLES");
