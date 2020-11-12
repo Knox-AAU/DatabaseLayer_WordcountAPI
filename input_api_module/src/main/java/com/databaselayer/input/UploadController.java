@@ -22,22 +22,32 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 @SpringBootApplication
 @RestController
 public class UploadController {
-    static final String pathToFiles = "/home/christoffer/Documents/hdt/";
-    static final String HDTDataPath =  pathToFiles + "swdf.hdt";
-    static final String RDFDataPath = pathToFiles + "temp.nt";
-    static final String RDFOutput =    pathToFiles + "output.nt";
-    static final String libPath = "'hdt-lib.jar:/home/christoffer/Documents/hdt/lib/*'";
-    //Måske husk at slette index, når filen er blevet erstattet /todo
-    // Takes a string (.ttl) and recompresses the HDT with the new information and restarts the server.
-    @PostMapping(value = "/update", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public String uploadFile(@RequestBody String inputTriples) throws IOException, InterruptedException {
-        // Decompress HDT
+    // pathToFiles should match /etc/fuseki/databases/hdt on server
+    static final String pathToFiles = "/home/christoffer/Documents/hdt";
+    static final String HDTDataFileName =  "database.hdt";
 
-        Process p = Runtime.getRuntime().exec("java -server -Xmx1024M -classpath '/home/christoffer/Documents/hdt/hdt-lib.jar:/home/christoffer/Documents/hdt/lib/*' org.rdfhdt.hdt.tools.HDT2RDF /home/christoffer/Documents/hdt/swdf.hdt /home/christoffer/Documents/hdt/decompressed.rdf");
+    static final String RDFDataPath = "/home/christoffer/Documents/hdt/temp.ttl";
+    static final String RDFFileName = "temp.ttl";
+    static final String RDFOutput =    pathToFiles + "/updated_temp.ttl";
+
+    // NewHDTFileName should match the old HDT filename
+    static final String NewHDTFileName =   "database.hdt";
+
+    //Måske husk at slette index, når filen er blevet erstattet /todo
+    // Takes a string (.ttl and recompresses the HDT with the new information and restarts the server.
+    @PostMapping(value = "/update", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public String uploadFile(@RequestBody String inputTriples) throws IOException, InterruptedException {
+        System.out.println("inputTriples input:\n" + inputTriples);
+
+        // Decompress HDT
+        String[] cmd = {"bash","-c", "java -server -Xmx1024M -classpath 'hdt-lib.jar:lib/*' org.rdfhdt.hdt.tools.HDT2RDF " + HDTDataFileName + " " + RDFFileName};
+        Process p = Runtime.getRuntime().exec(cmd, null, new File(pathToFiles));
 
         BufferedReader stdInput = new BufferedReader(new
                 InputStreamReader(p.getInputStream()));
@@ -45,14 +55,14 @@ public class UploadController {
         BufferedReader stdError = new BufferedReader(new
                 InputStreamReader(p.getErrorStream()));
 
-// Read the output from the command
+        // Read the output from the command
         System.out.println("Here is the standard output of the command:\n");
         String s = null;
         while ((s = stdInput.readLine()) != null) {
             System.out.println(s);
         }
 
-// Read any errors from the attempted command
+        // Read any errors from the attempted command
         System.out.println("Here is the standard error of the command (if any):\n");
         while ((s = stdError.readLine()) != null) {
             System.out.println(s);
@@ -62,8 +72,9 @@ public class UploadController {
 
         // QueryBuilder to access Decompressed HDT
         Model model = ModelFactory.createDefaultModel();
-        model.read(new FileInputStream(RDFDataPath),null,"N-TRIPLES");
-        org.apache.jena.query.Dataset dataset = DatasetFactory.assemble(model);
+        model.read(new FileInputStream(RDFDataPath),null,"TTL");
+        System.out.println("#1");
+        org.apache.jena.query.Dataset dataset = DatasetFactory.create(model);
         UpdateRequest updateQuery = UpdateFactory.create("INSERT DATA { " + inputTriples + " }");
         UpdateProcessor updater = UpdateExecutionFactory.create(updateQuery, dataset);
 
@@ -75,28 +86,28 @@ public class UploadController {
         }
         catch (Exception e){e.printStackTrace();}
         // Save QueryBuilder as RDF
-        RDFDataMgr.write(new FileOutputStream(RDFOutput), dataset, RDFFormat.TTL );
+
+        System.out.println("Model\n");
+        System.out.println(model);
+
+        RDFDataMgr.write(new FileOutputStream(RDFOutput), dataset, RDFFormat.NQUADS );
 
         return "Updated";
     }
 
     @PostMapping("/commit")
-    public String commit() throws IOException, ParserException {
-        // Compress HDT
-        HDT hdt = HDTManager.generateHDT(
-                RDFOutput,         // Input RDF File
-                "",          // Base URI
-                RDFNotation.parse("TTL"), // Input Type
-                new HDTSpecification(),   // HDT Options
-                null              // Progress Listener
-        );
+    public String commit() throws IOException {
+        // Delete old HDT
+        String[] cmdDel = {"bash","-c", "java -server -XX:NewRatio=1 -XX:SurvivorRatio=9 -Xmx1024M -classpath 'hdt-lib.jar:lib/*' org.rdfhdt.hdt.tools.RDF2HDT " + HDTDataFileName + " " + NewHDTFileName};
+        Process p1 = Runtime.getRuntime().exec(cmdDel, null, new File(pathToFiles));
 
-        // Stop server
+        // Generate new HDT
+        String[] cmdConvertToHDT = {"bash","-c", "java -server -XX:NewRatio=1 -XX:SurvivorRatio=9 -Xmx1024M -classpath 'hdt-lib.jar:lib/*' org.rdfhdt.hdt.tools.RDF2HDT " + HDTDataFileName + " " + NewHDTFileName};
+        Process p2 = Runtime.getRuntime().exec(cmdConvertToHDT, null, new File(pathToFiles));
 
-        // Switch old HDT with new HDT
-
-        // Start server
-
+        // Restart server
+        String[] cmdRestart = {"bash","-c", "sudo systemctl restart fuseki"};
+        Process p3 = Runtime.getRuntime().exec(cmdRestart);
 
         return "Committed";
     }
