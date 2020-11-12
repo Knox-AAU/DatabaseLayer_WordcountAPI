@@ -9,21 +9,11 @@ import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateProcessor;
 import org.apache.jena.update.UpdateRequest;
-import org.apache.jena.util.FileManager;
-import org.apache.jena.util.FileManagerImpl;
-import org.rdfhdt.hdt.enums.RDFNotation;
-import org.rdfhdt.hdt.exceptions.ParserException;
-import org.rdfhdt.hdt.hdt.HDT;
-import org.rdfhdt.hdt.hdt.HDTManager;
-import org.rdfhdt.hdt.options.HDTSpecification;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 
 @SpringBootApplication
 @RestController
@@ -34,7 +24,8 @@ public class UploadController {
 
     static final String RDFDataPath = "/home/christoffer/Documents/hdt/temp.ttl";
     static final String RDFFileName = "temp.ttl";
-    static final String RDFOutput =    pathToFiles + "/updated_temp.ttl";
+    static final String RDFUpdatedFileName = "updated_temp.ttl";
+    static final String RDFUpdatedPath =    pathToFiles + "/updated_temp.ttl";
 
     // NewHDTFileName should match the old HDT filename
     static final String NewHDTFileName =   "database.hdt";
@@ -45,35 +36,43 @@ public class UploadController {
     public String uploadFile(@RequestBody String inputTriples) throws IOException, InterruptedException {
         System.out.println("inputTriples input:\n" + inputTriples);
 
-        // Decompress HDT
-        String[] cmd = {"bash","-c", "java -server -Xmx1024M -classpath 'hdt-lib.jar:lib/*' org.rdfhdt.hdt.tools.HDT2RDF " + HDTDataFileName + " " + RDFFileName};
-        Process p = Runtime.getRuntime().exec(cmd, null, new File(pathToFiles));
+        // Model
+        Model model;
 
-        BufferedReader stdInput = new BufferedReader(new
-                InputStreamReader(p.getInputStream()));
+        // Check if temp file exists
+            // Decompress HDT
+         /*   String[] cmd = {"bash","-c", "java -server -Xmx1024M -classpath 'hdt-lib.jar:lib/*' org.rdfhdt.hdt.tools.HDT2RDF " + HDTDataFileName + " " + RDFFileName};
+            Process p = Runtime.getRuntime().exec(cmd, null, new File(pathToFiles));
 
-        BufferedReader stdError = new BufferedReader(new
-                InputStreamReader(p.getErrorStream()));
+            BufferedReader stdInput = new BufferedReader(new
+                    InputStreamReader(p.getInputStream()));
 
-        // Read the output from the command
-        System.out.println("Here is the standard output of the command:\n");
-        String s = null;
-        while ((s = stdInput.readLine()) != null) {
-            System.out.println(s);
-        }
+            BufferedReader stdError = new BufferedReader(new
+                    InputStreamReader(p.getErrorStream()));
 
-        // Read any errors from the attempted command
-        System.out.println("Here is the standard error of the command (if any):\n");
-        while ((s = stdError.readLine()) != null) {
-            System.out.println(s);
-        }
+            // Read the output from the command
+            System.out.println("Here is the standard output of the command:\n");
+            String s = null;
+            while ((s = stdInput.readLine()) != null) {
+                System.out.println(s);
+            }
 
-        p.waitFor();
+            // Read any errors from the attempted command
+            System.out.println("Here is the standard error of the command (if any):\n");
+            while ((s = stdError.readLine()) != null) {
+                System.out.println(s);
+            }
 
-        // QueryBuilder to access Decompressed HDT
-        Model model = ModelFactory.createDefaultModel();
-        model.read(new FileInputStream(RDFDataPath),null,"TTL");
-        System.out.println("#1");
+            p.waitFor();
+            active = true;
+
+            model = ModelFactory.createDefaultModel();
+            model.read(new FileInputStream(RDFDataPath),null,"TTL");
+          */
+
+        // Operate on updated temp file
+        model = ModelFactory.createDefaultModel();
+        model.read(new FileInputStream(RDFUpdatedPath),null,"TTL");
         org.apache.jena.query.Dataset dataset = DatasetFactory.create(model);
         UpdateRequest updateQuery = UpdateFactory.create("INSERT DATA { " + inputTriples + " }");
         UpdateProcessor updater = UpdateExecutionFactory.create(updateQuery, dataset);
@@ -90,17 +89,15 @@ public class UploadController {
         System.out.println("Model\n");
         System.out.println(model);
 
-        RDFDataMgr.write(new FileOutputStream(RDFOutput), dataset, RDFFormat.NQUADS );
+        RDFDataMgr.write(new FileOutputStream(RDFUpdatedPath), dataset.getDefaultModel(), RDFFormat.TURTLE );
 
         return "Updated";
     }
 
+
+
     @PostMapping("/commit")
     public String commit() throws IOException {
-        // Delete old HDT
-        String[] cmdDel = {"bash","-c", "java -server -XX:NewRatio=1 -XX:SurvivorRatio=9 -Xmx1024M -classpath 'hdt-lib.jar:lib/*' org.rdfhdt.hdt.tools.RDF2HDT " + HDTDataFileName + " " + NewHDTFileName};
-        Process p1 = Runtime.getRuntime().exec(cmdDel, null, new File(pathToFiles));
-
         // Generate new HDT
         String[] cmdConvertToHDT = {"bash","-c", "java -server -XX:NewRatio=1 -XX:SurvivorRatio=9 -Xmx1024M -classpath 'hdt-lib.jar:lib/*' org.rdfhdt.hdt.tools.RDF2HDT " + HDTDataFileName + " " + NewHDTFileName};
         Process p2 = Runtime.getRuntime().exec(cmdConvertToHDT, null, new File(pathToFiles));
@@ -108,6 +105,7 @@ public class UploadController {
         // Restart server
         String[] cmdRestart = {"bash","-c", "sudo systemctl restart fuseki"};
         Process p3 = Runtime.getRuntime().exec(cmdRestart);
+
 
         return "Committed";
     }
