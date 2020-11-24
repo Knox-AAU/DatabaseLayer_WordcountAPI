@@ -58,13 +58,10 @@ public class UploadController {
 
         return "Updated";
     }
-    
+
+
     @PostMapping("/commit")
     public String commit() throws IOException, InterruptedException {
-        // Generate new HDT
-        String[] cmdDeleteOldHdt = {"bash","-c", "rm " + pathToFiles + "/database.hdt"};
-        Process p0 = Runtime.getRuntime().exec(cmdDeleteOldHdt, null, new File(pathToFiles));
-
         // Generate new HDT
         String[] cmdDeleteIndex = {"bash","-c", "rm " + pathToFiles + "/database.hdt.index.v1-1"};
         Process p1 = Runtime.getRuntime().exec(cmdDeleteIndex, null, new File(pathToFiles));
