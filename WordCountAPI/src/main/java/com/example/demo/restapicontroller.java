@@ -6,8 +6,11 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +21,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.sql.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.*;
 @SpringBootApplication
 @RestController
@@ -25,19 +30,17 @@ public class restapicontroller {
     @Autowired
     JdbcTemplate jdbc;
 
+
     @PostMapping(value = "/wordCountData", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public String insert(@RequestBody String input) throws Exception {
-        List<Map<String, Object>> rows = jdbc.queryForList("SELECT * FROM wordlist");
-        //System.out.println(rows);
         JSONParser parser = new JSONParser();
         JSONObject object = (JSONObject) parser.parse(input);
 
-
-
-//            JSONObject jsonlist = (JSONObject) object.get("words");
+        //getting json object from wherever it's sent and converting them to java types.
         JSONArray jsonarray = (JSONArray) object.get("words");
         String articletitle = (String) object.get("articletitle");
         String filepath = (String) object.get("filepath");
+        int totalWordsInArticle = Integer.parseInt((object.get("totalwordsinarticle").toString()));
 
         if(articletitle == null)
         {
@@ -48,11 +51,8 @@ public class restapicontroller {
             throw new Exception("Filepath must not be null");
         }
 
-
-            insertfiledata("filelist(filepath, articletitle, totalwordsinarticle)",
-                    (String) object.get("filepath"),
-                    (String) object.get("articletitle"),
-                    Integer.parseInt(object.get("totalwordsinarticle").toString()));
+        insertfiledata("filelist(filepath, articletitle, totalwordsinarticle)",
+                filepath, articletitle, totalWordsInArticle);
 
 
 
@@ -69,34 +69,19 @@ public class restapicontroller {
             insertworddata("wordlist(wordname)", entryWord);
 
             insertappearsdata("appearsin(amount, filepath, articletitle, wordname)",
-                    (int) entryAmount, (String) object.get("filepath"), (String) object.get("articletitle"), entryWord);
+                    (int) entryAmount, filepath, articletitle, entryWord);
         }
 
 
-
-
-        //word = (String) object.get("word");
         System.out.println(" word: " + object.get("word") + '\n'
                 + " filepath: " + object.get("filepath") + '\n'
                 + " articletitle: " + object.get("articletitle") + '\n'
                 + " totalwordsinarticle: " + object.get("totalwordsinarticle"));
 
 
-
-
-        /*
-        if(object.get("amount") != null && object.get("word") != null && object.get("filepath") != null && object.get("articletitle") != null)
-        {
-            //insert data; amount, wordname, filepath, articletitle
-            insertappearsdata("appearsin(amount, filepath, articletitle, wordname)",
-                    Integer.parseInt(object.get("amount").toString()),
-                    (String) object.get("filepath"),
-                    (String) object.get("articletitle"),
-                    (String) object.get("word")
-            );
-        } */
         return "done";
     }
+
     public int insertfiledata(String tableref, String filepath,
                               String articletitle, int totalwordsinarticle) throws SQLException{
         String sql = String.format("INSERT INTO %s" + "VALUES ('%s','%s',%d) ON CONFLICT DO NOTHING",
