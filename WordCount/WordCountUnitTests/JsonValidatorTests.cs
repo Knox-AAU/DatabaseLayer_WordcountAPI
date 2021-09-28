@@ -13,16 +13,24 @@ namespace WordCountUnitTests
         
         private const string JsonObjectSchema = @"{
             ""type"": ""object"",
+            ""required"": [
+                ""name"",
+                ""roles""
+            ],
             ""properties"": {
                 ""name"": {""type"": ""string""},
                 ""roles"": {""type"": ""array""}
             }
         }";
 
-        private const string JsonArarySchema = @"{
+        private const string JsonArraySchema = @"{
             ""type"": ""array"",
             ""items"": {
                 ""type"": ""object"",
+                ""required"": [
+                    ""name"",
+                    ""roles""
+                ],
                 ""properties"": {
                     ""name"": {""type"": ""string""},
                     ""roles"": {""type"": ""array""},
@@ -31,7 +39,7 @@ namespace WordCountUnitTests
         }";
 
         [Test]
-        public void TestJsonObject()
+        public void IsJsonObjectValid_CorrectFormat_Success()
         {
             const string jsonObject = @"{
                 ""name"": ""Arnie Admin"",
@@ -47,7 +55,7 @@ namespace WordCountUnitTests
         }
       
         [Test]
-        public void TestJsonArray()
+        public void IsJsonArrayValid_CorrectFormat_Success()
         {
             const string jsonArray = @"[
                 {
@@ -60,7 +68,7 @@ namespace WordCountUnitTests
                 }
             ]";
             
-            Assert.True(new JsonValidator<UserModel[]>(JsonArarySchema).IsArrayValid(jsonArray, out UserModel[] nameModels));
+            Assert.True(new JsonValidator<UserModel[]>(JsonArraySchema).IsArrayValid(jsonArray, out UserModel[] nameModels));
             
             Assert.That(nameModels.Length == 2);
             Assert.That(nameModels[0].Name == "Jason");
@@ -68,23 +76,23 @@ namespace WordCountUnitTests
         }
 
         [Test]
-        public void TestJsonObjectFail()
+        public void IsJsonObjectValid_IncorrectKeys_Failure()
         {
             const string jsonObject = @"{
-                ""names"": ""Arnie Admin"",
-                ""roles"": true
+                ""bames"": ""Arnie Admin"",
+                ""roles"": [""Developer"", ""Administrator""]
             }";
             
             Assert.False(new JsonValidator<UserModel>(JsonObjectSchema).IsObjectValid(jsonObject, out UserModel userModel));
         }
       
         [Test]
-        public void TestJsonArrayFail()
+        public void IsJsonArrayValid_IncorrectKeys_Failure()
         {
             const string jsonArray = @"[
                 {
-                    ""name"": 1,
-                    ""roles"": [""Developer"", ""Administrator""]
+                    ""rame"": ""Jason"",
+                    ""aoles"": [""Developer"", ""Administrator""]
                 },
                 {
                     ""name"": ""Jack"",
@@ -92,7 +100,7 @@ namespace WordCountUnitTests
                 }
             ]";
             
-            Assert.False(new JsonValidator<UserModel[]>(JsonArarySchema).IsArrayValid(jsonArray, out UserModel[] nameModels));
+            Assert.False(new JsonValidator<UserModel[]>(JsonArraySchema).IsArrayValid(jsonArray, out UserModel[] nameModels));
         }
     }
 }
