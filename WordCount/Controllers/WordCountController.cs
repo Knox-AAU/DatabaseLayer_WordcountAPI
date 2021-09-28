@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Text.Json;
 using KnoxDatabaseLayer3.JsonModels;
 using Microsoft.AspNetCore.Mvc;
 
