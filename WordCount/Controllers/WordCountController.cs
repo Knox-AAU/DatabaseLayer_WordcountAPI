@@ -30,7 +30,7 @@ namespace KnoxDatabaseLayer3.Controllers
         [HttpPost]
         public void Post([FromBody] string jsonInput)
         {
-            if (new SampleJsonExample().IsValid(jsonInput, out IEnumerable<ArticleData> articleData))
+            if (new JsonValidator<WordCountPostRoot, ArticleData>().IsValid(jsonInput, out IEnumerable<ArticleData> articleData))
             {
                 // TODO: Store data in database
             }

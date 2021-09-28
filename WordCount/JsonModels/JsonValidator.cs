@@ -7,11 +7,11 @@ using Newtonsoft.Json.Schema;
 
 namespace KnoxDatabaseLayer3.JsonModels
 {
-    public sealed class SampleJsonExample
+    public sealed class JsonValidator<TIn, TOut> where TIn : IPostRoot<TOut> where TOut : class
     {
         private const string JsonSchemaFileName = "wordCounterSchema.json";
         
-        public bool IsValid(string jsonString, out IEnumerable<ArticleData> articleData)
+        public bool IsValid(string jsonString, out IEnumerable<TOut> articleData)
         {
             articleData = null;
 
@@ -28,16 +28,16 @@ namespace KnoxDatabaseLayer3.JsonModels
             return true;
         }
 
-        private static IEnumerable<ArticleData> DeserializeJsonString(string jsonString)
+        private static IEnumerable<TOut> DeserializeJsonString(string jsonString)
         {
             JsonSerializerOptions options = new()
             {
                 PropertyNameCaseInsensitive = false
             };
             
-            ArticleData[] articles = JsonSerializer.Deserialize<WordCountPostRoot>(jsonString).Articles;
+            IEnumerable<TOut> root = JsonSerializer.Deserialize<TIn>(jsonString).Data;
 
-            return articles;
+            return root;
         }
     }
 }
