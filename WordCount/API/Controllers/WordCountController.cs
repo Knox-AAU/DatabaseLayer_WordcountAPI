@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Generic;
+using System.Text.Json;
 using KnoxDatabaseLayer3.JsonModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,11 +31,10 @@ namespace KnoxDatabaseLayer3.Controllers
         [HttpPost]
         public void Post([FromBody] string jsonInput)
         {
-            // TODO: Validate schema here
-
-            ArticleData[] articles = JsonSerializer.Deserialize<WordCountPostRoot>(jsonInput).Articles;
-            
-            // TODO: Store data in database
+            if (new SampleJsonExample().IsValid(jsonInput, out IEnumerable<ArticleData> articleData))
+            {
+                // TODO: Store data in database
+            }
         }
     }
 }
