@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
@@ -8,11 +9,14 @@ namespace WordCount
 {
     public class DataAccess
     {
-        public IEnumerable<WordList> GetWords()
+        
+        public IEnumerable<WordNameModel> GetWords()
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(Helper.CnnVal("wordCount")))
+            
+            using (NpgsqlConnection connection = new NpgsqlConnection("User ID=postgres;Password=1234;" +
+                                                                      "Host=localhost;Port=5432;Database=wordcount;"))
             {
-                IEnumerable<WordList> output = connection.Query<WordList>("SELECT * FROM wordlist");
+                IEnumerable<WordNameModel> output = connection.Query<WordNameModel>("SELECT * FROM wordlist");
                 return output;
             }
         }

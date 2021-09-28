@@ -25,9 +25,9 @@ namespace WordCount.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WordList> Get()
+        public IEnumerable<WordNameModel> Get()
         {
-            var data = new DataAccess().GetWords();
+            IEnumerable<WordNameModel> data = new DataAccess().GetWords();
             return data;
         }
     }
