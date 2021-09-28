@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WordCount.csproj" />
+      <ProjectReference Include="..\WordCountAPI\WordCount.csproj" />
     </ItemGroup>
 
 </Project>
