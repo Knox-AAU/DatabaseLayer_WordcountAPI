@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
 using NJsonSchema.Validation;
 using JsonSchema = NJsonSchema.JsonSchema;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace KnoxDatabaseLayer3.JsonUtility
+namespace KnoxDatabaseLayer3.JsonModels
 {
     public sealed class SampleJsonExample
     {

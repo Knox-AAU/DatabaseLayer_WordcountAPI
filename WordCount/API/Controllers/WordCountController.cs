@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using KnoxDatabaseLayer3.JsonUtility;
+using KnoxDatabaseLayer3.JsonModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KnoxDatabaseLayer3.Controllers
