@@ -30,9 +30,11 @@ namespace KnoxDatabaseLayer3.Controllers
         [HttpPost]
         public void Post([FromBody] string jsonInput)
         {
-            if (new JsonValidator<Article[]>("").IsArrayValid(jsonInput, out Article[] root))
+            // TODO: Query schema from database and use it when validating jsonInput 
+            
+            if (new JsonValidator<Article[]>("").IsArrayValid(jsonInput, out Article[] articles))
             {
-                // TODO: Store data in database
+                // TODO: Store articles in database
             }
         }
     }
