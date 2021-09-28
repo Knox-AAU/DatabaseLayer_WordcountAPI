@@ -1,7 +1,7 @@
 ﻿namespace KnoxDatabaseLayer3.JsonModels
 {
-    public sealed class WordCountPostRoot : IPostRoot<ArticleData>
+    public sealed class WordCountPostRoot
     {
-        public ArticleData[] Data { get; set; }
+        public ArticleData[] Articles { get; set; }
     }
 }

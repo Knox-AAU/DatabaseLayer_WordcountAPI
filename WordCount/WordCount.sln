@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordCount", "WordCount.csproj", "{AD77BB73-3B3A-4539-9ACC-0BB104855883}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordCountUnitTests", "WordCountUnitTests\WordCountUnitTests.csproj", "{30B82549-0121-4720-B4E8-36F16ECBD190}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{AD77BB73-3B3A-4539-9ACC-0BB104855883}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD77BB73-3B3A-4539-9ACC-0BB104855883}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD77BB73-3B3A-4539-9ACC-0BB104855883}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30B82549-0121-4720-B4E8-36F16ECBD190}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30B82549-0121-4720-B4E8-36F16ECBD190}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30B82549-0121-4720-B4E8-36F16ECBD190}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30B82549-0121-4720-B4E8-36F16ECBD190}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

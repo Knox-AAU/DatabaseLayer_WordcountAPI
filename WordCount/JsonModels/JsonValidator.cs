@@ -1,43 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
 namespace KnoxDatabaseLayer3.JsonModels
 {
-    public sealed class JsonValidator<TIn, TOut> where TIn : IPostRoot<TOut> where TOut : class
+    public sealed class JsonValidator<T> where T : class 
     {
-        private const string JsonSchemaFileName = "wordCounterSchema.json";
+        private readonly string jsonSchemaString;
         
-        public bool IsValid(string jsonString, out IEnumerable<TOut> articleData)
+        public JsonValidator(string jsonSchemaString)
         {
-            articleData = null;
+            this.jsonSchemaString = jsonSchemaString;
+        }
+        
+        public bool IsObjectValid(string jsonString, out T data)
+        {
+            JObject jsonObject = JObject.Parse(jsonString);
 
-            string directory = AppDomain.CurrentDomain.BaseDirectory;
-            string jsonSchemaString = File.ReadAllText($"{directory}/{JsonSchemaFileName}");
-            
+            return IsValid(jsonObject, jsonString, out data);
+        }
+        
+        public bool IsArrayValid(string jsonString, out T data)
+        {
+            JArray jsonArray = JArray.Parse(jsonString);
+
+            return IsValid(jsonArray, jsonString, out data);
+        }
+
+        private bool IsValid(JToken jToken, string jsonString, out T data)
+        {
+            data = null;
+
             JSchema schema = JSchema.Parse(jsonSchemaString);
-            JArray test = JArray.Parse(jsonString);
 
-            if (!test.IsValid(schema)) return false;
+            if (!jToken.IsValid(schema)) return false;
             
-            articleData = DeserializeJsonString(jsonString);
+            data = DeserializeJsonString(jsonString);
             
             return true;
         }
 
-        private static IEnumerable<TOut> DeserializeJsonString(string jsonString)
+        private static T DeserializeJsonString(string jsonString)
         {
             JsonSerializerOptions options = new()
             {
                 PropertyNameCaseInsensitive = false
             };
-            
-            IEnumerable<TOut> root = JsonSerializer.Deserialize<TIn>(jsonString).Data;
 
-            return root;
+            return JsonSerializer.Deserialize<T>(jsonString);
         }
     }
 }
