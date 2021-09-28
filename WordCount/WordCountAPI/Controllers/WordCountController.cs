@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using KnoxDatabaseLayer3.JsonModels;
 using Microsoft.AspNetCore.Mvc;
+using WordCount.JsonModels;
 
 namespace KnoxDatabaseLayer3.Controllers
 {

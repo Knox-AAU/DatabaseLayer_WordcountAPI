@@ -1,22 +1,13 @@
 {
-    "$id": "http://example.com/example.json",
     "$schema": "http://json-schema.org/draft-07/schema",
     "default": [],
     "description": "The root schema comprises the entire JSON document.",
     "title": "The root schema",
-    "required": [
-        "articletitle",
-        "filepath",
-        "totalwordsinarticle",
-        "words"
-    ],
     "type": "array",
     "additionalItems": true,
     "items": {
-        "$id": "#/items",
         "anyOf": [
             {
-                "$id": "#/items/anyOf/0",
                 "type": "object",
                 "required": [
                     "articletitle",
@@ -26,7 +17,6 @@
                 ],
                 "properties": {
                     "articletitle": {
-                        "$id": "#/items/anyOf/0/properties/articletitle",
                         "default": "",
                         "description": "The title of the article which this refers to.",
                         "examples": [
@@ -36,7 +26,6 @@
                         "type": "string"
                     },
                     "filepath": {
-                        "$id": "#/items/anyOf/0/properties/filepath",
                         "default": "",
                         "description": "Where to find this article.",
                         "examples": [
@@ -46,7 +35,6 @@
                         "type": "string"
                     },
                     "totalwordsinarticle": {
-                        "$id": "#/items/anyOf/0/properties/totalwordsinarticle",
                         "default": 0,
                         "description": "Amount of tokens in 'words'.",
                         "examples": [
@@ -56,17 +44,14 @@
                         "type": "integer"
                     },
                     "words": {
-                        "$id": "#/items/anyOf/0/properties/words",
                         "default": [],
                         "description": "The BoW(bag-of-words) list of tokens and number of occurrences.",
                         "title": "The words schema",
                         "type": "array",
                         "additionalItems": true,
                         "items": {
-                            "$id": "#/items/anyOf/0/properties/words/items",
                             "anyOf": [
                                 {
-                                    "$id": "#/items/anyOf/0/properties/words/items/anyOf/0",
                                     "description": "A token and an associated number of occurences in the article.",
                                     "required": [
                                         "amount",
@@ -75,7 +60,6 @@
                                     "type": "object",
                                     "properties": {
                                         "amount": {
-                                            "$id": "#/items/anyOf/0/properties/words/items/anyOf/0/properties/amount",
                                             "type": "integer",
                                             "title": "The amount schema",
                                             "examples": [
@@ -83,7 +67,6 @@
                                             ]
                                         },
                                         "word": {
-                                            "$id": "#/items/anyOf/0/properties/words/items/anyOf/0/properties/word",
                                             "type": "string",
                                             "title": "The word schema",
                                             "examples": [

@@ -1,16 +1,17 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
-namespace KnoxDatabaseLayer3.JsonModels
+namespace WordCount.JsonModels
 {
     public sealed class JsonValidator<T> where T : class 
     {
-        private readonly string jsonSchemaString;
+        private readonly JSchema schema;
         
         public JsonValidator(string jsonSchemaString)
         {
-            this.jsonSchemaString = jsonSchemaString;
+            schema = JSchema.Parse(jsonSchemaString);
         }
         
         public bool IsObjectValid(string jsonString, out T data)
@@ -30,9 +31,7 @@ namespace KnoxDatabaseLayer3.JsonModels
         private bool IsValid(JToken jToken, string jsonString, out T data)
         {
             data = null;
-
-            JSchema schema = JSchema.Parse(jsonSchemaString);
-
+            
             if (!jToken.IsValid(schema)) return false;
             
             data = DeserializeJsonString(jsonString);
@@ -44,10 +43,10 @@ namespace KnoxDatabaseLayer3.JsonModels
         {
             JsonSerializerOptions options = new()
             {
-                PropertyNameCaseInsensitive = false
+                PropertyNameCaseInsensitive = true
             };
-
-            return JsonSerializer.Deserialize<T>(jsonString);
+            
+            return JsonSerializer.Deserialize<T>(jsonString, options);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace KnoxDatabaseLayer3.JsonModels
+﻿namespace WordCount.JsonModels
 {
     public sealed class WordCountPostRoot
     {
