@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KnoxDatabaseLayer3.JsonUtility;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KnoxDatabaseLayer3.Controllers
 {
@@ -8,13 +9,14 @@ namespace KnoxDatabaseLayer3.Controllers
     {
         // GET
         [HttpGet]
-        public void Get([FromBody] TurtleJson t)
+        [Route("/[controller]/{id:int}")]
+        public ArticleData Get([FromBody] int id)
         {
-                //Steps: try to convert to json, on fail, log the exception
-                    //Create file log class/service
-                //insert file data into 'data layer' class
-                //save data
+            return null;
+            //Steps: try to convert to json, on fail, log the exception
+            //Create file log class/service
+            //insert file data into 'data layer' class
+            //save data
         }
     }
-
 }
