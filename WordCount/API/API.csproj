@@ -7,7 +7,7 @@
 
     <ItemGroup>
         <PackageReference Include="Dapper" Version="2.0.90" />
-        <PackageReference Include="NJsonSchema" Version="10.5.2" />
+        <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15-beta1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     </ItemGroup>
 

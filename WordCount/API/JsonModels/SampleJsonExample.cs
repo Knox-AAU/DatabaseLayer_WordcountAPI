@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using NJsonSchema.Validation;
-using JsonSchema = NJsonSchema.JsonSchema;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
 
 namespace KnoxDatabaseLayer3.JsonModels
 {
@@ -16,25 +17,19 @@ namespace KnoxDatabaseLayer3.JsonModels
         {
             string directory = AppDomain.CurrentDomain.BaseDirectory;
             string jsonString = File.ReadAllText($"{directory}/{JsonFileName}");
-            string jsonSchema = File.ReadAllText($"{directory}/{JsonSchemaFileName}");
+            string jsonSchemaString = File.ReadAllText($"{directory}/{JsonSchemaFileName}");
             
             JsonSerializerOptions options = new()
             {
                 PropertyNameCaseInsensitive = false
             };
+
+            JSchema schema = JSchema.Parse(jsonSchemaString);
             
-            Task.Run(() => Test(jsonSchema, jsonString));
-        }
+            JArray test = JArray.Parse(jsonString);
+            bool valid = test.IsValid(schema);
 
-        private async void Test(string jsonSchema, string jsonString)
-        {
-            var schema = await JsonSchema.FromJsonAsync(jsonSchema);
-            var errors = schema.Validate(jsonString);
-
-            foreach (ValidationError error in errors)
-            {
-                Console.WriteLine(error);
-            }
+            Console.WriteLine("Valid + " + valid);
         }
     }
 }
