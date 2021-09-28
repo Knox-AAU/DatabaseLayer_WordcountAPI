@@ -10,7 +10,7 @@ namespace KnoxDatabaseLayer3.Controllers
     {
         [HttpGet]
         [Route("/[controller]/{id:int}")]
-        public ArticleData Get([FromBody] int id)
+        public Article Get([FromBody] int id)
         {
             return null;
             //Steps: try to convert to json, on fail, log the exception
@@ -21,7 +21,7 @@ namespace KnoxDatabaseLayer3.Controllers
         
         [HttpGet]
         [Route("/[controller]")]
-        public ArticleData GetAll()
+        public Article GetAll()
         {
             // TODO: Get all word count data and return it
             return null;
@@ -30,9 +30,8 @@ namespace KnoxDatabaseLayer3.Controllers
         [HttpPost]
         public void Post([FromBody] string jsonInput)
         {
-            if (new JsonValidator<WordCountPostRoot>("").IsArrayValid(jsonInput, out WordCountPostRoot root))
+            if (new JsonValidator<Article[]>("").IsArrayValid(jsonInput, out Article[] root))
             {
-                ArticleData[] articles = root.Articles;
                 // TODO: Store data in database
             }
         }

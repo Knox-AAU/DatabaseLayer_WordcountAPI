@@ -2,7 +2,7 @@
 {
     public sealed class WordData
     {
-        public int amount { get; set; }
-        public string word { get; set; }
+        public int Amount { get; set; }
+        public string Word { get; set; }
     }
 }
