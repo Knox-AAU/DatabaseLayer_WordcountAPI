@@ -1,12 +1,18 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
+using System.Data.Common;
+using System.Web;
 
 namespace WordCount
 {
-    public static class Helper
+    public class Helper
     {
         public static string CnnVal(string name)
         {
-            return ConfigurationManager.ConnectionStrings[name].ConnectionString;
+            // lav til rigtig klasse og brug dependency injection
+            string connectionStringSettings = ConfigurationManager.ConnectionStrings[name].ConnectionString;
+            
+            return connectionStringSettings;
         }
     }
 }

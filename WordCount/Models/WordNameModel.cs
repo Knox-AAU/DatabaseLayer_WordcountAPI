@@ -1,4 +1,4 @@
-﻿namespace WordCount
+﻿namespace WordCount.Models
 {
     public class WordNameModel
     {
