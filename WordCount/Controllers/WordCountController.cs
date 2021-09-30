@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using WordCount.Data;
 using WordCount.Models;
 
 namespace WordCount.Controllers
@@ -24,7 +25,7 @@ namespace WordCount.Controllers
         [HttpGet]
         public IEnumerable<WordNameModel> Get()
         {
-            IEnumerable<WordNameModel> data = new DataAccess.DataAccess(config).GetWords();
+            IEnumerable<WordNameModel> data = new DataAccess(config).GetWords();
             return data;
         }
     }

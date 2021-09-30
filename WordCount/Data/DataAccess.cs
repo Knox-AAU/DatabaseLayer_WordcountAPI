@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using WordCount.Models;
 
-namespace WordCount.DataAccess
+namespace WordCount.Data
 {
     public sealed class DataAccess
     {
