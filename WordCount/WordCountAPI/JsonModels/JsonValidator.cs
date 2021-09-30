@@ -13,22 +13,10 @@ namespace WordCount.JsonModels
             schema = JSchema.Parse(jsonSchemaString);
         }
         
-        public bool IsObjectValid(string jsonString, out T data)
+        public bool IsValid(string jsonString, out T data)
         {
-            JObject jsonObject = JObject.Parse(jsonString);
+            JToken jToken = JToken.Parse(jsonString);
 
-            return IsValid(jsonObject, jsonString, out data);
-        }
-        
-        public bool IsArrayValid(string jsonString, out T data)
-        {
-            JArray jsonArray = JArray.Parse(jsonString);
-
-            return IsValid(jsonArray, jsonString, out data);
-        }
-
-        private bool IsValid(JToken jToken, string jsonString, out T data)
-        {
             data = null;
             
             if (!jToken.IsValid(schema)) return false;
@@ -37,7 +25,7 @@ namespace WordCount.JsonModels
             
             return true;
         }
-
+        
         private static T DeserializeJsonString(string jsonString)
         {
             JsonSerializerOptions options = new()

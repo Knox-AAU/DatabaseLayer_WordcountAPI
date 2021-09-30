@@ -46,7 +46,7 @@ namespace WordCountUnitTests
                 ""roles"": [""Developer"", ""Administrator""]
             }";
         
-            Assert.True(new JsonValidator<UserModel>(JsonObjectSchema).IsObjectValid(jsonObject, out UserModel userModel));
+            Assert.True(new JsonValidator<UserModel>(JsonObjectSchema).IsValid(jsonObject, out UserModel userModel));
             
             Assert.That(userModel.Name == "Arnie Admin");
             Assert.That(userModel.Roles.Length == 2);
@@ -68,7 +68,7 @@ namespace WordCountUnitTests
                 }
             ]";
             
-            Assert.True(new JsonValidator<UserModel[]>(JsonArraySchema).IsArrayValid(jsonArray, out UserModel[] nameModels));
+            Assert.True(new JsonValidator<UserModel[]>(JsonArraySchema).IsValid(jsonArray, out UserModel[] nameModels));
             
             Assert.That(nameModels.Length == 2);
             Assert.That(nameModels[0].Name == "Jason");
@@ -83,7 +83,7 @@ namespace WordCountUnitTests
                 ""roles"": [""Developer"", ""Administrator""]
             }";
             
-            Assert.False(new JsonValidator<UserModel>(JsonObjectSchema).IsObjectValid(jsonObject, out UserModel userModel));
+            Assert.False(new JsonValidator<UserModel>(JsonObjectSchema).IsValid(jsonObject, out UserModel userModel));
         }
       
         [Test]
@@ -100,7 +100,7 @@ namespace WordCountUnitTests
                 }
             ]";
             
-            Assert.False(new JsonValidator<UserModel[]>(JsonArraySchema).IsArrayValid(jsonArray, out UserModel[] nameModels));
+            Assert.False(new JsonValidator<UserModel[]>(JsonArraySchema).IsValid(jsonArray, out UserModel[] nameModels));
         }
     }
 }
