@@ -14,10 +14,7 @@ namespace WordCount
     {
         private readonly IConfiguration config;
 
-        public DataAccess(IConfiguration config)
-        {
-            this.config = config;
-        }
+        
         public IEnumerable<WordNameModel> GetWords()
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(Helper.CnnVal("WordCountDb")))
