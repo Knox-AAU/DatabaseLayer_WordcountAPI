@@ -10,9 +10,9 @@ namespace WordCount
         public static string CnnVal(string name)
         {
             // lav til rigtig klasse og brug dependency injection
-            string connectionStringSettings = ConfigurationManager.ConnectionStrings[name].ConnectionString;
-            
-            return connectionStringSettings;
+            //string connectionStringSettings = ConfigurationManager.ConnectionStrings[name].ConnectionString;
+            return string.Empty;
+            //return connectionStringSettings;
         }
     }
 }
