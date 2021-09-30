@@ -19,7 +19,6 @@ namespace WordCount
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Configuration.GetConnectionString("Connect")
         }
 
         public IConfiguration Configuration { get; }
