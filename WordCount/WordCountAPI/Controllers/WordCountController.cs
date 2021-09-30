@@ -32,7 +32,7 @@ namespace KnoxDatabaseLayer3.Controllers
         {
             // TODO: Query schema from database and use it when validating jsonInput 
             
-            if (new JsonValidator<Article[]>("").IsArrayValid(jsonInput, out Article[] articles))
+            if (new JsonValidator<Article[]>("").IsValid(jsonInput, out Article[] articles))
             {
                 // TODO: Store articles in database
             }
