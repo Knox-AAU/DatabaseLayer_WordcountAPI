@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Npgsql;
 using WordCount.Models;
 
-namespace WordCount.DataAccess
+namespace WordCount.Data
 {
     public sealed class DataAccess
     {
@@ -22,8 +22,6 @@ namespace WordCount.DataAccess
 
             string connectionString = GetConnectionString(connectionStringName);
 
-            Console.WriteLine(connectionString);
-            
             using (NpgsqlConnection connection = new(connectionString))
             {
                 IEnumerable<WordNameModel> output = connection.Query<WordNameModel>("SELECT * FROM wordlist");
