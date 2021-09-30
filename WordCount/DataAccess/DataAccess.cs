@@ -22,8 +22,6 @@ namespace WordCount.DataAccess
 
             string connectionString = GetConnectionString(connectionStringName);
 
-            Console.WriteLine(connectionString);
-            
             using (NpgsqlConnection connection = new(connectionString))
             {
                 IEnumerable<WordNameModel> output = connection.Query<WordNameModel>("SELECT * FROM wordlist");
