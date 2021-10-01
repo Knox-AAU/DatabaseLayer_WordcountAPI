@@ -1,41 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WordCount.JsonModels;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using WordCount.Data;
+using WordCount.Models;
 
-namespace KnoxDatabaseLayer3.Controllers
+namespace WordCount.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WordCountController : Controller
+    public class WordCountController : ControllerBase
     {
-        [HttpGet]
-        [Route("/[controller]/{id:int}")]
-        public Article Get([FromBody] int id)
+        private readonly IConfiguration config;
+        
+        public WordCountController(IConfiguration config)
         {
-            return null;
-            //Steps: try to convert to json, on fail, log the exception
-            //Create file log class/service
-            //insert file data into 'data layer' class
-            //save data
+            this.config = config;
         }
         
         [HttpGet]
-        [Route("/[controller]")]
-        public Article GetAll()
+        public IEnumerable<string> Get()
         {
-            // TODO: Get all word count data and return it
-            return null;
-        }
-
-        [HttpPost]
-        public void Post([FromBody] string jsonInput)
-        {
-            // TODO: Query schema from database and use it when validating jsonInput 
-            
-            if (new JsonValidator<Article[]>("").IsValid(jsonInput, out Article[] articles))
+            var x = new[]
             {
-                // TODO: Store articles in database
-            }
+                new WordList() { wordname = "aokd" }
+            };
+            
+            List<string> data = new DataAccess(config).GetWords();
+            return data;
         }
     }
 }

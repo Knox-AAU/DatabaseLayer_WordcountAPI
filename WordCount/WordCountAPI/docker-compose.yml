@@ -15,6 +15,8 @@ services:
       - database:username=postgres
       - database:password=Sysadmins.
       - database:database=wordcount
+      - database:port=5002
+      - database:connectionString=User ID=postgres;Password=Sysadmins.;Host=db;Port=5432;Database=wordcount;
   db:
     image: postgres
     environment:
