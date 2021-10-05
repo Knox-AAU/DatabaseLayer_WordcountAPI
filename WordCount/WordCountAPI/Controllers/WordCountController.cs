@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using WordCount.Data;
+using WordCount.JsonModels;
 using WordCount.Models;
 
 namespace WordCount.Controllers
@@ -16,11 +17,28 @@ namespace WordCount.Controllers
     public class WordCountController : ControllerBase
     {
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<string> GetAll()
         {
+            // Get all words
             List<string> words = new();
             new WordCountContext().wordlist.Take(100).ToList().ForEach(wordList => words.Add(wordList.WordName));
             return words;
+        }
+
+        [HttpGet]
+        [Route("/[controller]/{id:int}")]
+        public void Get([FromBody] int id)
+        {
+        }
+
+        [HttpPost]
+        public void Post([FromBody] string jsonInput)
+        {
+            // Get schema and use for validating
+            if (new JsonValidator<Article[]>("").IsValid(jsonInput, out Article[] articles))
+            {
+                // Store in DB
+            }
         }
     }
 }
