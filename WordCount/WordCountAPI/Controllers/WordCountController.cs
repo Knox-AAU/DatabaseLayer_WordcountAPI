@@ -19,7 +19,7 @@ namespace WordCount.Controllers
         public IEnumerable<string> Get()
         {
             List<string> words = new();
-            new WordCountContext().wordlist.Take(100).ToList().ForEach(wordList => words.Add(wordList.wordname));
+            new WordCountContext().wordlist.Take(100).ToList().ForEach(wordList => words.Add(wordList.WordName));
             return words;
         }
     }

@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace WordCount.Models
 {
-    public class WordList
+    public sealed class WordList
     {
         [Key]
-        [Column(TypeName = "citext")]
-        public string wordname { get; set; }
+        [Column("wordname", TypeName = "citext")]
+        public string WordName { get; set; }
     }
 }
