@@ -1,5 +1,4 @@
-﻿version: 0.0.1
-services: 
+﻿services: 
   api:
     build: 
       context: .
@@ -10,22 +9,28 @@ services:
       - wordcount
     depends_on: 
       - db
-    environment:
-      - database:host=db
-      - database:username=postgres
-      - database:password=Sysadmins.
-      - database:database=wordcount
-      - database:port=5002
-      - database:connectionString=User ID=postgres;Password=Sysadmins.;Host=db;Port=5432;Database=wordcount;
+    environment: 
+      - database:host=${db_host}
+      - database:username=${db_username}
+      - database:database=${POSTGRES_DATABASE}
+      - database:password=${POSTGRES_PASSWORD}
+      - database:port=${db_port}
+      - database:connectionString=${db_connectionString}
   db:
     image: postgres
     environment:
-      - POSTGRES_PASSWORD=Sysadmins.
-      - POSTGRES_DATABASE=wordcount
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
     ports:
       - "5002:5432"
     networks: 
       - wordcount
+    volumes:
+      - dbvolume:/var/lib/postgresql/data
+
 networks:
   wordcount:
     driver: bridge
+volumes: 
+  dbvolume:
+    driver: local
