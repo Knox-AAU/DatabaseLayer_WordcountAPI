@@ -10,9 +10,8 @@ namespace WordCount.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var x = Environment.GetEnvironmentVariable("database:connectionString");
-            Console.WriteLine(x);
-            optionsBuilder.UseNpgsql(x);
+            string? connectionString = Environment.GetEnvironmentVariable("database:connectionString");
+            optionsBuilder.UseNpgsql(connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

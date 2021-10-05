@@ -15,23 +15,12 @@ namespace WordCount.Controllers
     [Route("[controller]")]
     public class WordCountController : ControllerBase
     {
-        private readonly IConfiguration config;
-        
-        public WordCountController(IConfiguration config)
-        {
-            this.config = config;
-        }
-        
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            var x = new[]
-            {
-                new WordList() { wordname = "aokd" }
-            };
-            
-            List<string> data = new DataAccess(config).GetWords();
-            return data;
+            List<string> words = new();
+            new WordCountContext().wordlist.Take(100).ToList().ForEach(el => words.Add(el.wordname));
+            return words;
         }
     }
 }
