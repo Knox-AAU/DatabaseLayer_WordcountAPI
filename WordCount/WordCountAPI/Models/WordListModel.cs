@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace WordCount.Models
 {
-    public sealed class WordList
+    public sealed class WordListModel
     {
         [Key]
         [Column("wordname", TypeName = "citext")]

@@ -4,13 +4,19 @@ using WordCount.Models;
 
 namespace WordCount.Data
 {
-    public class WordCountContext : DbContext
+    public sealed class WordListContext : DbContext
     {
-        public DbSet<WordList> wordlist { get; set; }
-
+        public DbSet<WordListModel> Wordlist { get; set; }
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string? connectionString = Environment.GetEnvironmentVariable("database:connectionString");
+            
+            if (connectionString == null)
+            {
+                throw new Exception("Connection string not found.");
+            }
+            
             optionsBuilder.UseNpgsql(connectionString);
         }
 
