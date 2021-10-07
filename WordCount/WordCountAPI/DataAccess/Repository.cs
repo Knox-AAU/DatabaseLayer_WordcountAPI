@@ -1,25 +1,24 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.Data.Entity;
 
 namespace WordCount.DataAccess
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityModel
+    public sealed class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityModel
     {
-        private readonly DbContext _context;
-        private readonly List<TEntity> _dbSet;
+        private readonly DbContext context;
+        private readonly List<TEntity> entityList;
 
         public Repository(DbContext context)
         {
-            this._context = context;
-            this._dbSet = context.Set<TEntity>().ToList();
+            this.context = context;
+            entityList = context.Set<TEntity>().ToList();
         }
 
         public void Insert(TEntity entity)
         {
-            _dbSet.Add(entity);
+            entityList.Add(entity);
             Save();
         }
         
@@ -29,18 +28,32 @@ namespace WordCount.DataAccess
             Save();
         }
 
-        public void Update(int id, TEntity newEntity)
+
+        public void Update(int oldEntityId, TEntity newEntity)
         {
-            TEntity found = _dbSet.Find(entity => entity.Id == id);
-            found = newEntity;
+            int index = entityList.FindIndex(entity => entity.Id == oldEntityId);
+
+            if (index == -1)
+            {
+                // TODO: Proper logging
+                Console.WriteLine($"No entity found with id {oldEntityId}.");
+                return;
+            }
+            
+            entityList[index] = newEntity;
             Save();
+        }
+
+        public void Update(TEntity oldEntity, TEntity newEntity)
+        {
+            Update(oldEntity.Id, newEntity);
         }
         
         public TEntity GetById(int id)
         {
-            return _dbSet.Find(entity => entity.Id == id);
+            return entityList.Find(entity => entity.Id == id);
         }
-        
+
 
         /// <summary>
         /// Deletes entity by references.
@@ -48,7 +61,7 @@ namespace WordCount.DataAccess
         /// <param name="entity"></param>
         public void Delete(TEntity entity)
         {
-            _dbSet.Remove(entity);
+            entityList.Remove(entity);
             Save();
         }
         
@@ -58,58 +71,38 @@ namespace WordCount.DataAccess
         /// <param name="predicate"></param>
         public void Delete(Predicate<TEntity> predicate)
         {
-            _dbSet.Remove(Find(predicate));
+            entityList.Remove(Find(predicate));
             Save();
         }
         
-
         private void Save()
         {
-            _context.SaveChanges();
+            context.SaveChanges();
         }
 
         public IEnumerable<TEntity> All()
         {
-            return _dbSet;
+            return entityList;
         }
-        
 
         public TEntity Find(Predicate<TEntity> predicate)
         {
-            return _dbSet.Find(predicate);
+            return entityList.Find(predicate);
         }
 
         public IEnumerable<TEntity> FindAll(Predicate<TEntity> predicate)
         {
-            return _dbSet.FindAll(predicate);
+            return entityList.FindAll(predicate);
         }
 
         public void SaveAsync()
         {
-            _context.SaveChangesAsync();
+            context.SaveChangesAsync();
         }
 
-        public virtual IEnumerable<TEntity> Get (Predicate<TEntity> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
+        public GetArranger<TEntity> Get()
         {
-            IQueryable<TEntity> query = _dbSet.AsQueryable();
-
-            if (filter != null)
-            {
-                query = query.Where(e => filter(e));
-            }
-
-            if (orderBy != null)
-            {
-                return orderBy(query).ToList();
-            }
-
-            return query.ToList();
+            return new GetArranger<TEntity>(entityList.AsQueryable());
         }
-    }
-
-    public abstract class EntityModel
-    {
-        public int Id { get; private set; }
     }
 }

@@ -7,7 +7,6 @@ namespace WordCount.JsonModels
     public sealed class JsonValidator<T> where T : class 
     {
         private readonly JSchema schema;
-        
         public JsonValidator(string jsonSchemaString)
         {
             schema = JSchema.Parse(jsonSchemaString);
