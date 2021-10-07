@@ -5,6 +5,7 @@ namespace WordCount.Models
 {
     public sealed class AppearsInModel
     {
+        [Key]
         [Column("id", TypeName = "integer")]
         public int Id { get; set; }
         [Column("amount", TypeName = "integer")]
