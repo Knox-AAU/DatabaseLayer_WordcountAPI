@@ -10,8 +10,5 @@ namespace WordCount.JsonModels
         public string FilePath { get; set; }
         public int TotalWordsInArticle { get; set; }
         public WordData[] Words { get; set; }
-
-
-
     }
 }

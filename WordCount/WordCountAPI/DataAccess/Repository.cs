@@ -9,36 +9,36 @@ namespace WordCount.DataAccess
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityModel
     {
         private DbContext _context;
-        private List<TEntity> _dbSet;
+        private List<TEntity> dbSet;
 
         public Repository(DbContext context)
         {
             this._context = context;
-            this._dbSet = context.Set<TEntity>().ToList();
+            this.dbSet = context.Set<TEntity>().ToList();
         }
 
         public void Insert(TEntity entity)
         {
-            _dbSet.Add(entity);
+            dbSet.Add(entity);
             Save();
         }
         
         public void Insert(IEnumerable<TEntity> entities)
         {
-            _dbSet.AddRange(entities);
+            dbSet.AddRange(entities);
             Save();
         }
 
         public void Update(int id, TEntity newEntity)
         {
-            TEntity found = _dbSet.Find(entity => entity.Id == id);
+            TEntity found = dbSet.Find(entity => entity.Id == id);
             found = newEntity;
             Save();
         }
         
         public TEntity GetById(int id)
         {
-            return _dbSet.Find(entity => entity.Id == id);
+            return dbSet.Find(entity => entity.Id == id);
         }
         
 
@@ -48,7 +48,7 @@ namespace WordCount.DataAccess
         /// <param name="entity"></param>
         public void Delete(TEntity entity)
         {
-            _dbSet.Remove(entity);
+            dbSet.Remove(entity);
             Save();
         }
         
@@ -58,7 +58,7 @@ namespace WordCount.DataAccess
         /// <param name="predicate"></param>
         public void Delete(Predicate<TEntity> predicate)
         {
-            _dbSet.Remove(Find(predicate));
+            dbSet.Remove(Find(predicate));
             Save();
         }
         
@@ -70,18 +70,18 @@ namespace WordCount.DataAccess
 
         public IEnumerable<TEntity> All()
         {
-            return _dbSet;
+            return dbSet;
         }
         
 
         public TEntity Find(Predicate<TEntity> predicate)
         {
-            return _dbSet.Find(predicate);
+            return dbSet.Find(predicate);
         }
 
         public IEnumerable<TEntity> FindAll(Predicate<TEntity> predicate)
         {
-            return _dbSet.FindAll(predicate);
+            return dbSet.FindAll(predicate);
         }
 
         public void SaveAsync()
@@ -92,7 +92,7 @@ namespace WordCount.DataAccess
         public virtual IEnumerable<TEntity> Get (Predicate<TEntity> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
-            IQueryable<TEntity> query = _dbSet.AsQueryable();
+            IQueryable<TEntity> query = dbSet.AsQueryable();
 
             if (filter != null)
             {
@@ -106,10 +106,5 @@ namespace WordCount.DataAccess
 
             return query.ToList();
         }
-    }
-
-    public abstract class EntityModel
-    {
-        public int Id { get; private set; }
     }
 }
