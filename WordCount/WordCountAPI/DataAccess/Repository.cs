@@ -24,7 +24,7 @@ namespace WordCount.DataAccess
         
         public void Insert(IEnumerable<TEntity> entities)
         {
-            _dbSet.AddRange(entities);
+            entityList.AddRange(entities);
             Save();
         }
 

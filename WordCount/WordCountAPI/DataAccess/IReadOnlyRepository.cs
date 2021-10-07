@@ -11,8 +11,6 @@ namespace WordCount.DataAccess
         public TEntity Find(Predicate<TEntity> predicate);
         public IEnumerable<TEntity> FindAll(Predicate<TEntity> predicate);
 
-        public IEnumerable<TEntity> Get (
-            Predicate<TEntity> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null);
+        public GetArranger<TEntity> Get ();
     }
 }
