@@ -16,6 +16,7 @@
       - database:password=${POSTGRES_PASSWORD}
       - database:port=${db_port}
       - database:connectionString=${db_connectionString}
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
   db:
     image: postgres
     environment:
