@@ -8,12 +8,12 @@ namespace WordCount.DataAccess
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityModel
     {
-        private DbContext _context;
-        private List<TEntity> dbSet;
+        private readonly DbContext context;
+        private readonly List<TEntity> dbSet;
 
         public Repository(DbContext context)
         {
-            this._context = context;
+            this.context = context;
             this.dbSet = context.Set<TEntity>().ToList();
         }
 
@@ -65,7 +65,7 @@ namespace WordCount.DataAccess
 
         private void Save()
         {
-            _context.SaveChanges();
+            context.SaveChanges();
         }
 
         public IEnumerable<TEntity> All()
@@ -86,7 +86,7 @@ namespace WordCount.DataAccess
 
         public void SaveAsync()
         {
-            _context.SaveChangesAsync();
+            context.SaveChangesAsync();
         }
 
         public virtual IEnumerable<TEntity> Get (Predicate<TEntity> filter = null,
