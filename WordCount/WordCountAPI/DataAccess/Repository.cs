@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.Data.Entity;
 
 namespace WordCount.DataAccess
@@ -14,7 +13,7 @@ namespace WordCount.DataAccess
         public Repository(DbContext context)
         {
             this.context = context;
-            this.dbSet = context.Set<TEntity>().ToList();
+            dbSet = context.Set<TEntity>().ToList();
         }
 
         public void Insert(TEntity entity)
@@ -29,18 +28,30 @@ namespace WordCount.DataAccess
             Save();
         }
 
-        public void Update(int id, TEntity newEntity)
+        public void Update(int oldEntityId, TEntity newEntity)
         {
-            TEntity found = dbSet.Find(entity => entity.Id == id);
-            found = newEntity;
+            int index = dbSet.FindIndex(entity => entity.Id == oldEntityId);
+
+            if (index == -1)
+            {
+                // TODO: Proper logging
+                Console.WriteLine($"No entity found with id {oldEntityId}.");
+                return;
+            }
+            
+            dbSet[index] = newEntity;
             Save();
+        }
+
+        public void Update(TEntity oldEntity, TEntity newEntity)
+        {
+            Update(oldEntity.Id, newEntity);
         }
         
         public TEntity GetById(int id)
         {
             return dbSet.Find(entity => entity.Id == id);
         }
-        
 
         /// <summary>
         /// Deletes entity by references.
@@ -62,7 +73,6 @@ namespace WordCount.DataAccess
             Save();
         }
         
-
         private void Save()
         {
             context.SaveChanges();
