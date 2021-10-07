@@ -8,29 +8,29 @@ namespace WordCount.DataAccess
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityModel
     {
         private readonly DbContext context;
-        private readonly List<TEntity> dbSet;
+        private readonly List<TEntity> entityList;
 
         public Repository(DbContext context)
         {
             this.context = context;
-            dbSet = context.Set<TEntity>().ToList();
+            entityList = context.Set<TEntity>().ToList();
         }
 
         public void Insert(TEntity entity)
         {
-            dbSet.Add(entity);
+            entityList.Add(entity);
             Save();
         }
         
         public void Insert(IEnumerable<TEntity> entities)
         {
-            dbSet.AddRange(entities);
+            entityList.AddRange(entities);
             Save();
         }
 
         public void Update(int oldEntityId, TEntity newEntity)
         {
-            int index = dbSet.FindIndex(entity => entity.Id == oldEntityId);
+            int index = entityList.FindIndex(entity => entity.Id == oldEntityId);
 
             if (index == -1)
             {
@@ -39,7 +39,7 @@ namespace WordCount.DataAccess
                 return;
             }
             
-            dbSet[index] = newEntity;
+            entityList[index] = newEntity;
             Save();
         }
 
@@ -50,7 +50,7 @@ namespace WordCount.DataAccess
         
         public TEntity GetById(int id)
         {
-            return dbSet.Find(entity => entity.Id == id);
+            return entityList.Find(entity => entity.Id == id);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace WordCount.DataAccess
         /// <param name="entity"></param>
         public void Delete(TEntity entity)
         {
-            dbSet.Remove(entity);
+            entityList.Remove(entity);
             Save();
         }
         
@@ -69,7 +69,7 @@ namespace WordCount.DataAccess
         /// <param name="predicate"></param>
         public void Delete(Predicate<TEntity> predicate)
         {
-            dbSet.Remove(Find(predicate));
+            entityList.Remove(Find(predicate));
             Save();
         }
         
@@ -80,18 +80,17 @@ namespace WordCount.DataAccess
 
         public IEnumerable<TEntity> All()
         {
-            return dbSet;
+            return entityList;
         }
-        
 
         public TEntity Find(Predicate<TEntity> predicate)
         {
-            return dbSet.Find(predicate);
+            return entityList.Find(predicate);
         }
 
         public IEnumerable<TEntity> FindAll(Predicate<TEntity> predicate)
         {
-            return dbSet.FindAll(predicate);
+            return entityList.FindAll(predicate);
         }
 
         public void SaveAsync()
@@ -99,22 +98,9 @@ namespace WordCount.DataAccess
             context.SaveChangesAsync();
         }
 
-        public virtual IEnumerable<TEntity> Get (Predicate<TEntity> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
+        public virtual GetArranger<TEntity> Get()
         {
-            IQueryable<TEntity> query = dbSet.AsQueryable();
-
-            if (filter != null)
-            {
-                query = query.Where(e => filter(e));
-            }
-
-            if (orderBy != null)
-            {
-                return orderBy(query).ToList();
-            }
-
-            return query.ToList();
+            return new GetArranger<TEntity>(entityList.AsQueryable());
         }
     }
 }
