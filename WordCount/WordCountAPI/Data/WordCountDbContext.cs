@@ -4,10 +4,13 @@ using WordCount.Models;
 
 namespace WordCount.Data
 {
-    public sealed class WordListContext : DbContext
+    public sealed class WordCountDbContext : DbContext
     {
         public DbSet<WordListModel> Wordlist { get; set; }
-        
+        public DbSet<AppearsInModel> AppearsIn { get; set; }
+        public DbSet<ExternalSourcesModel> ExternalSources { get; set; }
+        public DbSet<FileListModel> FileList { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string? connectionString = Environment.GetEnvironmentVariable("database:connectionString");

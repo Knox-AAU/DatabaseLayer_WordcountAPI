@@ -21,7 +21,7 @@ namespace WordCount.Controllers
         {
             // Get all words
             List<string> words = new();
-            new WordListContext().Wordlist.Take(100).ToList().ForEach(wordList => words.Add(wordList.WordName));
+            new WordCountDbContext().Wordlist.Take(100).ToList().ForEach(wordList => words.Add(wordList.WordName));
             return words;
         }
 
