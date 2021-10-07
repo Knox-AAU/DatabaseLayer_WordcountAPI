@@ -7,6 +7,5 @@ namespace WordCount.JsonModels
     {
         public int Amount { get; set; }
         public string Word { get; set; }
-
     }
 }
