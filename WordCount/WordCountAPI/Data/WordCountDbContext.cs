@@ -4,6 +4,10 @@ using WordCount.Models;
 
 namespace WordCount.Data
 {
+    /// <summary>
+    /// Implementation of DbContext responsible for establishing a connection to the database and configuring the
+    /// models on the C# side to match the attributes of the database relations.
+    /// </summary>
     public sealed class WordCountDbContext : DbContext
     {
         public DbSet<WordListModel> Wordlist { get; set; }
