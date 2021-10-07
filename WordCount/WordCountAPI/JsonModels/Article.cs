@@ -1,4 +1,8 @@
-﻿namespace WordCount.JsonModels
+﻿using System;
+using System.Linq;
+using WordCount.DataAccess;
+
+namespace WordCount.JsonModels
 {
     public sealed class Article
     {

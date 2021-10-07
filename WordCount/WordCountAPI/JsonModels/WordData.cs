@@ -1,4 +1,7 @@
-﻿namespace WordCount.JsonModels
+﻿using System;
+using WordCount.DataAccess;
+
+namespace WordCount.JsonModels
 {
     public sealed class WordData
     {
