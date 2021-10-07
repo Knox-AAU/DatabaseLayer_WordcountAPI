@@ -8,8 +8,8 @@ namespace WordCount.DataAccess
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityModel
     {
-        private DbContext _context;
-        private List<TEntity> _dbSet;
+        private readonly DbContext _context;
+        private readonly List<TEntity> _dbSet;
 
         public Repository(DbContext context)
         {
