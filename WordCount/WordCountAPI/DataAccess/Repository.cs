@@ -5,7 +5,7 @@ using Microsoft.Data.Entity;
 
 namespace WordCount.DataAccess
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityModel
+    public sealed class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityModel
     {
         private readonly DbContext context;
         private readonly List<TEntity> entityList;
@@ -98,7 +98,7 @@ namespace WordCount.DataAccess
             context.SaveChangesAsync();
         }
 
-        public virtual GetArranger<TEntity> Get()
+        public GetArranger<TEntity> Get()
         {
             return new GetArranger<TEntity>(entityList.AsQueryable());
         }
