@@ -1,27 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Authentication;
-using WordCount.JsonModels;
 
 namespace WordCount.DataAccess
 {
-    public interface IRepository<T>
+    public interface IRepository<TEntity> where TEntity : EntityModel
     {
-        public void Insert(T entity);
-        public void Update(T employee);
-        public void Delete(Predicate<T> predicate);
-        public void Delete(T entity);
-        public void Save();
-        public IEnumerable<T> GetAll();
-        public void Update(T entity, T oldData);
+        public void Insert(IEnumerable<TEntity> entities);
+        public void Update(int id, TEntity newEntity);
+        public TEntity GetById(int id);
 
-        public T Find(Predicate<T> predicate);
+        /// <summary>
+        /// Deletes entity by references.
+        /// </summary>
+        /// <param name="entity"></param>
+        public void Delete(TEntity entity);
 
-        public void SaveAsync();
+        public void Insert(TEntity entity);
 
-        public IEnumerable<T> FindAll(Predicate<T> predicate);
+        /// <summary>
+        /// Delete first entity satisfying the predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        public void Delete(Predicate<TEntity> predicate);
+        
+        public IEnumerable<TEntity> All();
+        public TEntity Find(Predicate<TEntity> predicate);
+        public IEnumerable<TEntity> FindAll(Predicate<TEntity> predicate);
 
-        public IEnumerable<T> Get(Predicate<T> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null);
+        public IEnumerable<TEntity> Get (
+            Predicate<TEntity> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null);
     }
 }
