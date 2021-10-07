@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Data.Entity;
@@ -27,7 +27,7 @@ namespace WordCount.DataAccess
             entityList.AddRange(entities);
             Save();
         }
-
+        
         public void Update(int oldEntityId, TEntity newEntity)
         {
             int index = entityList.FindIndex(entity => entity.Id == oldEntityId);
@@ -52,7 +52,7 @@ namespace WordCount.DataAccess
         {
             return entityList.Find(entity => entity.Id == id);
         }
-
+        
         /// <summary>
         /// Deletes entity by references.
         /// </summary>
