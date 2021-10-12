@@ -33,31 +33,23 @@ namespace WordCount.Controllers
                 PropertyNameCaseInsensitive = true
             };
 
-            try
+            string jsonString = jsonInput.GetRawText();
+            JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonString, options);
+
+            if (schemaData == null)
             {
-                string jsonString = jsonInput.GetRawText();
-                JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonString, options);
-
-                if (schemaData == null)
-                {
-                    Console.WriteLine("json deserialization failed and returned null.");
-                    return;
-                }
-
-                JsonSchemaModel model = new()
-                {
-                    SchemaName = schemaData.SchemaName,
-                    JsonString = schemaData.SchemaBody.GetRawText()
-                };
-
-                dbContext.JsonSchemas.Add(model);
-                dbContext.SaveChanges();
+                Console.WriteLine("json deserialization failed and returned null.");
+                return;
             }
-            catch
+
+            JsonSchemaModel model = new()
             {
-                // TODO better logging
-                Console.WriteLine("Invalid json schema.");
-            }
+                SchemaName = schemaData.SchemaName,
+                JsonString = schemaData.SchemaBody.GetRawText()
+            };
+
+            dbContext.JsonSchemas.Add(model);
+            dbContext.SaveChanges();
         }
         
         [HttpGet]
