@@ -27,7 +27,13 @@ namespace WordCount.Controllers
         public void PostJsonSchema([FromBody] JsonElement jsonInput)
         {
             WordCountDbContext dbContext = new();
-            JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonInput.ToString());
+
+            JsonSerializerOptions options = new()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            
+            JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonInput.ToString(), options);
 
             JsonSchemaModel model = new()
             {
