@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WordCount.Models
 {
+    [Table("jsonschemas")]
     public sealed class JsonSchemaModel
     {
         [Key]
