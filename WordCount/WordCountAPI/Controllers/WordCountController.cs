@@ -12,8 +12,6 @@ namespace WordCount.Controllers
     [Route("[controller]")]
     public class WordCountController : ControllerBase
     {
-        private readonly GetController getController = new GetController();
-
         [HttpPost]
         public void Post([FromBody] string jsonInput)
         {
