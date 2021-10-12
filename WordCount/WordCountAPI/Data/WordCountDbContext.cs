@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using WordCount.Models;
 
@@ -17,10 +19,16 @@ namespace WordCount.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string? connectionString = Environment.GetEnvironmentVariable("database:connectionString");
+            foreach (DictionaryEntry environmentVariable in Environment.GetEnvironmentVariables())
+            {
+                Console.WriteLine($"{environmentVariable.Key}: {environmentVariable.Value}");
+            }
+            
+            string? connectionString = Environment.GetEnvironmentVariable("database_connectionString");
             
             if (connectionString == null)
             {
+                Console.WriteLine(connectionString);
                 throw new Exception("Connection string not found.");
             }
             
