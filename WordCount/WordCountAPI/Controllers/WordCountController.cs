@@ -36,12 +36,6 @@ namespace WordCount.Controllers
             string jsonString = jsonInput.GetRawText();
             JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonString, options);
 
-            if (schemaData == null)
-            {
-                Console.WriteLine("json deserialization failed and returned null.");
-                return;
-            }
-
             JsonSchemaModel model = new()
             {
                 SchemaName = schemaData.SchemaName,
