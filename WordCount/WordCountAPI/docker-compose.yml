@@ -2,7 +2,7 @@
   api:
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./${ASPNETCORE_ENVIRONMENT}/Dockerfile
     ports:
       - "5000:80"
     networks: 
@@ -10,13 +10,15 @@
     depends_on: 
       - db
     environment: 
-      - database:host=${db_host}
-      - database:username=${db_username}
-      - database:database=${POSTGRES_DATABASE}
-      - database:password=${POSTGRES_PASSWORD}
-      - database:port=${db_port}
-      - database:connectionString=${db_connectionString}
+      - database_host=${db_host}
+      - database_username=${db_username}
+      - database_database=${POSTGRES_DATABASE}
+      - database_password=${POSTGRES_PASSWORD}
+      - database_port=${db_port}
+      - database_connectionString=${db_connectionString}
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+    volumes:
+      - .:/app
   db:
     image: postgres
     environment:
@@ -32,6 +34,6 @@
 networks:
   wordcount:
     driver: bridge
-volumes: 
+volumes:
   dbvolume:
     driver: local
