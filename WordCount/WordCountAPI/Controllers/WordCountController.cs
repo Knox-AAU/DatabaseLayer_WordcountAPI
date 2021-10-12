@@ -33,7 +33,7 @@ namespace WordCount.Controllers
                 PropertyNameCaseInsensitive = true
             };
             
-            JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonInput.ToString(), options);
+            JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonInput.GetRawText(), options);
 
             JsonSchemaModel model = new()
             {
