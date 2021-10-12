@@ -23,15 +23,16 @@ namespace WordCount.Controllers
         }
         
         [HttpPost]
-        [Route("/[controller]/PostJsonSchema/{schemaName}")]
-        public void PostJsonSchema([FromBody] JsonElement jsonInput, string schemaName)
+        [Route("/[controller]/PostJsonSchema/")]
+        public void PostJsonSchema([FromBody] JsonElement jsonInput)
         {
-            var dbContext = new WordCountDbContext();
+            WordCountDbContext dbContext = new();
+            JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonInput.ToString());
 
-            var model = new JsonSchemaModel
+            JsonSchemaModel model = new()
             {
-                SchemaName = schemaName,
-                JsonString = jsonInput.ToString()
+                SchemaName = schemaData.SchemaName,
+                JsonString = schemaData.SchemaBody
             };
 
             dbContext.JsonSchemas.Add(model);
