@@ -16,6 +16,7 @@ namespace WordCount.Data
         public DbSet<AppearsInModel> AppearsIn { get; set; }
         public DbSet<ExternalSourcesModel> ExternalSources { get; set; }
         public DbSet<FileListModel> FileList { get; set; }
+        public DbSet<JsonSchemaModel> JsonSchemas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
