@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
@@ -27,22 +28,36 @@ namespace WordCount.Controllers
         public void PostJsonSchema([FromBody] JsonElement jsonInput)
         {
             WordCountDbContext dbContext = new();
-
             JsonSerializerOptions options = new()
             {
                 PropertyNameCaseInsensitive = true
             };
 
-            JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonInput.GetRawText(), options);
-
-            JsonSchemaModel model = new()
+            try
             {
-                SchemaName = schemaData.SchemaName,
-                JsonString = schemaData.SchemaBody.GetRawText()
-            };
+                string jsonString = jsonInput.GetRawText();
+                JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonString, options);
 
-            dbContext.JsonSchemas.Add(model);
-            dbContext.SaveChanges();
+                if (schemaData == null)
+                {
+                    Console.WriteLine("json deserialization failed and returned null.");
+                    return;
+                }
+
+                JsonSchemaModel model = new()
+                {
+                    SchemaName = schemaData.SchemaName,
+                    JsonString = schemaData.SchemaBody.GetRawText()
+                };
+
+                dbContext.JsonSchemas.Add(model);
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                // TODO better logging
+                Console.WriteLine("Invalid json schema.");
+            }
         }
         
         [HttpGet]
