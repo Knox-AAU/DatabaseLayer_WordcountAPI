@@ -23,7 +23,7 @@ namespace WordCount.Controllers
         }
         
         [HttpPost]
-        [Route("/[controller]/PostJsonSchema/")]
+        [Route("/[controller]/PostJsonSchema")]
         public void PostJsonSchema([FromBody] JsonElement jsonInput)
         {
             WordCountDbContext dbContext = new();
@@ -32,13 +32,13 @@ namespace WordCount.Controllers
             {
                 PropertyNameCaseInsensitive = true
             };
-            
+
             JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonInput.GetRawText(), options);
 
             JsonSchemaModel model = new()
             {
                 SchemaName = schemaData.SchemaName,
-                JsonString = schemaData.SchemaBody
+                JsonString = schemaData.SchemaBody.GetRawText()
             };
 
             dbContext.JsonSchemas.Add(model);
