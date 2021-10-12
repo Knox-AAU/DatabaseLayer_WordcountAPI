@@ -19,16 +19,10 @@ namespace WordCount.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            foreach (DictionaryEntry environmentVariable in Environment.GetEnvironmentVariables())
-            {
-                Console.WriteLine($"{environmentVariable.Key}: {environmentVariable.Value}");
-            }
-            
             string? connectionString = Environment.GetEnvironmentVariable("database_connectionString");
             
             if (connectionString == null)
             {
-                Console.WriteLine(connectionString);
                 throw new Exception("Connection string not found.");
             }
             
