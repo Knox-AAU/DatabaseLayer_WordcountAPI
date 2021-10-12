@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
@@ -22,17 +21,16 @@ namespace WordCount.Controllers
         [Route("/[controller]/{id:int}")]
         public WordListModel Get(int id)
         {
-            Console.WriteLine(id);
             WordListModel entity = new WordCountDbContext().Wordlist.Find(id);
 
             return entity;
         }
         
         [HttpGet]
-        [Route("/[controller]/{test}")]
-        public void Get(string test)
+        [Route("/[controller]/WordRatios")]
+        public string GetWordRatios()
         {
-            Console.WriteLine(test);
+            var dbContext = new WordCountDbContext();
         }
     }
 }
