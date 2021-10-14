@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using WordCount.Models;
 
@@ -14,10 +16,11 @@ namespace WordCount.Data
         public DbSet<AppearsInModel> AppearsIn { get; set; }
         public DbSet<ExternalSourcesModel> ExternalSources { get; set; }
         public DbSet<FileListModel> FileList { get; set; }
+        public DbSet<JsonSchemaModel> JsonSchemas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string? connectionString = Environment.GetEnvironmentVariable("database:connectionString");
+            string? connectionString = Environment.GetEnvironmentVariable("database_connectionString");
             
             if (connectionString == null)
             {

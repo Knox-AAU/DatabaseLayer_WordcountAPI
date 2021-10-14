@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WordCount.Models
 {
+    [Table("appearsin")]
     public sealed class AppearsInModel
     {
         [Key]
@@ -14,7 +15,7 @@ namespace WordCount.Models
         public string WordName { get; set; }
         [Column("filepath", TypeName = "text")]
         public string FilePath { get; set; }
-        [Column("amount", TypeName = "text")]
+        [Column("articletitle", TypeName = "text")]
         public string ArticleTitle { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WordCount.Models
 {
+    [Table("filelist")]
     public sealed class FileListModel
     {
         [Key]
