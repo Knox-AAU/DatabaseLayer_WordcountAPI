@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using WordCount.Data;
 using WordCount.JsonModels;
 using WordCount.Models;
@@ -16,21 +13,6 @@ namespace WordCount.Controllers
     [Route("[controller]")]
     public class WordCountController : ControllerBase
     {
-        [HttpGet]
-        public IEnumerable<string> GetAll()
-        {
-            // Get all words
-            List<string> words = new();
-            new WordCountDbContext().Wordlist.Take(1).ToList().ForEach(wordList => words.Add(wordList.WordName));
-            return words;
-        }
-
-        [HttpGet]
-        [Route("/[controller]/{id:int}")]
-        public void Get([FromBody] int id)
-        {
-        }
-
         [HttpPost]
         public void Post([FromBody] string jsonInput)
         {
@@ -40,5 +22,35 @@ namespace WordCount.Controllers
                 // Store in DB
             }
         }
+        
+        
+        [HttpGet]
+        public IEnumerable<string> GetAll()
+        {
+            // Get all words
+            List<string> words = new();
+            new WordCountDbContext().Wordlist.Take(100).ToList().ForEach(wordList => words.Add(wordList.WordName));
+            return words;
+        }
+        
+        [HttpGet]
+        [Route("/[controller]/{id:int}")]
+        public WordListModel Get(int id)
+        {
+            WordListModel entity = new WordCountDbContext().Wordlist.Find(id);
+
+            return entity;
+        }
+        
+        [HttpGet]
+        [Route("/[controller]/WordRatios")]
+        public string GetWordRatios()
+        {
+            var dbContext = new WordCountDbContext();
+
+            return string.Empty;
+        }
+        
+        
     }
 }
