@@ -6,7 +6,8 @@ using Microsoft.Data.Entity;
 namespace WordCount.DataAccess
 {
     public sealed class Repository<TEntity, TKey> 
-        : ReadOnlyRepository<TEntity, TKey> where TEntity : DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>
+        : ReadOnlyRepository<TEntity, TKey> where TEntity : DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>, 
+        IRepository<TEntity, TKey>
     {
         private readonly DbContext context;
         private readonly List<TEntity> entityList;
