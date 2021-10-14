@@ -23,28 +23,6 @@ namespace WordCount.Controllers
             }
         }
         
-        [HttpPost]
-        [Route("/[controller]/PostJsonSchema")]
-        public void PostJsonSchema([FromBody] JsonElement jsonInput)
-        {
-            WordCountDbContext dbContext = new();
-            JsonSerializerOptions options = new()
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            string jsonString = jsonInput.GetRawText();
-            JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonString, options);
-
-            JsonSchemaModel model = new()
-            {
-                SchemaName = schemaData.SchemaName,
-                JsonString = schemaData.SchemaBody.GetRawText()
-            };
-
-            dbContext.JsonSchemas.Add(model);
-            dbContext.SaveChanges();
-        }
         
         [HttpGet]
         public IEnumerable<string> GetAll()
@@ -72,5 +50,7 @@ namespace WordCount.Controllers
 
             return string.Empty;
         }
+        
+        
     }
 }
