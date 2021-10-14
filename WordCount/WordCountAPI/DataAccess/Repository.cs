@@ -5,12 +5,15 @@ using Microsoft.Data.Entity;
 
 namespace WordCount.DataAccess
 {
-    public sealed class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityModel
+    public sealed class Repository<TEntity, TKey> 
+        : ReadOnlyRepository<TEntity, TKey> where TEntity : DatabaseEntityModel<TKey> 
+            where TKey : IEquatable<TKey>,
+            IRepository<TEntity, TKey>
     {
         private readonly DbContext context;
         private readonly List<TEntity> entityList;
 
-        public Repository(DbContext context)
+        public Repository(DbContext context) : base(context)
         {
             this.context = context;
             entityList = context.Set<TEntity>().ToList();
@@ -28,9 +31,9 @@ namespace WordCount.DataAccess
             Save();
         }
         
-        public void Update(int oldEntityId, TEntity newEntity)
+        public void Update(TKey oldEntityId, TEntity newEntity)
         {
-            int index = entityList.FindIndex(entity => entity.Id == oldEntityId);
+            int index = entityList.FindIndex(entity => entity.PrimaryKey.Equals(oldEntityId));
 
             if (index == -1)
             {
@@ -45,13 +48,9 @@ namespace WordCount.DataAccess
 
         public void Update(TEntity oldEntity, TEntity newEntity)
         {
-            Update(oldEntity.Id, newEntity);
+            Update(oldEntity.PrimaryKey, newEntity);
         }
-        
-        public TEntity GetById(int id)
-        {
-            return entityList.Find(entity => entity.Id == id);
-        }
+   
         
         /// <summary>
         /// Deletes entity by references.
@@ -76,31 +75,6 @@ namespace WordCount.DataAccess
         private void Save()
         {
             context.SaveChanges();
-        }
-
-        public IEnumerable<TEntity> All()
-        {
-            return entityList;
-        }
-
-        public TEntity Find(Predicate<TEntity> predicate)
-        {
-            return entityList.Find(predicate);
-        }
-
-        public IEnumerable<TEntity> FindAll(Predicate<TEntity> predicate)
-        {
-            return entityList.FindAll(predicate);
-        }
-
-        public void SaveAsync()
-        {
-            context.SaveChangesAsync();
-        }
-
-        public GetArranger<TEntity> Get()
-        {
-            return new GetArranger<TEntity>(entityList.AsQueryable());
         }
     }
 }

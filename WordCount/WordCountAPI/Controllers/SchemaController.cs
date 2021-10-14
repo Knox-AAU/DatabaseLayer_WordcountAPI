@@ -1,8 +1,6 @@
-using System.Linq;
-using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using WordCount.Data;
+using WordCount.DataAccess;
 using WordCount.JsonModels;
 using WordCount.Models;
 
@@ -10,54 +8,48 @@ namespace WordCount.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class SchemaController: ControllerBase
+    public class SchemaController : ControllerBase
     {
-        
+        private readonly IRepository<JsonSchema, string> repository;
+
+        public SchemaController(IRepository<JsonSchema, string> repos)
+        {
+            repository = repos;
+        }
+
         /// <summary>
-        /// Method for posting a JSON schema to the database which can then be used later for validation of input.
+        ///     Method for posting a JSON schema to the database which can then be used later for validation of input.
         /// </summary>
         /// <param name="jsonInput">
-        /// A JSON element consisting of the keys "schemaName" and "schemaBody". <br/>
-        /// The value of key "schemaName" is the primary key for the given schema. <br/>
-        /// The value of key "schemaBody" is the schema itself.
+        ///     A JSON element consisting of the keys "schemaName" and "schemaBody". <br />
+        ///     The value of key "schemaName" is the primary key for the given schema. <br />
+        ///     The value of key "schemaBody" is the schema itself.
         /// </param>
         [HttpPost]
         [Route("/[controller]")]
         public IActionResult PostJsonSchema([FromBody] JsonElement jsonInput)
         {
-            WordCountDbContext dbContext = new();
-            JsonSerializerOptions options = new()
-            {
-                PropertyNameCaseInsensitive = true
-            };
+            JsonSerializerOptions options = new() {PropertyNameCaseInsensitive = true};
 
             string jsonString = jsonInput.GetRawText();
-            JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonString, options);
+            JsonSchemaInputModel? schemaInput = JsonSerializer.Deserialize<JsonSchemaInputModel>(jsonString, options);
 
-            if (schemaData == null)
-            {
+            if (schemaInput == null)
                 // 400 Unprocessable entity 
                 return new ObjectResult("Wrong body syntax, does not follow schema") {StatusCode = 400};
-            }
-            
-            JsonSchemaModel model = new()
+
+            JsonSchema model = new()
             {
-                SchemaName = schemaData.SchemaName,
-                JsonString = schemaData.SchemaBody.GetRawText()
+                SchemaName = schemaInput.SchemaName, JsonString = schemaInput.SchemaBody.GetRawText()
             };
 
-            if (dbContext.JsonSchemas.Find(model.SchemaName) != null)
-            {
+            if (repository.Find(schema => schema.PrimaryKey == model.SchemaName) == null)
                 // 403 forbidden
                 return new ObjectResult("Duplicate value") {StatusCode = 403};
-            }
-            
-            dbContext.JsonSchemas.Add(model);                
-            dbContext.SaveChanges();
-    
+            repository.Insert(model);
+
             // status 200 OK
             return new ObjectResult("Ok") {StatusCode = 200};
         }
-
     }
 }

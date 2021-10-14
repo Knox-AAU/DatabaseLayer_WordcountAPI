@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Data.Entity;
+using Microsoft.Data.Entity.Metadata.Internal;
+using WordCount.Data;
+using WordCount.Models;
 
 namespace WordCount.DataAccess
 {
-    public sealed class ReadOnlyRepository<T> : IReadOnlyRepository<T> where T : EntityModel
+    public class ReadOnlyRepository<T, TKey> : IReadOnlyRepository<T, TKey> 
+        where T : DatabaseEntityModel<TKey> 
+                    where TKey : IEquatable<TKey>
     {
-        private readonly IQueryable<T> entities;
+        private DbSet<T> entities;
 
         public ReadOnlyRepository(DbContext context)
         {
-            entities = context.Set<T>().AsNoTracking();
+            entities = context.Set<T>();
         }
 
         /// <summary>
@@ -19,9 +24,9 @@ namespace WordCount.DataAccess
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public T GetById(int id)
+        public T GetById(TKey key)
         {
-            return entities.First(e => e.Id == id);
+            return entities.First(a => a.PrimaryKey.Equals(key));
         }
 
         public IEnumerable<T> All()
@@ -31,7 +36,15 @@ namespace WordCount.DataAccess
 
         public T Find(Predicate<T> predicate)
         {
-            return entities.First(e => predicate(e));
+
+            try
+            {
+                return entities.First(e => predicate(e));
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         public IEnumerable<T> FindAll(Predicate<T> predicate)
@@ -43,5 +56,10 @@ namespace WordCount.DataAccess
         {
             return new GetArranger<T>(entities);
         }
+    }
+
+    public abstract class DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>
+    {
+        public abstract TKey PrimaryKey { get; }
     }
 }

@@ -4,17 +4,32 @@ using System.Linq;
 
 namespace WordCount.DataAccess
 {
-    public interface IRepository<TEntity> where TEntity : EntityModel
+    public interface IRepository<TEntity, TKey> : IReadOnlyRepository<TEntity, TKey>
+        where TEntity : DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>
     {
+        /// <summary>
+        /// Insert and each of the entities
+        /// </summary>
+        /// <param name="entities"></param>
         public void Insert(IEnumerable<TEntity> entities);
-        public void Update(int id, TEntity newEntity);
-        public TEntity GetById(int id);
+        
+        /// <summary>
+        /// Updates entity in the database
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="newEntity"></param>
+        public void Update(TKey id, TEntity newEntity);
 
         /// <summary>
         /// Deletes entity by references.
         /// </summary>
         /// <param name="entity"></param>
         public void Delete(TEntity entity);
+
+        /// <summary>
+        /// Inserts and saves entity to database
+        /// </summary>
+        /// <param name="entity"></param>
 
         public void Insert(TEntity entity);
 
@@ -23,10 +38,7 @@ namespace WordCount.DataAccess
         /// </summary>
         /// <param name="predicate"></param>
         public void Delete(Predicate<TEntity> predicate);
-        
-        public IEnumerable<TEntity> All();
-        public TEntity Find(Predicate<TEntity> predicate);
-        public IEnumerable<TEntity> FindAll(Predicate<TEntity> predicate);
-        public GetArranger<TEntity> Get();
+
+
     }
 }
