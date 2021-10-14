@@ -12,6 +12,15 @@ namespace WordCount.Controllers
     [Route("[controller]")]
     public class SchemaController: ControllerBase
     {
+        
+        /// <summary>
+        /// Method for posting a JSON schema to the database which can then be used later for validation of input.
+        /// </summary>
+        /// <param name="jsonInput">
+        /// A JSON element consisting of the keys "schemaName" and "schemaBody". <br/>
+        /// The value of key "schemaName" is the primary key for the given schema. <br/>
+        /// The value of key "schemaBody" is the schema itself.
+        /// </param>
         [HttpPost]
         [Route("/[controller]")]
         public IActionResult PostJsonSchema([FromBody] JsonElement jsonInput)
