@@ -34,6 +34,7 @@ namespace WordCount.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasPostgresExtension("citext");
+            modelBuilder.Entity<AppearsInModel>().HasNoKey();
         }
     }
 }
