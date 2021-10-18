@@ -4,7 +4,8 @@ using System.Linq;
 
 namespace WordCount.DataAccess
 {
-    public interface IReadOnlyRepository<TEntity, in TKey> where TEntity : DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>
+    public interface IReadOnlyRepository<TEntity, in TKey> 
+        where TEntity : DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>
     {
         public TEntity GetById(TKey id);
         public IEnumerable<TEntity> All();

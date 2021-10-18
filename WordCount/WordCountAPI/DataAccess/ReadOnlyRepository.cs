@@ -10,14 +10,25 @@ namespace WordCount.DataAccess
 {
     public class ReadOnlyRepository<T, TKey> : IReadOnlyRepository<T, TKey> 
         where T : DatabaseEntityModel<TKey> 
-                    where TKey : IEquatable<TKey>
+        where TKey : IEquatable<TKey>
     {
-        private DbSet<T> entities;
+        private ICollection<T> _entitiesSet;
 
         public ReadOnlyRepository(DbContext context)
         {
-            entities = context.Set<T>();
+            _entitiesSet = context.Set<T>().ToList();
         }
+
+        public ReadOnlyRepository(DbSet<T> entitySet)
+        {
+            _entitiesSet = entitySet.ToList();
+        }
+        
+        public ReadOnlyRepository(ICollection<T> entities)
+        {
+            _entitiesSet = entities;
+        }
+
 
         /// <summary>
         /// Find first entity with matching id
@@ -26,12 +37,12 @@ namespace WordCount.DataAccess
         /// <returns></returns>
         public T GetById(TKey key)
         {
-            return entities.First(a => a.PrimaryKey.Equals(key));
+            return _entitiesSet.First(a => a.PrimaryKey.Equals(key));
         }
 
         public IEnumerable<T> All()
         {
-            return entities;
+            return _entitiesSet;
         }
 
         public T Find(Predicate<T> predicate)
@@ -39,7 +50,7 @@ namespace WordCount.DataAccess
 
             try
             {
-                return entities.First(e => predicate(e));
+                return _entitiesSet.First(e => predicate(e));
             }
             catch (Exception e)
             {
@@ -49,17 +60,12 @@ namespace WordCount.DataAccess
 
         public IEnumerable<T> FindAll(Predicate<T> predicate)
         {
-            return entities.Where(e => predicate(e));
+            return _entitiesSet.Where(e => predicate(e));
         }
 
         public GetArranger<T> Get()
         {
-            return new GetArranger<T>(entities);
+            return new GetArranger<T>(_entitiesSet.AsQueryable());
         }
-    }
-
-    public abstract class DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>
-    {
-        public abstract TKey PrimaryKey { get; }
     }
 }

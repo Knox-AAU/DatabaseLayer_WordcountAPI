@@ -6,8 +6,10 @@ using Microsoft.Data.Entity;
 namespace WordCount.DataAccess
 {
     public sealed class Repository<TEntity, TKey> 
-        : ReadOnlyRepository<TEntity, TKey> where TEntity : DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>, 
-        IRepository<TEntity, TKey>
+        : ReadOnlyRepository<TEntity, TKey>, IRepository<TEntity, TKey>
+        where TEntity : DatabaseEntityModel<TKey>
+        where TKey : IEquatable<TKey>
+        
     {
         private readonly DbContext context;
         private readonly List<TEntity> entityList;
@@ -16,6 +18,16 @@ namespace WordCount.DataAccess
         {
             this.context = context;
             entityList = context.Set<TEntity>().ToList();
+        }
+
+        public Repository(DbSet<TEntity> set) : base(set)
+        {
+            entityList = set.ToList();
+        }
+        
+        public Repository(ICollection<TEntity> set) : base(set)
+        {
+            entityList = set.ToList();
         }
 
         public void Insert(TEntity entity)
