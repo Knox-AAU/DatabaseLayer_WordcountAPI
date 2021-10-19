@@ -12,21 +12,31 @@ namespace WordCount.DataAccess
         where T : DatabaseEntityModel<TKey> 
         where TKey : IEquatable<TKey>
     {
-        private ICollection<T> _entitiesSet;
+        public IReadOnlyList<T> EntitySet => InternalEntitySet;
+        protected List<T> InternalEntitySet { get; }
 
         public ReadOnlyRepository(DbContext context)
         {
-            _entitiesSet = context.Set<T>().ToList();
+            InternalEntitySet = context.Set<T>().ToList();
         }
 
         public ReadOnlyRepository(DbSet<T> entitySet)
         {
-            _entitiesSet = entitySet.ToList();
+            if (entitySet == null)
+            {
+                throw new NullReferenceException();
+            }
+            
+            InternalEntitySet = entitySet.ToList();
         }
         
-        public ReadOnlyRepository(ICollection<T> entities)
+        public ReadOnlyRepository(List<T> internalEntity)
         {
-            _entitiesSet = entities;
+            if (internalEntity == null)
+            {
+                throw new NullReferenceException();
+            }
+            InternalEntitySet = internalEntity;
         }
 
 
@@ -37,19 +47,19 @@ namespace WordCount.DataAccess
         /// <returns></returns>
         public T GetById(TKey key)
         {
-            return _entitiesSet.First(a => a.PrimaryKey.Equals(key));
+            return InternalEntitySet.First(a => a.PrimaryKey.Equals(key));
         }
 
         public IEnumerable<T> All()
         {
-            return _entitiesSet;
+            return InternalEntitySet;
         }
 
         public T Find(Predicate<T> predicate)
         {
             try
             {
-                return _entitiesSet.First(e => predicate(e));
+                return InternalEntitySet.First(e => predicate(e));
             }
             catch (Exception e)
             {
@@ -61,7 +71,7 @@ namespace WordCount.DataAccess
         {
             try
             {
-                return _entitiesSet.ToList().First(e=> e.PrimaryKey.Equals(entity.PrimaryKey));
+                return InternalEntitySet.ToList().First(e=> e.PrimaryKey.Equals(entity.PrimaryKey));
             }
             catch (Exception e)
             {
@@ -71,12 +81,12 @@ namespace WordCount.DataAccess
 
         public IEnumerable<T> FindAll(Predicate<T> predicate)
         {
-            return _entitiesSet.Where(e => predicate(e));
+            return InternalEntitySet.Where(e => predicate(e));
         }
 
         public GetArranger<T> Get()
         {
-            return new GetArranger<T>(_entitiesSet.AsQueryable());
+            return new GetArranger<T>(InternalEntitySet.AsQueryable());
         }
     }
 }

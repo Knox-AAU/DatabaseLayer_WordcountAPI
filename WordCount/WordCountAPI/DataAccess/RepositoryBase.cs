@@ -7,41 +7,32 @@ namespace WordCount.DataAccess
 {
     public class RepositoryBase<TEntity, TKey> : ReadOnlyRepository<TEntity, TKey>, IRepository<TEntity, TKey> where TEntity : DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>
     {
-        protected List<TEntity> EntityList;
         public event Action ListChanged;
-
-        public RepositoryBase(DbSet<TEntity> set) : base(set)
-        {
-            EntityList = set != null ? set.ToList() : new List<TEntity>();
-        }
-
-        public RepositoryBase(ICollection<TEntity> set) : base(set)
-        {
-            EntityList = set != null ? set.ToList() : new List<TEntity>();
-        }
-
-
+        
+        public RepositoryBase(DbContext context) : base(context) { }
+        public RepositoryBase(DbSet<TEntity> entitySet) : base(entitySet) { }
+        public RepositoryBase(List<TEntity> internalEntity) : base(internalEntity) { }
+        
         public virtual void Insert(TEntity entity)
         {
-            var a = Find(entity);
-            if (a != null)
+            if (Find(entity) != null)
             {
                 throw new ArgumentException("Duplicate entity");
             }
 
-            EntityList.Add(entity);
+            InternalEntitySet.Add(entity);
             ListChanged?.Invoke();
         }
 
         public virtual void Insert(IEnumerable<TEntity> entities)
         {
-            EntityList.AddRange(entities);
+            InternalEntitySet.AddRange(entities);
             ListChanged?.Invoke();
         }
 
         public virtual void Update(TKey oldEntityId, TEntity newEntity)
         {
-            int index = EntityList.FindIndex(entity => entity.PrimaryKey.Equals(oldEntityId));
+            int index = InternalEntitySet.FindIndex(entity => entity.PrimaryKey.Equals(oldEntityId));
 
             if (index == -1)
             {
@@ -49,7 +40,7 @@ namespace WordCount.DataAccess
                 return;
             }
             
-            EntityList[index] = newEntity;
+            InternalEntitySet[index] = newEntity;
             ListChanged?.Invoke();
         }
 
@@ -65,7 +56,7 @@ namespace WordCount.DataAccess
         /// <param name="entity"></param>
         public virtual void Delete(TEntity entity)
         {
-            EntityList.Remove(entity);
+            InternalEntitySet.Remove(entity);
             ListChanged?.Invoke();
         }
 
@@ -75,7 +66,7 @@ namespace WordCount.DataAccess
         /// <param name="predicate"></param>
         public virtual void Delete(Predicate<TEntity> predicate)
         {
-            EntityList.Remove(Find(predicate));
+            InternalEntitySet.Remove(Find(predicate));
             ListChanged?.Invoke();
         }
     }
