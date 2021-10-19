@@ -16,9 +16,8 @@ namespace WordCount.Controllers
         [HttpPost]
         public void Post([FromBody] JsonElement jsonElement)
         {
-            var pls = new WordCountDbContext();
-
-            var schema = pls.JsonSchemas.ToList().Find(s => s.SchemaName == "wordcount");
+            WordCountDbContext dbContext = new();
+            var schema = dbContext.JsonSchemas.ToList().Find(s => s.SchemaName == "wordcount");
 
             string jsonInput = jsonElement.GetRawText();
 
@@ -56,12 +55,12 @@ namespace WordCount.Controllers
                         appearsInModels.Add(appearsInModel);
                     }
 
-                    pls.Add(fileListModel);
-                    pls.AddRange(words);
-                    pls.AddRange(appearsInModels);
+                    dbContext.FileList.Add(fileListModel);
+                    dbContext.Wordlist.AddRange(words);
+                    dbContext.AppearsIn.AddRange(appearsInModels);
                 }
 
-                pls.SaveChanges();
+                dbContext.SaveChanges();
                 
                 Response.StatusCode = 200;
                 Console.WriteLine($"Added {articles.Length} entries.");
