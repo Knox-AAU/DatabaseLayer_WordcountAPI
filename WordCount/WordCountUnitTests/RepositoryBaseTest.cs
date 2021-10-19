@@ -192,6 +192,20 @@ namespace WordCountUnitTests
             Assert.False(repos.EntitySet.Contains(testObj1));
         }
         
+        [Test]
+        public void Update_NonExistingGivesArgumentException()
+        {
+            string KeyToRemove = "123bvd";
+            DbObject testObj = new DbObject {Key = KeyToRemove};
+
+            List<DbObject> testData = new() {};
+
+            RepositoryBase<DbObject, string> repos = new(testData);
+
+
+            Assert.Throws<ArgumentException>(() => repos.Update(testObj.Key, testObj));
+        }
+        
         
     }
 }
