@@ -47,10 +47,21 @@ namespace WordCount.DataAccess
 
         public T Find(Predicate<T> predicate)
         {
-
             try
             {
                 return _entitiesSet.First(e => predicate(e));
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+        
+        public T Find(T entity)
+        {
+            try
+            {
+                return _entitiesSet.ToList().First(e=> e.PrimaryKey.Equals(entity.PrimaryKey));
             }
             catch (Exception e)
             {
