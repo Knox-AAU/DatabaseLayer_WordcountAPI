@@ -14,7 +14,7 @@ namespace WordCount.DataAccess
     {
         public IReadOnlyList<T> EntitySet => InternalEntitySet;
         protected List<T> InternalEntitySet { get; }
-
+        
         public ReadOnlyRepository(DbContext context)
         {
             InternalEntitySet = context.Set<T>().ToList();
@@ -49,12 +49,21 @@ namespace WordCount.DataAccess
         {
             return InternalEntitySet.First(a => a.PrimaryKey.Equals(key));
         }
-
+        
+        /// <summary>
+        /// Get all elements of the entities
+        /// </summary>
+        /// <returns>All entities</returns>
         public IEnumerable<T> All()
         {
             return InternalEntitySet;
         }
 
+        /// <summary>
+        /// Find the first entity satisfying the predicate
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>Entity satisfying predicate</returns>
         public T Find(Predicate<T> predicate)
         {
             try
@@ -67,6 +76,11 @@ namespace WordCount.DataAccess
             }
         }
         
+        /// <summary>
+        /// Finds entity with equal primary key
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public T Find(T entity)
         {
             try
@@ -79,6 +93,11 @@ namespace WordCount.DataAccess
             }
         }
 
+        /// <summary>
+        /// Finds all elements satisfying predicate.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns>All entities satisfying the predicate</returns>
         public IEnumerable<T> FindAll(Predicate<T> predicate)
         {
             return InternalEntitySet.Where(e => predicate(e));

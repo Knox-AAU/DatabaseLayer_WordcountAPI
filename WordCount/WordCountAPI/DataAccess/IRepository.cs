@@ -16,9 +16,9 @@ namespace WordCount.DataAccess
         /// <summary>
         /// Updates entity in the database
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="EntityKey"></param>
         /// <param name="newEntity"></param>
-        public void Update(TKey id, TEntity newEntity);
+        public void Update(TKey EntityKey, TEntity newEntity);
 
         /// <summary>
         /// Deletes entity by references.

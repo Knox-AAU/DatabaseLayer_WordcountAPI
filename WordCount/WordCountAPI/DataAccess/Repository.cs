@@ -9,7 +9,6 @@ namespace WordCount.DataAccess
         : RepositoryBase<TEntity, TKey>
         where TEntity : DatabaseEntityModel<TKey>
         where TKey : IEquatable<TKey>
-        
     {
         private readonly DbContext context;
 
@@ -19,8 +18,12 @@ namespace WordCount.DataAccess
             ListChanged += Save;
         }
 
+        /// <summary>
+        /// Saves the elements in the DbSet to the database.
+        /// </summary>
         private void Save()
         {
+            context.AddRange(InternalEntitySet);
             context.SaveChanges();
         }
     }

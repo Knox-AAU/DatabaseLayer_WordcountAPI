@@ -13,6 +13,12 @@ namespace WordCount.DataAccess
         public RepositoryBase(DbSet<TEntity> entitySet) : base(entitySet) { }
         public RepositoryBase(List<TEntity> internalEntity) : base(internalEntity) { }
         
+        /// <summary>
+        /// Insert the entity into the internal list, unless already existing and invokes functions subscribed to
+        /// ListChanged.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <exception cref="ArgumentException"></exception>
         public virtual void Insert(TEntity entity)
         {
             if (Find(entity) != null)
@@ -24,15 +30,27 @@ namespace WordCount.DataAccess
             ListChanged?.Invoke();
         }
 
+        /// <summary>
+        /// Insert the entity into the internal list, unless already existing and invokes functions subscribed to
+        /// ListChanged event.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <exception cref="ArgumentException"></exception>
         public virtual void Insert(IEnumerable<TEntity> entities)
         {
             InternalEntitySet.AddRange(entities);
             ListChanged?.Invoke();
         }
 
-        public virtual void Update(TKey oldEntityId, TEntity newEntity)
+        /// <summary>
+        /// Updates existing entity in internal list and invokes functions subscribed to ListChanged event.
+        /// ListChanged.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public virtual void Update(TKey EntityKey, TEntity newEntity)
         {
-            int index = InternalEntitySet.FindIndex(entity => entity.PrimaryKey.Equals(oldEntityId));
+            int index = InternalEntitySet.FindIndex(entity => entity.PrimaryKey.Equals(EntityKey));
 
             if (index == -1)
             {
@@ -43,6 +61,12 @@ namespace WordCount.DataAccess
             ListChanged?.Invoke();
         }
 
+        /// <summary>
+        /// Updates existing entity in internal list and invokes functions subscribed to ListChanged event.
+        /// ListChanged.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <exception cref="ArgumentException"></exception>
         public virtual void Update(TEntity oldEntity, TEntity newEntity)
         {
             Update(oldEntity.PrimaryKey, newEntity);
