@@ -14,13 +14,63 @@ namespace WordCount.Controllers
     public class WordCountController : ControllerBase
     {
         [HttpPost]
-        public void Post([FromBody] string jsonInput)
+        public void Post([FromBody] JsonElement jsonElement)
         {
+            var pls = new WordCountDbContext();
+
+            var schema = pls.JsonSchemas.ToList().Find(s => s.SchemaName == "wordcount");
+
+            string jsonInput = jsonElement.GetRawText();
+
             // Get schema and use for validating
-            if (new JsonValidator<Article[]>("").IsValid(jsonInput, out Article[] articles))
+            if (new JsonValidator<Article[]>(schema.JsonString).IsValid(jsonInput, out Article[] articles))
             {
-                // Store in DB
+                foreach (Article article in articles)
+                {
+                    FileListModel fileListModel = new()
+                    {
+                        ArticleTitle = article.ArticleTitle,
+                        FilePath = article.FilePath,
+                        TotalWordsInArticle = article.TotalWordsInArticle
+                    };
+                    
+                    List<WordListModel> words = new();
+                    List<AppearsInModel> appearsInModels = new();
+
+                    foreach (WordData articleWord in article.Words)
+                    {
+                        WordListModel wordListModel = new()
+                        {
+                            WordName = articleWord.Word,
+                        };
+
+                        AppearsInModel appearsInModel = new()
+                        {
+                            Amount = articleWord.Amount,
+                            WordName = articleWord.Word,
+                            ArticleTitle = article.ArticleTitle,
+                            FilePath = article.FilePath
+                        };
+                        
+                        words.Add(wordListModel);
+                        appearsInModels.Add(appearsInModel);
+                    }
+
+                    pls.Add(fileListModel);
+                    pls.AddRange(words);
+                    pls.AddRange(appearsInModels);
+                }
+
+                pls.SaveChanges();
+                
+                Response.StatusCode = 200;
+                Console.WriteLine($"Added {articles.Length} entries.");
             }
+            else
+            {
+                Response.StatusCode = 400;
+            }
+
         }
         
         
