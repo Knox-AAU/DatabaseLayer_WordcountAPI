@@ -36,13 +36,7 @@ namespace WordCount.Controllers
                 
             foreach (Article article in articles)
             {
-                FileListModel fileListModel = new()
-                {
-                    SourceId = 0,
-                    ArticleTitle = article.ArticleTitle,
-                    FilePath = article.FilePath,
-                    TotalWordsInArticle = article.TotalWordsInArticle
-                };
+                FileListModel fileListModel = JsonDbUtility.ArticleToFileList(article);
 
                 if (dbContext.FileList.ToList().Exists(a => a.ArticleTitle == fileListModel.ArticleTitle))
                 {
@@ -63,18 +57,8 @@ namespace WordCount.Controllers
 
                 foreach (WordData articleWord in article.Words)
                 {
-                    WordListModel wordListModel = new()
-                    {
-                        WordName = articleWord.Word,
-                    };
-
-                    AppearsInModel appearsInModel = new()
-                    {
-                        Amount = articleWord.Amount,
-                        WordName = articleWord.Word,
-                        ArticleTitle = article.ArticleTitle,
-                        FilePath = article.FilePath
-                    };
+                    WordListModel wordListModel = JsonDbUtility.WordDataToWordList(articleWord);
+                    AppearsInModel appearsInModel = JsonDbUtility.ArticleWordDataToAppearsIn(article, articleWord);
 
                     if (dbContext.Wordlist.Find(wordListModel.WordName) == null)
                     {
@@ -124,7 +108,5 @@ namespace WordCount.Controllers
 
             return string.Empty;
         }
-        
-        
     }
 }
