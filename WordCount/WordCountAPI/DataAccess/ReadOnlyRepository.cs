@@ -84,7 +84,7 @@ namespace WordCount.DataAccess
             return InternalEntitySet.Where(e => predicate(e));
         }
 
-        public GetArranger<T> Get()
+        public GetArranger<T> Find()
         {
             return new GetArranger<T>(InternalEntitySet.AsQueryable());
         }

@@ -31,10 +31,8 @@ namespace WordCountUnitTests
         public void Repository_GivesNotNullAndSameCountAsInput()
         {
             //Arrange
-            RepositoryBase<DbObject, string> repos = new(new List<DbObject>());
             //Act
-            IEnumerable<DbObject> reposResult = repos.All();
-            List<DbObject> l = new List<DbObject>()
+            List<DbObject> objList = new List<DbObject>()
             {
                 new DbObject() {
                     Key = "one",
@@ -42,10 +40,12 @@ namespace WordCountUnitTests
                     BoolProp = true
                 }
             };
+            RepositoryBase<DbObject, string> repos = new(objList);
+            IEnumerable<DbObject> reposResult = repos.All();
             //Assert
             Assert.NotNull(reposResult);
-            Assert.AreEqual(reposResult.Count(), l.Count());
-            Assert.AreEqual(reposResult, l);
+            Assert.AreEqual(reposResult.Count(), objList.Count());
+            Assert.AreEqual(reposResult, objList);
         }
 
         [Test]
@@ -235,7 +235,5 @@ namespace WordCountUnitTests
 
             Assert.Throws<ArgumentException>(() => repos.Update(testObj.Key, testObj));
         }
-        
-        
     }
 }
