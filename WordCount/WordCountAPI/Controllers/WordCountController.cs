@@ -38,6 +38,9 @@ namespace WordCount.Controllers
                         TotalWordsInArticle = article.TotalWordsInArticle
                     };
                     
+                    if (dbContext.FileList.ToList().Exists(a => a.ArticleTitle == fileListModel.ArticleTitle)) continue;
+                    if (dbContext.FileList.ToList().Exists(a => a.FilePath == fileListModel.FilePath)) continue;
+                    
                     List<WordListModel> words = new();
                     appearsInModels = new();
 
@@ -56,7 +59,7 @@ namespace WordCount.Controllers
                             FilePath = article.FilePath
                         };
 
-                        if (!words.Exists(w => w.WordName == wordListModel.WordName))
+                        if (dbContext.Wordlist.Find(wordListModel.WordName) == null)
                         {
                             words.Add(wordListModel);
                         }
