@@ -23,34 +23,29 @@ namespace WordCountUnitTests
             public string Key { get; set; }
         }
 
-        private List<DbObject> CorrectData { get; set; }
 
-        [SetUp]
-        public void SetUp()
-        {
-            CorrectData = new List<DbObject>
-            {
-               
-            };
-        }
+
+
 
         [Test]
         public void Repository_GivesNotNullAndSameCountAsInput()
         {
             //Arrange
-            RepositoryBase<DbObject, string> repos = new(CorrectData);
+            RepositoryBase<DbObject, string> repos = new(new List<DbObject>());
             //Act
             IEnumerable<DbObject> reposResult = repos.All();
-            CorrectData.Add( new()
-                {
+            List<DbObject> l = new List<DbObject>()
+            {
+                new DbObject() {
                     Key = "one",
                     IntProp = 1,
                     BoolProp = true
-                });
+                }
+            };
             //Assert
             Assert.NotNull(reposResult);
-            Assert.AreEqual(reposResult.Count(), CorrectData.Count());
-            Assert.AreEqual(reposResult, CorrectData);
+            Assert.AreEqual(reposResult.Count(), l.Count());
+            Assert.AreEqual(reposResult, l);
         }
 
         [Test]
@@ -78,20 +73,52 @@ namespace WordCountUnitTests
             //Assert
             Assert.IsTrue(repos.EntitySet.Contains(test));
         }
+        
+        [Test]
+        public void Repository_Insert_AddObjectsToCollection()
+        {
+            //Arrange
+            
+            DbObject test1 = new DbObject {Key = "TestObject1"};
+            DbObject test2= new DbObject {Key = "TestObject2"};
+            RepositoryBase<DbObject, string> repos = new(new List<DbObject>());
+            //Act
+            repos.Insert(new List<DbObject>(){test1,test2});
+
+            //Assert
+            Assert.IsTrue(repos.EntitySet.Contains(test1));
+            Assert.IsTrue(repos.EntitySet.Contains(test2));
+        }
+        
+        [Test]
+        public void Repository_Update_UpdatesEntity()
+        {
+            //Arrange
+            DbObject original = new DbObject {Key = "TestObject1", BoolProp = false};
+            DbObject newEntity= new DbObject {Key = "TestObject2", BoolProp = true};
+            RepositoryBase<DbObject, string> repos = new(new List<DbObject>(){original});
+
+            //Act
+            repos.Update(original, newEntity);
+            //Assert
+            Assert.IsTrue(repos.EntitySet.Contains(newEntity));
+            Assert.IsNotNull(repos.EntitySet.First(a => a.BoolProp = true));
+        }
 
         [Test]
         public void Repository_FindAll_FindDataOnKey()
         {
             //Arrange
-            
-            CorrectData.Add(
-                new()
-                {
+            List<DbObject> objList = new List<DbObject>()
+            {
+                new DbObject() {
                     Key = "two",
-                    IntProp = 2,
+                    IntProp = 1,
                     BoolProp = true
-                });
-            RepositoryBase<DbObject, string> repos = new(CorrectData);
+                }
+            };
+   
+            RepositoryBase<DbObject, string> repos = new(objList);
             //Act
             IEnumerable<DbObject> p = repos.FindAll(a => a.BoolProp);
 
@@ -105,10 +132,11 @@ namespace WordCountUnitTests
         public void Repository_Find_FindDataOnPredicate()
         {
             //Arrange
-            RepositoryBase<DbObject, string> repos = new(CorrectData);
+            List<DbObject> objList = new List<DbObject>();
+            RepositoryBase<DbObject, string> repos = new(objList);
             //Act
             DbObject testObj = new DbObject {Key = "123bvd"};
-            CorrectData.Add(testObj);
+            objList.Add(testObj);
             DbObject res = repos.Find(a => a.Key == "123bvd");
 
 
@@ -122,14 +150,15 @@ namespace WordCountUnitTests
         {
             //Arrange
             DbObject testObj = new DbObject {Key = "123bvd"};
-            CorrectData.Add(testObj);
+            List<DbObject> objList = new List<DbObject>();
+            objList.Add(testObj);
             
-            RepositoryBase<DbObject, string> repos = new(CorrectData);
+            RepositoryBase<DbObject, string> repos = new(objList);
             //Act
-            repos.Update(CorrectData.First().Key, testObj);
+            repos.Update(objList.First().Key, testObj);
             
             //Assert
-            Assert.IsTrue(CorrectData.Contains(testObj));
+            Assert.IsTrue(objList.Contains(testObj));
         }
         
         [Test]
@@ -138,8 +167,9 @@ namespace WordCountUnitTests
             //Arrange
             DbObject testObj1 = new DbObject {Key = "123bvd"};
             DbObject testObj2 = new DbObject {Key = "123bvd"};
-            CorrectData.Add(testObj1);
-            RepositoryBase<DbObject, string> repos = new(CorrectData);
+            List<DbObject> objList = new List<DbObject>();
+            objList.Add(testObj1);
+            RepositoryBase<DbObject, string> repos = new(objList);
             //Act
             //Assert
             Assert.Throws<ArgumentException>(() => repos.Insert(testObj2));
