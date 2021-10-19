@@ -26,6 +26,8 @@ namespace WordCount.Controllers
             // Get schema and use for validating
             if (new JsonValidator<Article[]>(maut).IsValid(jsonInput, out Article[] articles))
             {
+                List<AppearsInModel> appearsInModels = new();
+                
                 foreach (Article article in articles)
                 {
                     FileListModel fileListModel = new()
@@ -37,7 +39,7 @@ namespace WordCount.Controllers
                     };
                     
                     List<WordListModel> words = new();
-                    List<AppearsInModel> appearsInModels = new();
+                    appearsInModels = new();
 
                     foreach (WordData articleWord in article.Words)
                     {
@@ -64,10 +66,11 @@ namespace WordCount.Controllers
 
                     dbContext.Wordlist.AddRange(words);
                     dbContext.FileList.Add(fileListModel);
-                    dbContext.SaveChanges();
-                    dbContext.AppearsIn.AddRange(appearsInModels);
-                    dbContext.SaveChanges();
                 }
+                
+                dbContext.SaveChanges();
+                dbContext.AppearsIn.AddRange(appearsInModels);
+                dbContext.SaveChanges();
 
                 Response.StatusCode = 200;
                 Console.WriteLine($"Added {articles.Length} entries.");
