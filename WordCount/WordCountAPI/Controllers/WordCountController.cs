@@ -29,7 +29,7 @@ namespace WordCount.Controllers
             // Get schema and use for validating
             if (!new JsonValidator<Article[]>(schema.JsonString).IsValid(jsonInput, out Article[] articles))
             {
-                return new ObjectResult(message == string.Empty ? "Ok" : message) { StatusCode = statusCode };
+                return new ObjectResult("Wrong body syntax, does not follow schema.") { StatusCode = 400 };
             }
 
             List<AppearsInModel> appearsInModels = new();
