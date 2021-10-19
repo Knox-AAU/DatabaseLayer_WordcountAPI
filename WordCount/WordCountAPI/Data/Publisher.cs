@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Code_first_test.Models
 {
-    public class Publisher
+    public abstract class Publisher
     {
         [Key]
         public string Name { get; set; }

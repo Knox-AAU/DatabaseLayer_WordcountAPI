@@ -9,7 +9,7 @@ namespace WordCount.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<Word> Words { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
-        public DbSet<WordOccurances> WordOccurances { get; set; }
+        public DbSet<WordOccurrences> WordOccurances { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
