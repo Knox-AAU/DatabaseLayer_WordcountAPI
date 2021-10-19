@@ -36,8 +36,7 @@ namespace WordCount.DataAccess
 
             if (index == -1)
             {
-                // TODO: Proper logging
-                return;
+                throw new ArgumentException("No entity with such ID");
             }
             
             InternalEntitySet[index] = newEntity;
@@ -47,7 +46,6 @@ namespace WordCount.DataAccess
         public virtual void Update(TEntity oldEntity, TEntity newEntity)
         {
             Update(oldEntity.PrimaryKey, newEntity);
-            
         }
 
         /// <summary>

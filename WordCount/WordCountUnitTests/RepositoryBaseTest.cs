@@ -160,5 +160,38 @@ namespace WordCountUnitTests
             //Assert
             Assert.Throws<ArgumentException>(() => repos.Insert(testObj2));
         }
+
+        [Test]
+        public void Delete_RemoveEntityFromList()
+        {
+            DbObject testObj1 = new DbObject {Key = "123bvd"};
+            DbObject testObj2 = new DbObject {Key = "321bvd"};
+
+            List<DbObject> testData = new() {testObj1, testObj2};
+                
+
+            RepositoryBase<DbObject, string> repos = new(testData);
+            repos.Delete(testObj1);
+            
+            Assert.False(repos.EntitySet.Contains(testObj1));
+        }
+        
+        [Test]
+        public void Delete_RemoveEntityFromListWithPredicate()
+        {
+            string KeyToRemove = "123bvd";
+            DbObject testObj1 = new DbObject {Key = "123bvd"};
+            DbObject testObj2 = new DbObject {Key = KeyToRemove};
+
+            List<DbObject> testData = new() {testObj1, testObj2};
+                
+
+            RepositoryBase<DbObject, string> repos = new(testData);
+            repos.Delete(a => a.Key == KeyToRemove);
+            
+            Assert.False(repos.EntitySet.Contains(testObj1));
+        }
+        
+        
     }
 }
