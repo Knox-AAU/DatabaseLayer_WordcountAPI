@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Data;
-using WordCount.DataAccess;
 using WordCount.JsonModels;
 using WordCount.Models;
 
@@ -12,7 +9,7 @@ namespace WordCount.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WordCountController : ControllerBase
+    public partial class WordCountController : ControllerBase
     {
         [HttpPost]
         public void Post([FromBody] string jsonInput)
@@ -24,7 +21,6 @@ namespace WordCount.Controllers
             }
         }
         
-        
         [HttpGet]
         public IEnumerable<string> GetAll()
         {
@@ -33,14 +29,7 @@ namespace WordCount.Controllers
             new WordCountDbContext().Wordlist.Take(100).ToList().ForEach(wordList => words.Add(wordList.WordName));
             return words;
         }
-
-        [HttpGet]
-        [Route("/[controller]/getAllWordRatios")]
-        public IEnumerable<WordRatios> GetAllWordRatios()
-        {
-            return new WordCountDbContext().WordRatios.ToList();
-        }
-
+        
         [HttpGet]
         [Route("/[controller]/{id:int}")]
         public WordListModel Get(int id)
