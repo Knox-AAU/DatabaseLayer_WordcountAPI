@@ -6,10 +6,10 @@ using WordCount.DataAccess;
 
 namespace WordCount.Controllers
 {
-    public partial class WordCountController
+    public sealed class WordRatioController : Controller
     {
         [HttpGet]
-        [Route("/[controller]/getAllWordRatios")]
+        [Route("/[controller]/all")]
         public IEnumerable<WordRatios> GetAllWordRatios()
         {
             return new WordCountDbContext().WordRatios.ToList();

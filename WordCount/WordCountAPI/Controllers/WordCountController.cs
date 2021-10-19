@@ -9,7 +9,7 @@ namespace WordCount.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public partial class WordCountController : ControllerBase
+    public class WordCountController : ControllerBase
     {
         [HttpPost]
         public void Post([FromBody] string jsonInput)
