@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Data;
 using WordCount.JsonModels;
@@ -23,7 +21,6 @@ namespace WordCount.Controllers
             }
         }
         
-        
         [HttpGet]
         public IEnumerable<string> GetAll()
         {
@@ -41,16 +38,5 @@ namespace WordCount.Controllers
 
             return entity;
         }
-        
-        [HttpGet]
-        [Route("/[controller]/WordRatios")]
-        public string GetWordRatios()
-        {
-            var dbContext = new WordCountDbContext();
-
-            return string.Empty;
-        }
-        
-        
     }
 }
