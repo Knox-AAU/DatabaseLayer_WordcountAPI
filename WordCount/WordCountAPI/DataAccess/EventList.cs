@@ -7,6 +7,7 @@ namespace WordCount.DataAccess
     public sealed class EventList<T> :  IList<T>, IReadOnlyList<T> 
     {
         public event Action<T> ItemAdded;
+        public event Action<IEnumerable<T>> ItemsAdded;
         public event Action<int, T> ItemInserted;
         public event Action<T> ItemRemoved;
         public event Action ListCleared;
@@ -27,7 +28,8 @@ namespace WordCount.DataAccess
         int ICollection<T>.Count => internalList.Count;
 
         int IReadOnlyCollection<T>.Count => internalList.Count;
-        
+        public event Action<IEnumerable<T>> ItemsRemoved;
+
         private readonly List<T> internalList = new();
 
         public void Add(T item)
@@ -82,11 +84,8 @@ namespace WordCount.DataAccess
 
         public void AddRange(IEnumerable<T> items)
         {
-            foreach (var item in items)
-            {
-                internalList.Add(item);
-                ItemAdded?.Invoke(item);
-            }
+            internalList.AddRange(items);
+            ItemsAdded?.Invoke(items);
         }
 
         public void FindIndex()
