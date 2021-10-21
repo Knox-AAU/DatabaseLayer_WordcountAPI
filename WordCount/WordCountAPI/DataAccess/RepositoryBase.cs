@@ -80,7 +80,8 @@ namespace WordCount.DataAccess
         /// Updates existing entity in internal list and invokes functions subscribed to ListChanged event.
         /// ListChanged.
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="oldEntity"></param>
+        /// <param name="newEntity"></param>
         /// <exception cref="ArgumentException"></exception>
         public virtual void Update(TEntity oldEntity, TEntity newEntity)
         {
