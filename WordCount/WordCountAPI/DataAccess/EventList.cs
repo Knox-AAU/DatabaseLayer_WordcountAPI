@@ -10,6 +10,12 @@ namespace WordCount.DataAccess
         public event Action<int, T> ItemInserted;
         public event Action<T> ItemRemoved;
         public event Action ListCleared;
+        
+        public T this[int index]
+        {
+            get => internalList[index];
+            set => internalList[index] = value;
+        }
 
         public bool IsReadOnly => false;
         
@@ -67,12 +73,6 @@ namespace WordCount.DataAccess
             
             internalList.RemoveAt(index);
             ItemRemoved?.Invoke(item);
-        }
-
-        public T this[int index]
-        {
-            get => internalList[index];
-            set => internalList[index] = value;
         }
     }
 }
