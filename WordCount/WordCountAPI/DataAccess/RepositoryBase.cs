@@ -41,13 +41,14 @@ namespace WordCount.DataAccess
 
             InternalEntitySet.Add(entity);
             ListChanged?.Invoke();
+            
         }
 
         /// <summary>
         /// Insert the entity into the internal list, unless already existing and invokes functions subscribed to
         /// ListChanged event.
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="entities"></param>
         /// <exception cref="ArgumentException"></exception>
         public virtual void Insert(IEnumerable<TEntity> entities)
         {
@@ -59,11 +60,12 @@ namespace WordCount.DataAccess
         /// Updates existing entity in internal list and invokes functions subscribed to ListChanged event.
         /// ListChanged.
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="entityKey"></param>
+        /// <param name="newEntity"></param>
         /// <exception cref="ArgumentException"></exception>
-        public virtual void Update(TKey EntityKey, TEntity newEntity)
+        public virtual void Update(TKey entityKey, TEntity newEntity)
         {
-            int index = InternalEntitySet.FindIndex(entity => entity.PrimaryKey.Equals(EntityKey));
+            int index = InternalEntitySet.FindIndex(entity => entity.PrimaryKey.Equals(entityKey));
 
             if (index == -1)
             {
