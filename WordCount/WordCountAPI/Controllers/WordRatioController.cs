@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Data;
 using WordCount.DataAccess;
@@ -19,14 +17,11 @@ namespace WordCount.Controllers
         
         [HttpGet]
         [Route("/[controller]/")]
-        public IEnumerable<WordRatios> GetMatches(string[] terms, string[] sources)
+        public IActionResult GetMatches(string[] terms, string[] sources)
         {
             if (terms.Length == 0)
             {
-                //TODO Error message    
-                Response.StatusCode = 400;
-                Response.ContentType = "string";
-                Response.WriteAsync("No terms given.");
+                return BadRequest("No terms given.");
             }
             
             List<WordRatios> set = new WordCountDbContext().WordRatios.ToList();
@@ -37,7 +32,9 @@ namespace WordCount.Controllers
                 result = result.Where(r => sources.Contains(r.SourceName));
             }
 
-            return result.OrderBy(a => a.ArticleTitle);
+            result = result.OrderBy(a => a.ArticleTitle);
+
+            return Ok(result);
         }
     }
 }
