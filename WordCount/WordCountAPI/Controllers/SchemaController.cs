@@ -12,7 +12,6 @@ namespace WordCount.Controllers
     [Route("[controller]")]
     public class SchemaController: ControllerBase
     {
-        
         /// <summary>
         /// Method for posting a JSON schema to the database which can then be used later for validation of input.
         /// </summary>

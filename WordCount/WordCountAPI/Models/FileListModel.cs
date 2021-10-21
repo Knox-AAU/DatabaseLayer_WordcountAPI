@@ -7,8 +7,9 @@ namespace WordCount.Models
     public sealed class FileListModel
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id", TypeName = "bigint")]
-        public int Id { get; set; }
+        public long Id { get; set; }
         [Column("filepath", TypeName = "text")]
         public string FilePath { get; set; }
         [Column("articletitle", TypeName = "text")]
