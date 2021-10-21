@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +19,8 @@ namespace WordCount.Controllers
         [HttpGet]
         [Route("/[controller]/")]
         public IEnumerable<WordRatios> GetMatches(string[] terms, string[] sources)
-        { 
-            if (terms == null || terms.Length == 0)
+        {
+            if (terms.Length == 0)
             {
                 //TODO Error message    
                 return null;
@@ -27,10 +28,11 @@ namespace WordCount.Controllers
             
             List<WordRatios> set = new WordCountDbContext().WordRatios.ToList();
             IEnumerable<WordRatios> result = set.Where(w => terms.Contains(w.WordName));
-            
-            if (sources != null && sources.Length != 0)
-                result = result.Where(r => sources.Contains(r.SourceName));
 
+            if (sources.Length != 0)
+            {
+                result = result.Where(r => sources.Contains(r.SourceName));
+            }
 
             return result.OrderBy(a => a.ArticleTitle);
         }
