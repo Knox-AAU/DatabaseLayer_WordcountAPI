@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace WordCount.DataAccess
 {
-    public sealed class EventList<T> : IList<T>, IReadOnlyList<T>
+    public sealed class EventList<T> :  IList<T>, IReadOnlyList<T> 
     {
         public event Action<T> ItemAdded;
         public event Action<int, T> ItemInserted;
@@ -15,6 +15,11 @@ namespace WordCount.DataAccess
         {
             get => internalList[index];
             set => internalList[index] = value;
+        }
+
+        public EventList(List<T> originalList)
+        {
+            internalList = originalList;
         }
 
         public bool IsReadOnly => false;
@@ -73,6 +78,25 @@ namespace WordCount.DataAccess
             
             internalList.RemoveAt(index);
             ItemRemoved?.Invoke(item);
+        }
+
+        public void AddRange(IEnumerable<T> items)
+        {
+            foreach (var item in items)
+            {
+                internalList.Add(item);
+                ItemAdded?.Invoke(item);
+            }
+        }
+
+        public void FindIndex()
+        {
+            
+        }
+
+        public int FindIndex(Predicate<T> func)
+        {
+            return internalList.FindIndex(func);
         }
     }
 }

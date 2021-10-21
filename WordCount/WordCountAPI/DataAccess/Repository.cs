@@ -11,6 +11,9 @@ namespace WordCount.DataAccess
         where TKey : IEquatable<TKey>
     {
         private readonly DbContext context;
+        public event Action ElementsSaved;
+        public event Action ElementsRemoved;
+        public event Action ElementsUpdated;
 
         public Repository(DbContext context) : base(context.Set<TEntity>())
         {
@@ -24,7 +27,35 @@ namespace WordCount.DataAccess
         private void Save()
         {
             context.AddRange(InternalEntitySet);
-            context.SaveChanges();
+            ElementsSaved?.Invoke();
         }
+
+        public void Update(TEntity entity)
+        {
+            context.Update(entity);
+            ElementsUpdated?.Invoke();
+            Save();
+        }
+        
+        public void Update(IEnumerable<TEntity> entities)
+        {
+            context.UpdateRange(entities);
+            ElementsUpdated?.Invoke();
+            Save();
+        }
+        
+        public void Remove(TEntity entities)
+        {
+            context.Remove(entities);
+            ElementsRemoved?.Invoke();
+            Save();
+        }
+        public void Remove(IEnumerable<TEntity> entities)
+        {
+            context.Remove(entities);
+            ElementsRemoved?.Invoke();
+            Save();
+        }
+        
     }
 }

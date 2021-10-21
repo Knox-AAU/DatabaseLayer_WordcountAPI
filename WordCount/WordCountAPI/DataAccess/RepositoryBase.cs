@@ -8,10 +8,23 @@ namespace WordCount.DataAccess
     public class RepositoryBase<TEntity, TKey> : ReadOnlyRepository<TEntity, TKey>, IRepository<TEntity, TKey> where TEntity : DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>
     {
         public event Action ListChanged;
-        
-        public RepositoryBase(DbContext context) : base(context) { }
-        public RepositoryBase(DbSet<TEntity> entitySet) : base(entitySet) { }
-        public RepositoryBase(List<TEntity> internalEntity) : base(internalEntity) { }
+
+        public RepositoryBase(DbContext context) : base(context)
+        {
+            InternalEntitySet = new EventList<TEntity>(context.Set<TEntity>().ToList());
+        }
+
+        public RepositoryBase(DbSet<TEntity> entitySet) : base(entitySet)
+        {
+            InternalEntitySet = new EventList<TEntity>(entitySet.ToList());
+        }
+
+        public RepositoryBase(List<TEntity> internalEntity) : base(internalEntity)
+        {
+            InternalEntitySet = new EventList<TEntity>(internalEntity);
+        }
+
+        protected new EventList<TEntity> InternalEntitySet;
         
         /// <summary>
         /// Insert the entity into the internal list, unless already existing and invokes functions subscribed to
