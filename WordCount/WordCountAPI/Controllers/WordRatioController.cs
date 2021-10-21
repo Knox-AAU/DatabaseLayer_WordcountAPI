@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Data;
 using WordCount.DataAccess;
@@ -22,7 +23,9 @@ namespace WordCount.Controllers
             if (terms == null || terms.Length == 0)
             {
                 //TODO Error message    
-                return null;
+                Response.StatusCode = 400;
+                Response.ContentType = "string";
+                Response.WriteAsync("No terms given.");
             }
             
             List<WordRatios> set = new WordCountDbContext().WordRatios.ToList();
