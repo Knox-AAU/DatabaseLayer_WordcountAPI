@@ -29,7 +29,7 @@ namespace WordCount.Controllers
             // Get schema and use for validating
             if (!new JsonValidator<Article[]>(schema.JsonString).IsValid(jsonInput, out Article[] articles))
             {
-                return BadRequest("Wrong body syntax, does not follow schema.");
+                return new ObjectResult("Wrong body syntax, does not follow schema.") { StatusCode = 400 };
             }
 
             List<AppearsInModel> appearsInModels = new();
@@ -78,7 +78,7 @@ namespace WordCount.Controllers
 
             Console.WriteLine($"Added {articles.Length} entries.");
 
-            return Ok(message == string.Empty ? "Ok" : message);
+            return new ObjectResult(message == string.Empty ? "Ok" : message) { StatusCode = statusCode };
         }
         
         [HttpGet]
@@ -91,14 +91,14 @@ namespace WordCount.Controllers
         }
         
         [HttpGet]
-        [Route("/[controller]/{id:int}")]
-        public IActionResult Get(int id)
+        [Route("/[controller]/{word}")]
+        public IActionResult Get(string word)
         {
-            WordListModel entity = new WordCountDbContext().Wordlist.Find(id);
+            WordListModel entity = new WordCountDbContext().Wordlist.Find(word);
 
             if (entity == null)
             {
-                return BadRequest($"An entity with id {id} does not exist in the database.");
+                return NotFound($"Word \"{word}\" does not exist in the database.");
             }
 
             return Ok(entity);
