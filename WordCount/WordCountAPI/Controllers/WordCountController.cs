@@ -91,12 +91,17 @@ namespace WordCount.Controllers
         }
         
         [HttpGet]
-        [Route("/[controller]/{id:int}")]
-        public WordListModel Get(int id)
+        [Route("/[controller]/{word}")]
+        public IActionResult Get(string word)
         {
-            WordListModel entity = new WordCountDbContext().Wordlist.Find(id);
+            WordListModel entity = new WordCountDbContext().Wordlist.Find(word);
 
-            return entity;
+            if (entity == null)
+            {
+                return NotFound($"Word \"{word}\" does not exist in the database.");
+            }
+
+            return Ok(entity);
         }
     }
 }
