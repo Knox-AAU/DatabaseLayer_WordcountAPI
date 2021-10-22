@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel.DataAnnotations.Schema;
+using Code_first_test.Models;
 using Microsoft.EntityFrameworkCore;
 using WordCount.DataAccess;
 using WordCount.Models;
@@ -19,7 +20,7 @@ namespace WordCount.Data
         public DbSet<FileListModel> FileList { get; set; }
         public DbSet<JsonSchemaModel> JsonSchemas { get; set; }
         public DbSet<WordRatios> WordRatios { get; set; }
-
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string? connectionString = Environment.GetEnvironmentVariable("database_connectionString");

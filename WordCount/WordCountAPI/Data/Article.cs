@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Code_first_test.Models
 {
@@ -10,7 +11,9 @@ namespace Code_first_test.Models
         public string Title { get; set; }
         public string FilePath { get; set; }
         public int TotalWordsInArticle { get; set; }
-        public ICollection<WordOccurrences> Words { get; set; }
+        public ICollection<OccursIn> ContainedWords { get; set; }
+        
+        [ForeignKey("Name")]
         public Publisher Publisher { get; set; }
     }
 }

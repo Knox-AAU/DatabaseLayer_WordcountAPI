@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Code_first_test.Models
 {
@@ -6,5 +8,6 @@ namespace Code_first_test.Models
     {
         [Key]
         public string Literal { get; set; }
+        public ICollection<OccursIn> OccursIn { get; set; }
     }
 }

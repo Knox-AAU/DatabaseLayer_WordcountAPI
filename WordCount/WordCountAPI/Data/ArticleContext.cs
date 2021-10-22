@@ -9,7 +9,7 @@ namespace WordCount.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<Word> Words { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
-        public DbSet<WordOccurrences> WordOccurances { get; set; }
+        public DbSet<OccursIn> WordOccurances { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -22,7 +22,7 @@ namespace WordCount.Data
             }
             */
             
-            optionsBuilder.UseNpgsql("Host=db;UserID=postgres;Password=Sysadmins.;Port=5432;Database=wordcount;");
+            optionsBuilder.UseNpgsql("Host=localhost;UserID=postgres;Password=Sysadmins.;Port=5432;Database=wordcount;");
             base.OnConfiguring(optionsBuilder);
         }
     }
