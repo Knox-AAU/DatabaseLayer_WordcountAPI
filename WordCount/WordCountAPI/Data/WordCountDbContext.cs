@@ -2,6 +2,7 @@
 using System.Collections;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using WordCount.DataAccess;
 using WordCount.Models;
 
 namespace WordCount.Data
@@ -17,6 +18,7 @@ namespace WordCount.Data
         public DbSet<ExternalSourcesModel> ExternalSources { get; set; }
         public DbSet<FileListModel> FileList { get; set; }
         public DbSet<JsonSchemaModel> JsonSchemas { get; set; }
+        public DbSet<WordRatios> WordRatios { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

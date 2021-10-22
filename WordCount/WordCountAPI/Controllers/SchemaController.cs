@@ -12,7 +12,6 @@ namespace WordCount.Controllers
     [Route("[controller]")]
     public class SchemaController: ControllerBase
     {
-        
         /// <summary>
         /// Method for posting a JSON schema to the database which can then be used later for validation of input.
         /// </summary>
@@ -37,7 +36,7 @@ namespace WordCount.Controllers
             if (schemaData == null)
             {
                 // 400 Unprocessable entity 
-                return new ObjectResult("Wrong body syntax, does not follow schema") {StatusCode = 400};
+                return BadRequest("Wrong body syntax, does not follow schema.");
             }
             
             JsonSchemaModel model = new()
@@ -49,14 +48,14 @@ namespace WordCount.Controllers
             if (dbContext.JsonSchemas.Find(model.SchemaName) != null)
             {
                 // 403 forbidden
-                return new ObjectResult("Duplicate value") {StatusCode = 403};
+                return Forbid("Duplicate value.");
             }
             
             dbContext.JsonSchemas.Add(model);                
             dbContext.SaveChanges();
     
             // status 200 OK
-            return new ObjectResult("Ok") {StatusCode = 200};
+            return Ok();
         }
 
     }

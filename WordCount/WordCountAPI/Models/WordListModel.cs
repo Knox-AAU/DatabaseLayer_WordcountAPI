@@ -9,5 +9,6 @@ namespace WordCount.Models
         [Key]
         [Column("wordname", TypeName = "citext")]
         public string WordName { get; set; }
+        
     }
 }
