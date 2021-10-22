@@ -8,12 +8,8 @@ namespace Code_first_test.Models
     {
         [Key]
         public long Id { get; set; }
-        
-
         public Article Article { get; set; }
         public int Occurances { get; set; }
-        
-
         public ICollection<Word> Words { get; set; }
     }
 }
