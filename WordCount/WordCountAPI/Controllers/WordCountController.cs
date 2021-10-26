@@ -41,6 +41,7 @@ namespace WordCount.Controllers
                 if (!dbContext.ExternalSources.ToList().Exists(e => e.SourceName == article.Publication))
                 {
                     dbContext.ExternalSources.Add(new ExternalSourcesModel { SourceName = article.Publication });
+                    dbContext.SaveChanges();
                 }
 
                 if (dbContext.FileList.ToList().Exists(a => a.ArticleTitle == fileListModel.ArticleTitle))
