@@ -95,6 +95,22 @@ namespace WordCount.Controllers
             new WordCountDbContext().Wordlist.Take(100).ToList().ForEach(wordList => words.Add(wordList.WordName));
             return words;
         }
+
+        [HttpGet]
+        [Route("/[controller]/{id:int}")]
+        public IActionResult GetFilepath(long id)
+        {
+            try
+            {
+                var x = new WordCountDbContext().FileList.First(e => e.Id == id).FilePath;
+                return new JsonResult(new FileIdResponse(x));
+            }
+            catch (Exception e)
+            {
+                return BadRequest("No such entity");
+            }
+        }
+    
         
         [HttpGet]
         [Route("/[controller]/{word}")]
@@ -108,6 +124,15 @@ namespace WordCount.Controllers
             }
 
             return Ok(entity);
+        }
+    }
+
+    public class FileIdResponse
+    {
+        public string FilePath { get; set; }
+        public FileIdResponse(string s)
+        {
+            FilePath = s;
         }
     }
 }
