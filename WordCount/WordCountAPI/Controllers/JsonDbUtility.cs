@@ -5,11 +5,11 @@ namespace WordCount.Controllers
 {
     public static class JsonDbUtility
     {
-        public static FileListModel ArticleToFileList(Article article)
+        public static FileListModel ArticleToFileList(Article article, long sourceId)
         {
             return new FileListModel
             {
-                SourceId = 0,
+                SourceId = sourceId,
                 ArticleTitle = article.ArticleTitle,
                 FilePath = article.FilePath,
                 TotalWordsInArticle = article.TotalWordsInArticle

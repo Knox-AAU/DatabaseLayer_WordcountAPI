@@ -36,13 +36,16 @@ namespace WordCount.Controllers
                 
             foreach (Article article in articles)
             {
-                FileListModel fileListModel = JsonDbUtility.ArticleToFileList(article);
-
+                
                 if (!dbContext.ExternalSources.ToList().Exists(e => e.SourceName == article.Publication))
                 {
                     dbContext.ExternalSources.Add(new ExternalSourcesModel { SourceName = article.Publication });
                     dbContext.SaveChanges();
                 }
+                
+                ExternalSourcesModel sourcesModel = dbContext.ExternalSources.First(source => source.SourceName == article.Publication);
+                
+                FileListModel fileListModel = JsonDbUtility.ArticleToFileList(article, sourcesModel.Id);
 
                 if (dbContext.FileList.ToList().Exists(a => a.ArticleTitle == fileListModel.ArticleTitle))
                 {
