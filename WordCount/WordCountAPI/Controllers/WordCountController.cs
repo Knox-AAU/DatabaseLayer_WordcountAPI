@@ -38,6 +38,11 @@ namespace WordCount.Controllers
             {
                 FileListModel fileListModel = JsonDbUtility.ArticleToFileList(article);
 
+                if (!dbContext.ExternalSources.ToList().Exists(e => e.SourceName == article.Publication))
+                {
+                    dbContext.ExternalSources.Add(new ExternalSourcesModel { SourceName = article.Publication });
+                }
+
                 if (dbContext.FileList.ToList().Exists(a => a.ArticleTitle == fileListModel.ArticleTitle))
                 {
                     statusCode = 206;
