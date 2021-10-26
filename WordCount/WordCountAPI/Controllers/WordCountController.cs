@@ -100,7 +100,7 @@ namespace WordCount.Controllers
         }
 
         [HttpGet]
-        [Route("/[controller]/{id:int}")]
+        [Route("/[controller]/filelist/{id:int}")]
         public IActionResult GetFilepath(long id)
         {
             try
