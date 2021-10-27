@@ -50,7 +50,5 @@ namespace WordCount.Controllers
 
             return string.Empty;
         }
-        
-        
     }
 }
