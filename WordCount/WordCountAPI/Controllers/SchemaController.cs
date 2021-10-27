@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Data;
 using WordCount.Data.Models;
+using WordCount.DataAccess;
 using WordCount.JsonModels;
 using WordCount.Models;
 
@@ -14,11 +15,11 @@ namespace WordCount.Controllers
     public class SchemaController: ControllerBase
     {
         
-        private readonly ArticleContext context;
-
+        private UnitOfWork unitOfWork;
+        
         public SchemaController()
         {
-            context = new ArticleContext();
+            unitOfWork = new UnitOfWork(new ArticleContext());
         }
 
         /// <summary>
@@ -30,8 +31,7 @@ namespace WordCount.Controllers
         [Route("/[controller]/{schemaName}")]
         public IActionResult GetSchema(string schemaName)
         {
-            return Ok(context.JsonSchemas.First(schema => schema.SchemaName == schemaName));
-
+            return Ok(unitOfWork.SchemaRepository.Find(schema => schema.SchemaName == schemaName));
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace WordCount.Controllers
         [Route("/[controller]")]
         public IActionResult GetAllSchemas()
         {
-            return Ok(context.JsonSchemas);
+            return Ok(unitOfWork.SchemaRepository.All());
         }
         
         /// <summary>
@@ -65,19 +65,17 @@ namespace WordCount.Controllers
                 return BadRequest("Wrong body syntax, cannot parse to JSON.");
             }
             
-            if (context.JsonSchemas.Find(schemaData.SchemaName) != null)
+            if (unitOfWork.SchemaRepository.GetById(schemaData.SchemaName) != null)
             {
                 // 403 forbidden
                 return Forbid("Duplicate value.");
             }
 
-            context.JsonSchemas.Add(new JsonSchemaModel()
+            unitOfWork.SchemaRepository.Insert(new JsonSchemaModel()
             {
                 SchemaName = schemaData.SchemaName,
                 JsonString = schemaData.SchemaBody.GetRawText()
-            });                
-            context.SaveChanges();
-
+            });
             return Ok();
         }
 
