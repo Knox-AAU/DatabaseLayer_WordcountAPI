@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using WordCount.JsonModels;
 
 namespace WordCount.Models
 {
@@ -15,5 +17,27 @@ namespace WordCount.Models
         public int TotalWords { get; set; }
         public Publisher Publisher { get; set; }
         public List<Term> Terms { get; set; }
+
+        public static Article CreateFromJsonModel(ArticleJsonModel jsonModel)
+        {
+            List<Term> terms = new(jsonModel.Words.Length);
+            
+            foreach (TermJsonModel term in jsonModel.Words)
+            {
+                terms.Add(new Term { Count = term.Amount, Word = term.Word });
+            }
+
+            return new Article()
+            {
+                FilePath = jsonModel.FilePath,
+                Title = jsonModel.ArticleTitle,
+                TotalWords = jsonModel.TotalWordsInArticle,
+                Publisher = new Publisher
+                {
+                    PublisherName = jsonModel.Publication
+                },
+                Terms = terms
+            };
+        }
     }
 }
