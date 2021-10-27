@@ -8,11 +8,11 @@ namespace WordCount.Controllers
 {
     public sealed class WordRatioController : Controller
     {
-        private readonly ArticleContext context;
+        private UnitOfWork unitOfWork;
 
         public WordRatioController()
         {
-            context = new ArticleContext();
+            unitOfWork = new UnitOfWork(new ArticleContext());
         }
         
         [HttpGet]
@@ -30,9 +30,9 @@ namespace WordCount.Controllers
             {
                 return BadRequest("No terms given.");
             }
-            
-            
-            List<WordRatio> set = context.WordRatios.ToList();
+
+
+            List<WordRatio> set = unitOfWork.WordRatioRepository.All().ToList();
             IEnumerable<WordRatio> result = set.Where(w => terms.Contains(w.Word));
             
             
