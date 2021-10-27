@@ -19,9 +19,9 @@ namespace WordCount.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] JsonElement jsonElement)
         {
-            string jsonInput = jsonElement.GetRawText();
             ArticleContext context = new ArticleContext();
             JsonSchemaModel? schema = context.JsonSchemas.ToList().Find(s => s.SchemaName == WordCountSchemaName);
+            string jsonInput = jsonElement.GetRawText();
             
             // Get schema and use for validating
             if (schema == null || !new JsonValidator<ArticleJsonModel[]>(schema.JsonString).IsValid(jsonInput, out ArticleJsonModel[] jsonArticles))

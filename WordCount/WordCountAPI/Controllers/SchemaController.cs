@@ -54,9 +54,8 @@ namespace WordCount.Controllers
         [Route("/[controller]")]
         public IActionResult PostJsonSchema([FromBody] JsonElement jsonInput)
         {
-            return null;
-/*
-            WordCountDbContext dbContext = new();
+
+            ArticleContext dbContext = new();
             JsonSerializerOptions options = new()
             {
                 PropertyNameCaseInsensitive = true
@@ -88,7 +87,6 @@ namespace WordCount.Controllers
     
             // status 200 OK
             return Ok();
-            */
         }
 
     }

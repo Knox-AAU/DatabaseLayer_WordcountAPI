@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
@@ -9,6 +10,7 @@ namespace WordCount.JsonModels
         private readonly JSchema schema;
         public JsonValidator(string jsonSchemaString)
         {
+            Console.WriteLine(jsonSchemaString);
             schema = JSchema.Parse(jsonSchemaString);
         }
         
