@@ -1,8 +1,9 @@
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using WordCount.Data;
+
 
 namespace WordCount.DataAccess
 {
@@ -12,9 +13,11 @@ namespace WordCount.DataAccess
         where TKey : IEquatable<TKey>
     {
         private readonly ArticleContext context;
+        private readonly DbSet<TEntity> dbSet;
         public Repository(ArticleContext context) : base(context)
         {
             this.context = context;
+            dbSet = context.Set<TEntity>();
             InternalEntitySet.ItemAdded += Add;
             InternalEntitySet.ItemsAdded += Add;
             InternalEntitySet.ItemRemoved += Remove;
@@ -23,13 +26,13 @@ namespace WordCount.DataAccess
 
         private void Add(IEnumerable<TEntity> obj)
         {
-            context.AddRange(obj);
+            dbSet.AddRange(obj);
             Save();
         }
 
         private void Add(TEntity obj)
         {
-            context.Add(obj);
+            dbSet.Add(obj);
             Save();
         }
         
@@ -44,24 +47,24 @@ namespace WordCount.DataAccess
 
         public void Update(TEntity entity)
         {
-            context.Update(entity);
+            dbSet.Update(entity);
             Save();
         }
         
         public void Update(IEnumerable<TEntity> entities)
         {
-            context.UpdateRange(entities);
+            dbSet.UpdateRange(entities);
             Save();
         }
         
         public void Remove(TEntity entities)
         {
-            context.Remove(entities);
+            dbSet.Remove(entities);
             Save();
         }
         public void Remove(IEnumerable<TEntity> entities)
         {
-            context.Remove(entities);
+            dbSet.RemoveRange(entities);
             Save();
         }
     }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using WordCount.Controllers.JsonInputModels;
 using WordCount.Data;
 using WordCount.Data.Models;
+using WordCount.DataAccess;
 using WordCount.JsonModels;
 using WordCount.Models;
 using Article = WordCount.Data.Models.Article;
@@ -17,17 +18,17 @@ namespace WordCount.Controllers
     public class WordCountController : ControllerBase
     {
         private const string WordCountSchemaName = "wordcount";
-        private readonly ArticleContext context;
+        private UnitOfWork unitOfWork;
 
         public WordCountController()
         {
-            context = new ArticleContext();
+            unitOfWork = new UnitOfWork(new ArticleContext());
         }
         
         [HttpPost]
         public IActionResult Post([FromBody] JsonElement jsonElement)
         {
-            JsonSchemaModel? schema = context.JsonSchemas.ToList().Find(s => s.SchemaName == WordCountSchemaName);
+            JsonSchemaModel? schema = unitOfWork.SchemaRepository.Find(s => s.SchemaName == WordCountSchemaName);
             string jsonInput = jsonElement.GetRawText();
 
             if (schema == null)
@@ -43,9 +44,7 @@ namespace WordCount.Controllers
 
             //Create article
             IEnumerable<Article> articles = Article.CreateFromJsonModels(jsonArticles);
-            context.Articles.AddRange(articles);
-            context.SaveChanges();
-            
+            unitOfWork.ArticleRepository.Insert(articles);
             return Ok();
         }
         
@@ -61,7 +60,7 @@ namespace WordCount.Controllers
         {
             try
             {
-                string filePath = context.Articles.First(e => e.Id == id).FilePath;
+                string filePath = unitOfWork.ArticleRepository.Find(e => e.Id == id).FilePath;
                 return new JsonResult(new FileIdResponse(filePath));
             }
             catch (Exception)
