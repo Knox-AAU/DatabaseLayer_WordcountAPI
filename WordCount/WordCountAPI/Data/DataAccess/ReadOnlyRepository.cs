@@ -54,7 +54,7 @@ namespace WordCount.DataAccess
         /// Get all elements of the entities
         /// </summary>
         /// <returns>All entities</returns>
-        public IEnumerable<T> All()
+        public List<T> All()
         {
             return InternalEntitySet;
         }

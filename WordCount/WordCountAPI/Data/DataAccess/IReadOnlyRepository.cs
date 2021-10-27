@@ -8,7 +8,7 @@ namespace WordCount.DataAccess
         where TEntity : DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>
     {
         public TEntity GetById(TKey id);
-        public IEnumerable<TEntity> All();
+        public List<TEntity> All();
         /// <summary>
         /// Finds first entity and returns it
         /// </summary>

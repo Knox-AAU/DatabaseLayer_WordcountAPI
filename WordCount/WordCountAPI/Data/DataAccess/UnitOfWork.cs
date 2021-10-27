@@ -24,7 +24,7 @@ namespace WordCount.DataAccess
             
         }
 
-        public Repository<WordRatio, CompositeKeyTriple<long, long, string>> wordRatioRepository;
+        private Repository<WordRatio, CompositeKeyTriple<long, long, string>> wordRatioRepository;
 
         public IRepository<WordRatio, CompositeKeyTriple<long, long, string>> WordRatioRepository
         {
