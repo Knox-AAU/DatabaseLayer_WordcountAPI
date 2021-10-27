@@ -17,7 +17,7 @@ namespace WordCount.Controllers
         
         [HttpGet]
         [Route("/[controller]/all")]
-        public IEnumerable<WordRatios> GetAllWordRatios()
+        public IEnumerable<WordRatio> GetAllWordRatios()
         {
             return null;
         }
@@ -32,16 +32,16 @@ namespace WordCount.Controllers
             }
             
             
-            List<WordRatios> set = context.WordRatios.ToList();
-            IEnumerable<WordRatios> result = set.Where(w => terms.Contains(w.WordName));
+            List<WordRatio> set = context.WordRatios.ToList();
+            IEnumerable<WordRatio> result = set.Where(w => terms.Contains(w.Word));
             
             
             if (sources.Length != 0)
             {
-                result = result.Where(r => sources.Contains(r.SourceName));
+                result = result.Where(r => sources.Contains(r.PublisherName));
             }
 
-            result = result.OrderBy(a => a.ArticleTitle);
+            result = result.OrderBy(a => a.Title);
             return Ok(result);
         }
     }

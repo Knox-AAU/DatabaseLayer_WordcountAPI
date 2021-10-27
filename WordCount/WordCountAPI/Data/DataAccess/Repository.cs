@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Data.Entity;
+using WordCount.Data;
 
 namespace WordCount.DataAccess
 {
@@ -10,9 +11,8 @@ namespace WordCount.DataAccess
         where TEntity : DatabaseEntityModel<TKey>
         where TKey : IEquatable<TKey>
     {
-        private readonly DbContext context;
-
-        public Repository(DbContext context) : base(context.Set<TEntity>())
+        private readonly ArticleContext context;
+        public Repository(ArticleContext context) : base(context)
         {
             this.context = context;
             InternalEntitySet.ItemAdded += Add;
@@ -64,8 +64,5 @@ namespace WordCount.DataAccess
             context.Remove(entities);
             Save();
         }
-        
-        
-        
     }
 }

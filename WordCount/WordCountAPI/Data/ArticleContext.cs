@@ -10,7 +10,7 @@ namespace WordCount.Data
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<JsonSchemaModel> JsonSchemas { get; set; }
-        public DbSet<WordRatios> WordRatios { get; set; }
+        public DbSet<WordRatio> WordRatios { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

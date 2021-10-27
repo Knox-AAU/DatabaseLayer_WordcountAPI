@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Data.Entity;
+using WordCount.Data;
 
 namespace WordCount.DataAccess
 {
@@ -9,7 +10,7 @@ namespace WordCount.DataAccess
     {
         public event Action ListChanged;
 
-        public RepositoryBase(DbContext context) : base(context)
+        public RepositoryBase(ArticleContext context) : base(context)
         {
             InternalEntitySet = new EventList<TEntity>(context.Set<TEntity>().ToList());
         }

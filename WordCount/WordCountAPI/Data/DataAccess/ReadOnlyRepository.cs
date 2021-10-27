@@ -15,7 +15,7 @@ namespace WordCount.DataAccess
         public IReadOnlyList<T> EntitySet => InternalEntitySet;
         protected List<T> InternalEntitySet { get; }
         
-        public ReadOnlyRepository(DbContext context)
+        public ReadOnlyRepository(ArticleContext context)
         {
             InternalEntitySet = context.Set<T>().ToList();
         }
