@@ -12,6 +12,31 @@ namespace WordCount.Controllers
     [Route("[controller]")]
     public class SchemaController: ControllerBase
     {
+
+        /// <summary>
+        /// Get JSON schema with given name.
+        /// </summary>
+        /// <param name="schemaName">Name of the JSON schema.</param>
+        /// <returns>The schema.</returns>
+        [HttpGet]
+        [Route("/[controller]/{schemaName}")]
+        public IActionResult GetSchema(string schemaName)
+        {
+            WordCountDbContext dbContext = new();
+            return Ok(dbContext.JsonSchemas.First(schema => schema.SchemaName == schemaName));
+        }
+
+        /// <summary>
+        /// Get all JSON schemas.
+        /// </summary>
+        [HttpGet]
+        [Route("/[controller]")]
+        public IActionResult GetAllSchemas()
+        {
+            WordCountDbContext dbContext = new();
+            return Ok(dbContext.JsonSchemas);
+        }
+        
         /// <summary>
         /// Method for posting a JSON schema to the database which can then be used later for validation of input.
         /// </summary>

@@ -23,5 +23,7 @@ namespace WordCount.DataAccess
         public string SourceName { get; set; }
         [Column("percent", TypeName = "numeric")]
         public float Percent { get; set; }
+        [Column("fid", TypeName = "bigint")]
+        public int FileId { get; set; }
     }
 }
