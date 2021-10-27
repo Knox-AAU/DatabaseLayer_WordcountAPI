@@ -60,7 +60,7 @@ namespace WordCount.Controllers
             try
             {
                 string filePath = context.Articles.First(e => e.Id == id).FilePath;
-                return Ok(filePath);
+                return new JsonResult(new FileIdResponse(filePath));
             }
             catch (Exception)
             {
