@@ -26,6 +26,8 @@
       - POSTGRES_DATABASE=${POSTGRES_DATABASE}
     ports:
       - "5002:5432"
+    networks:
+      - wordcount
     volumes:
       - dbvolume:/var/lib/postgresql/data
 

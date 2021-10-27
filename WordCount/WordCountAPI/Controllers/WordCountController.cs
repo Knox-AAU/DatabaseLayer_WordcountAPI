@@ -24,14 +24,17 @@ namespace WordCount.Controllers
             JsonSchemaModel? schema = context.JsonSchemas.ToList().Find(s => s.SchemaName == WordCountSchemaName);
             
             // Get schema and use for validating
-            if (schema == null || !new JsonValidator<ArticleJsonModel[]>(schema.JsonString).IsValid(jsonInput, out ArticleJsonModel[] articles))
+            if (schema == null || !new JsonValidator<ArticleJsonModel[]>(schema.JsonString).IsValid(jsonInput, out ArticleJsonModel[] jsonArticles))
             {
                 return BadRequest("Wrong body syntax, does not follow schema.");
             }
 
-            //A
-
-            return null;
+            //Create article
+            IEnumerable<Article> articles = Article.CreateFromJsonModels(jsonArticles);
+            context.Articles.AddRange(articles);
+            context.SaveChanges();
+            
+            return Ok();
         }
         
         [HttpGet]
