@@ -2,13 +2,14 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WordCount.Controllers.JsonInputModels;
+using WordCount.DataAccess;
 using WordCount.JsonModels;
 using WordCount.Models;
 
 namespace WordCount.Data.Models
 {
     [Table("Article")]
-    public sealed class Article
+    public sealed class Article : DatabaseEntityModel<long>
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -18,6 +19,9 @@ namespace WordCount.Data.Models
         public int TotalWords { get; set; }
         public Publisher Publisher { get; set; }
         public List<Term> Terms { get; set; }
+
+        [NotMapped]
+        public override long PrimaryKey => Id;
 
         public static Article CreateFromJsonModel(ArticleJsonModel jsonModel)
         {
