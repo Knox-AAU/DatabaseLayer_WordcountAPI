@@ -56,7 +56,7 @@ namespace WordCount.Controllers
         public IActionResult PostJsonSchema([FromBody] JsonElement jsonInput)
         {
 
-            JsonSchemaDataModel schemaData = CreateJsonModel(jsonInput);
+            JsonSchemaInputModel schemaData = CreateJsonModel(jsonInput);
 
             if (schemaData == null)
             {
@@ -80,19 +80,19 @@ namespace WordCount.Controllers
             return Ok();
         }
 
-        private JsonSchemaDataModel CreateJsonModel(JsonElement jsonInput)
+        private JsonSchemaInputModel CreateJsonModel(JsonElement jsonInput)
         {
             JsonSerializerOptions options = new()
             {
                 PropertyNameCaseInsensitive = true
             };
             string jsonString = String.Empty;
-            JsonSchemaDataModel schemaData = null;
+            JsonSchemaInputModel schemaData = null;
             
             try
             {
                 jsonString = jsonInput.GetRawText();
-                schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonString, options);
+                schemaData = JsonSerializer.Deserialize<JsonSchemaInputModel>(jsonString, options);
             }
             catch (JsonException)
             {
