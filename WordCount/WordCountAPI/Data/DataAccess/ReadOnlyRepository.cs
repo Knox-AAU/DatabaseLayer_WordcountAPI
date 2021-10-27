@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Metadata.Internal;
-using WordCount.Data;
-using WordCount.Models;
+using WordCount.DataAccess;
 
-namespace WordCount.DataAccess
+namespace WordCount.Data.DataAccess
 {
     public class ReadOnlyRepository<T, TKey> : IReadOnlyRepository<T, TKey> 
         where T : DatabaseEntityModel<TKey> 
@@ -43,7 +41,7 @@ namespace WordCount.DataAccess
         /// <summary>
         /// Find first entity with matching id
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
         public T GetById(TKey key)
         {
@@ -70,7 +68,7 @@ namespace WordCount.DataAccess
             {
                 return InternalEntitySet.First(e => predicate(e));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

@@ -30,12 +30,7 @@ namespace WordCount.Controllers
             {
                 return BadRequest("No terms given.");
             }
-
-
-            List<WordRatio> set = unitOfWork.WordRatioRepository.All().ToList();
-            IEnumerable<WordRatio> result = set.Where(w => terms.Contains(w.Word));
-            
-            
+            IEnumerable<WordRatio> result = unitOfWork.WordRatioRepository.FindAll(w => terms.Contains(w.Word));
             if (sources.Length != 0)
             {
                 result = result.Where(r => sources.Contains(r.PublisherName));
