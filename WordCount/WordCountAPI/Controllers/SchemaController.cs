@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Data;
+using WordCount.Data.Models;
 using WordCount.JsonModels;
 using WordCount.Models;
 

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using WordCount.Controllers.JsonInputModels;
 using WordCount.Data;
+using WordCount.Data.Models;
 using WordCount.JsonModels;
 using WordCount.Models;
-using Article = WordCount.Models.Article;
+using Article = WordCount.Data.Models.Article;
 
 namespace WordCount.Controllers
 {

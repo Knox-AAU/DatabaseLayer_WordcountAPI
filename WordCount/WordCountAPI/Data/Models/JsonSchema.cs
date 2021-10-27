@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WordCount.Models
+namespace WordCount.Data.Models
 {
     [Table("JsonSchema")]
     public sealed class JsonSchemaModel

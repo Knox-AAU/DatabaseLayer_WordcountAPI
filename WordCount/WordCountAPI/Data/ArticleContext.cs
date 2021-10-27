@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using WordCount.Data.Models;
 using WordCount.DataAccess;
 using WordCount.Models;
 

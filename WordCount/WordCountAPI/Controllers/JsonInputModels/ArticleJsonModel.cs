@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using WordCount.JsonModels;
 
-namespace WordCount.JsonModels
+namespace WordCount.Controllers.JsonInputModels
 {
     public sealed class ArticleJsonModel
     {

@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WordCount.Controllers.JsonInputModels;
 using WordCount.JsonModels;
+using WordCount.Models;
 
-namespace WordCount.Models
+namespace WordCount.Data.Models
 {
     [Table("Article")]
     public sealed class Article
