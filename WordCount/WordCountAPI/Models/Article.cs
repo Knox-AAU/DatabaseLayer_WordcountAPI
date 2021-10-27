@@ -26,7 +26,7 @@ namespace WordCount.Models
                 terms.Add(new Term { Count = term.Amount, Word = term.Word });
             }
 
-            return new Article()
+            return new Article
             {
                 FilePath = jsonModel.FilePath,
                 Title = jsonModel.ArticleTitle,
