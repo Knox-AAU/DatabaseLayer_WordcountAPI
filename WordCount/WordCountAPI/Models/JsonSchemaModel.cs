@@ -3,13 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WordCount.Models
 {
-    [Table("json_schema")]
+    [Table("JsonSchema")]
     public sealed class JsonSchemaModel
     {
         [Key]
-        [Column("schema_name")]
         public string SchemaName { get; set; }
-        [Column("json_binary", TypeName = "jsonb")]
+        [Column(TypeName = "jsonb")]
         public string JsonString { get; set; }
     }
 }

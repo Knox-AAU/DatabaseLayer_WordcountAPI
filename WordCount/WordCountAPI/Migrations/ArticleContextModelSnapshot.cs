@@ -97,16 +97,14 @@ namespace WordCount.Migrations
             modelBuilder.Entity("WordCount.Models.JsonSchemaModel", b =>
                 {
                     b.Property<string>("SchemaName")
-                        .HasColumnType("text")
-                        .HasColumnName("schema_name");
+                        .HasColumnType("text");
 
                     b.Property<string>("JsonString")
-                        .HasColumnType("jsonb")
-                        .HasColumnName("json_binary");
+                        .HasColumnType("jsonb");
 
                     b.HasKey("SchemaName");
 
-                    b.ToTable("json_schema");
+                    b.ToTable("JsonSchema");
                 });
 
             modelBuilder.Entity("WordCount.Models.Publisher", b =>

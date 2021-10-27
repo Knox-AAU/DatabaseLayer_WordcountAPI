@@ -19,6 +19,18 @@ namespace WordCount.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] JsonElement jsonElement)
         {
+            string jsonInput = jsonElement.GetRawText();
+            ArticleContext context = new ArticleContext();
+            JsonSchemaModel? schema = context.JsonSchemas.ToList().Find(s => s.SchemaName == WordCountSchemaName);
+            
+            // Get schema and use for validating
+            if (schema == null || !new JsonValidator<ArticleJsonModel[]>(schema.JsonString).IsValid(jsonInput, out ArticleJsonModel[] articles))
+            {
+                return BadRequest("Wrong body syntax, does not follow schema.");
+            }
+
+            //A
+
             return null;
         }
         

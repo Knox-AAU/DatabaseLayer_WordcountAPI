@@ -10,8 +10,8 @@ using WordCount.Data;
 namespace WordCount.Migrations
 {
     [DbContext(typeof(ArticleContext))]
-    [Migration("20211027132507_v1")]
-    partial class v1
+    [Migration("20211027132951_v2")]
+    partial class v2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -99,16 +99,14 @@ namespace WordCount.Migrations
             modelBuilder.Entity("WordCount.Models.JsonSchemaModel", b =>
                 {
                     b.Property<string>("SchemaName")
-                        .HasColumnType("text")
-                        .HasColumnName("schema_name");
+                        .HasColumnType("text");
 
                     b.Property<string>("JsonString")
-                        .HasColumnType("jsonb")
-                        .HasColumnName("json_binary");
+                        .HasColumnType("jsonb");
 
                     b.HasKey("SchemaName");
 
-                    b.ToTable("json_schema");
+                    b.ToTable("JsonSchema");
                 });
 
             modelBuilder.Entity("WordCount.Models.Publisher", b =>

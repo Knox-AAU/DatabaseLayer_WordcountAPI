@@ -3,20 +3,20 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace WordCount.Migrations
 {
-    public partial class v1 : Migration
+    public partial class v2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "json_schema",
+                name: "JsonSchema",
                 columns: table => new
                 {
-                    schema_name = table.Column<string>(type: "text", nullable: false),
-                    json_binary = table.Column<string>(type: "jsonb", nullable: true)
+                    SchemaName = table.Column<string>(type: "text", nullable: false),
+                    JsonString = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_json_schema", x => x.schema_name);
+                    table.PrimaryKey("PK_JsonSchema", x => x.SchemaName);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,7 +103,7 @@ namespace WordCount.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "json_schema");
+                name: "JsonSchema");
 
             migrationBuilder.DropTable(
                 name: "Term");
