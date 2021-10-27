@@ -38,5 +38,17 @@ namespace WordCount.Models
                 Terms = terms
             };
         }
+
+        public static IEnumerable<Article> CreateFromJsonModels(ICollection<ArticleJsonModel> jsonModels)
+        {
+            List<Article> articles = new(jsonModels.Count);
+
+            foreach (ArticleJsonModel jsonModel in jsonModels)
+            {
+                articles.Add(CreateFromJsonModel(jsonModel));
+            }
+
+            return articles;
+        }
     }
 }
