@@ -22,8 +22,10 @@ namespace WordCount.Controllers
         [Route("/[controller]/{schemaName}")]
         public IActionResult GetSchema(string schemaName)
         {
+            /*
             WordCountDbContext dbContext = new();
-            return Ok(dbContext.JsonSchemas.First(schema => schema.SchemaName == schemaName));
+            return Ok(dbContext.JsonSchemas.First(schema => schema.SchemaName == schemaName));*/
+            return null;
         }
 
         /// <summary>
@@ -33,8 +35,11 @@ namespace WordCount.Controllers
         [Route("/[controller]")]
         public IActionResult GetAllSchemas()
         {
+            /*
             WordCountDbContext dbContext = new();
-            return Ok(dbContext.JsonSchemas);
+            return Ok(dbContext.JsonSchemas);*/
+            return null;
+
         }
         
         /// <summary>
@@ -49,6 +54,8 @@ namespace WordCount.Controllers
         [Route("/[controller]")]
         public IActionResult PostJsonSchema([FromBody] JsonElement jsonInput)
         {
+            return null;
+/*
             WordCountDbContext dbContext = new();
             JsonSerializerOptions options = new()
             {
@@ -81,6 +88,7 @@ namespace WordCount.Controllers
     
             // status 200 OK
             return Ok();
+            */
         }
 
     }

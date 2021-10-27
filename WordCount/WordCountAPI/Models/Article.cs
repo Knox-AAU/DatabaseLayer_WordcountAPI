@@ -2,18 +2,18 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Code_first_test.Models
+namespace WordCount.Models
 {
+    [Table("Article")]
     public sealed class Article
     {
         [Key]
-        public long ArticleId { get; set; }
-        public string Title { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public long Id { get; set; }
         public string FilePath { get; set; }
-        public int TotalWordsInArticle { get; set; }
-        public ICollection<OccursIn> ContainedWords { get; set; }
-        
-        [ForeignKey("Name")]
+        public string Title { get; set; }
+        public int TotalWords { get; set; }
         public Publisher Publisher { get; set; }
+        public List<Term> Terms { get; set; }
     }
 }

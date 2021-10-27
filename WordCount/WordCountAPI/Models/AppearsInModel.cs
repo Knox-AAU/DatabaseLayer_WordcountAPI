@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WordCount.Models
 {
-    [Table("appearsin")]
     public sealed class AppearsInModel
     {
         [Key]
