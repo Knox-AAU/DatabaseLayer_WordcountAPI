@@ -8,6 +8,13 @@ namespace WordCount.Controllers
 {
     public sealed class WordRatioController : Controller
     {
+        private readonly ArticleContext context;
+
+        public WordRatioController()
+        {
+            context = new ArticleContext();
+        }
+        
         [HttpGet]
         [Route("/[controller]/all")]
         public IEnumerable<WordRatios> GetAllWordRatios()
@@ -24,18 +31,18 @@ namespace WordCount.Controllers
                 return BadRequest("No terms given.");
             }
             
-            /*
-            //List<WordRatios> set = new WordCountDbContext().WordRatios.ToList();
-            //IEnumerable<WordRatios> result = set.Where(w => terms.Contains(w.WordName));
-
+            
+            List<WordRatios> set = context.WordRatios.ToList();
+            IEnumerable<WordRatios> result = set.Where(w => terms.Contains(w.WordName));
+            
+            
             if (sources.Length != 0)
             {
                 result = result.Where(r => sources.Contains(r.SourceName));
             }
 
             result = result.OrderBy(a => a.ArticleTitle);
-            */
-            return Ok();
+            return Ok(result);
         }
     }
 }

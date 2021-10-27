@@ -1,5 +1,5 @@
+using System;
 using System.Linq;
-using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Data;
@@ -12,6 +12,13 @@ namespace WordCount.Controllers
     [Route("[controller]")]
     public class SchemaController: ControllerBase
     {
+        
+        private readonly ArticleContext context;
+
+        public SchemaController()
+        {
+            context = new ArticleContext();
+        }
 
         /// <summary>
         /// Get JSON schema with given name.
@@ -22,10 +29,8 @@ namespace WordCount.Controllers
         [Route("/[controller]/{schemaName}")]
         public IActionResult GetSchema(string schemaName)
         {
-            /*
-            WordCountDbContext dbContext = new();
-            return Ok(dbContext.JsonSchemas.First(schema => schema.SchemaName == schemaName));*/
-            return null;
+            return Ok(context.JsonSchemas.First(schema => schema.SchemaName == schemaName));
+
         }
 
         /// <summary>
@@ -35,11 +40,7 @@ namespace WordCount.Controllers
         [Route("/[controller]")]
         public IActionResult GetAllSchemas()
         {
-            /*
-            WordCountDbContext dbContext = new();
-            return Ok(dbContext.JsonSchemas);*/
-            return null;
-
+            return Ok(context.JsonSchemas);
         }
         
         /// <summary>
@@ -55,39 +56,49 @@ namespace WordCount.Controllers
         public IActionResult PostJsonSchema([FromBody] JsonElement jsonInput)
         {
 
-            ArticleContext dbContext = new();
-            JsonSerializerOptions options = new()
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            string jsonString = jsonInput.GetRawText();
-            JsonSchemaDataModel schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonString, options);
+            JsonSchemaDataModel schemaData = CreateJsonModel(jsonInput);
 
             if (schemaData == null)
             {
                 // 400 Unprocessable entity 
-                return BadRequest("Wrong body syntax, does not follow schema.");
+                return BadRequest("Wrong body syntax, cannot parse to JSON.");
             }
             
-            JsonSchemaModel model = new()
-            {
-                SchemaName = schemaData.SchemaName,
-                JsonString = schemaData.SchemaBody.GetRawText()
-            };
-
-            if (dbContext.JsonSchemas.Find(model.SchemaName) != null)
+            if (context.JsonSchemas.Find(schemaData.SchemaName) != null)
             {
                 // 403 forbidden
                 return Forbid("Duplicate value.");
             }
-            
-            dbContext.JsonSchemas.Add(model);                
-            dbContext.SaveChanges();
-    
-            // status 200 OK
+
+            context.JsonSchemas.Add(new JsonSchemaModel()
+            {
+                SchemaName = schemaData.SchemaName,
+                JsonString = schemaData.SchemaBody.GetRawText()
+            });                
+            context.SaveChanges();
+
             return Ok();
         }
 
+        private JsonSchemaDataModel CreateJsonModel(JsonElement jsonInput)
+        {
+            JsonSerializerOptions options = new()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            string jsonString = String.Empty;
+            JsonSchemaDataModel schemaData = null;
+            
+            try
+            {
+                jsonString = jsonInput.GetRawText();
+                schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonString, options);
+            }
+            catch (JsonException)
+            {
+            }
+
+            return schemaData;
+        }
     }
 }

@@ -15,11 +15,16 @@ namespace WordCount.Controllers
     public class WordCountController : ControllerBase
     {
         private const string WordCountSchemaName = "wordcount";
+        private readonly ArticleContext context;
+
+        public WordCountController()
+        {
+            context = new ArticleContext();
+        }
         
         [HttpPost]
         public IActionResult Post([FromBody] JsonElement jsonElement)
         {
-            ArticleContext context = new ArticleContext();
             JsonSchemaModel? schema = context.JsonSchemas.ToList().Find(s => s.SchemaName == WordCountSchemaName);
             string jsonInput = jsonElement.GetRawText();
 
@@ -54,23 +59,14 @@ namespace WordCount.Controllers
         {
             try
             {
-                //var x = new WordCountDbContext().Articles.First(e => e.Id == id).FilePath;
-                return null;
-                
+                string filePath = context.Articles.First(e => e.Id == id).FilePath;
+                return Ok(filePath);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return BadRequest("No such entity");
+                return BadRequest($"No entity with ID {id} exists");
             }
         }
-    
-        
-        [HttpGet]
-        [Route("/[controller]/{word}")]
-        public IActionResult Get(string word)
-        {
-            
-            return Ok();
-        }
+
     }
 }
