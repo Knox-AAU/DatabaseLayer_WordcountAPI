@@ -13,11 +13,11 @@ namespace WordCount.Controllers
     public class SchemaController: ControllerBase
     {
         
-        private readonly WordCountDbContext context;
+        private readonly ArticleContext context;
 
         public SchemaController()
         {
-            context = new ();
+            context = new ArticleContext();
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace WordCount.Controllers
         public IActionResult PostJsonSchema([FromBody] JsonElement jsonInput)
         {
 
-            var schemaData = CreateJsonModel(jsonInput);
+            JsonSchemaDataModel schemaData = CreateJsonModel(jsonInput);
 
             if (schemaData == null)
             {
@@ -70,7 +70,7 @@ namespace WordCount.Controllers
                 return Forbid("Duplicate value.");
             }
 
-            context.JsonSchemas.Add(new JsonSchema()
+            context.JsonSchemas.Add(new JsonSchemaModel()
             {
                 SchemaName = schemaData.SchemaName,
                 JsonString = schemaData.SchemaBody.GetRawText()
@@ -80,19 +80,19 @@ namespace WordCount.Controllers
             return Ok();
         }
 
-        private JsonSchemaInputModel CreateJsonModel(JsonElement jsonInput)
+        private JsonSchemaDataModel CreateJsonModel(JsonElement jsonInput)
         {
             JsonSerializerOptions options = new()
             {
                 PropertyNameCaseInsensitive = true
             };
             string jsonString = String.Empty;
-            JsonSchemaInputModel schemaData = null;
+            JsonSchemaDataModel schemaData = null;
             
             try
             {
                 jsonString = jsonInput.GetRawText();
-                schemaData = JsonSerializer.Deserialize<JsonSchemaInputModel>(jsonString, options);
+                schemaData = JsonSerializer.Deserialize<JsonSchemaDataModel>(jsonString, options);
             }
             catch (JsonException)
             {
