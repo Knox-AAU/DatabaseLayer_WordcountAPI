@@ -16,15 +16,6 @@ dotnet_diagnostic.SA0001.severity = None
 # The file header is missing or not located at the top of the file
 dotnet_diagnostic.SA1633.severity = None
 
-# Use string.Empty for empty strings
-dotnet_diagnostic.SA1122.severity = None
-
-# Variable '_' should begin with lower-case letter
-dotnet_diagnostic.SA1312.severity = None
-
-# Parameter '_' should begin with lower-case letter
-dotnet_diagnostic.SA1313.severity = None
-
 # Elements should be documented
 dotnet_diagnostic.SA1600.severity = None
 
@@ -33,12 +24,6 @@ dotnet_diagnostic.SA1101.severity = None
 
 # 'public' members should come before 'private' members
 dotnet_diagnostic.SA1202.severity = None
-
-# Comments should contain text
-dotnet_diagnostic.SA1120.severity = None
-
-# Constant fields should appear before non-constant fields
-dotnet_diagnostic.SA1203.severity = None
 
 # Elements should be separated by blank line
 dotnet_diagnostic.SA1516.severity = None
