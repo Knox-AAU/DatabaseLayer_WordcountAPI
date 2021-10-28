@@ -5,8 +5,7 @@ using WordCount.Data.Models;
 
 namespace WordCount.DataAccess
 {
-    [Table("WordRatio")]
-    
+
     public class WordRatio : DatabaseEntityModel<CompositeKeyTriple<long,long,string>>
     {
         public long ArticleId { get; set; }
@@ -17,7 +16,6 @@ namespace WordCount.DataAccess
         public int TotalWords { get; set; }
         public long PublisherId { get; set; }
         public string PublisherName { get; set; }
-        [Column("percent")]
         public float Percent { get; set; }
         
         [JsonIgnore]

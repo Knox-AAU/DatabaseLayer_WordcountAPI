@@ -45,7 +45,15 @@ namespace WordCount.Data.DataAccess
         /// <returns></returns>
         public T GetById(TKey key)
         {
-            return InternalEntitySet.First(a => a.PrimaryKey.Equals(key));
+            try
+            {
+                return InternalEntitySet.First(a => a.PrimaryKey.Equals(key));
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            
         }
         
         /// <summary>
