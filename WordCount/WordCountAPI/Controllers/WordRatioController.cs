@@ -19,7 +19,7 @@ namespace WordCount.Controllers
         [Route("/[controller]/all")]
         public IEnumerable<WordRatio> GetAllWordRatios()
         {
-            return null;
+            return unitOfWork.WordRatioRepository.All();
         }
         
         [HttpGet]

@@ -42,10 +42,20 @@ namespace WordCount.Controllers
                 return BadRequest("Wrong body syntax, does not follow schema.");
             }
 
+            string responseMessage = string.Empty;
+            List<Article> result = new();
+            foreach (var articleJsonModel in jsonArticles)
+            {
+                if (unitOfWork.ArticleRepository.Find(a => a.Title == articleJsonModel.ArticleTitle) == null)
+                {
+                    result.Add(Article.CreateFromJsonModel(articleJsonModel));
+                    responseMessage += $"{articleJsonModel.ArticleTitle} is already in database. ";
+                }
+            }
+            
             //Create article
-            IEnumerable<Article> articles = Article.CreateFromJsonModels(jsonArticles);
-            unitOfWork.ArticleRepository.Insert(articles);
-            return Ok();
+            unitOfWork.ArticleRepository.Insert(result);
+            return Ok(responseMessage);
         }
         
         [HttpGet]
