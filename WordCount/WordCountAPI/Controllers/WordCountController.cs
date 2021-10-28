@@ -113,8 +113,7 @@ namespace WordCount.Controllers
                 return BadRequest("No such entity");
             }
         }
-    
-        
+
         [HttpGet]
         [Route("/[controller]/{word}")]
         public IActionResult Get(string word)

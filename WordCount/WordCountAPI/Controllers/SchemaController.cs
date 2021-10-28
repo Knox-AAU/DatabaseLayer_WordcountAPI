@@ -10,9 +10,8 @@ namespace WordCount.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class SchemaController: ControllerBase
+    public class SchemaController : ControllerBase
     {
-
         /// <summary>
         /// Get JSON schema with given name.
         /// </summary>
@@ -82,6 +81,5 @@ namespace WordCount.Controllers
             // status 200 OK
             return Ok();
         }
-
     }
 }

@@ -13,6 +13,10 @@
         <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15-beta1" />
         <PackageReference Include="Npgsql" Version="5.0.10" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.354">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0-rc.1.21451.13" />
     </ItemGroup>
