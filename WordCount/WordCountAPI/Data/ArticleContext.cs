@@ -20,6 +20,11 @@ namespace WordCount.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Term>().HasKey(a => new { a.ArticleId, a.Word });
+            modelBuilder
+                .Entity<WordRatio>()
+                .ToView(nameof(WordRatio))
+                .HasNoKey();
+
         }
     }
 }
