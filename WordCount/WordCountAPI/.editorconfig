@@ -43,3 +43,9 @@ dotnet_diagnostic.SA1203.severity = None
 # Elements should be separated by blank line
 dotnet_diagnostic.SA1516.severity = None
 
+# A constructor should not follow a property
+dotnet_diagnostic.SA1201.severity = None
+
+# Use trailing comma in multi-line initializers
+dotnet_diagnostic.SA1413.severity = None
+
