@@ -14,6 +14,7 @@ namespace WordCount.DataAccess
     {
         private readonly ArticleContext context;
         private readonly DbSet<TEntity> dbSet;
+        
         public Repository(ArticleContext context) : base(context)
         {
             this.context = context;

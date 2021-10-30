@@ -44,15 +44,18 @@ namespace WordCount.Controllers
 
             string responseMessage = string.Empty;
             List<Article> result = new();
+            
             foreach (var articleJsonModel in jsonArticles)
             {
-                if (unitOfWork.ArticleRepository.Find(a => a.Title == articleJsonModel.ArticleTitle) != null)
+                Article article = Article.CreateFromJsonModel(articleJsonModel);
+                Publisher existingPublisher = unitOfWork.publisherRepository.Find(p => p.PublisherName == article.Publisher.PublisherName);
+                
+                if (existingPublisher != null)
                 {
-                    responseMessage += $"{articleJsonModel.ArticleTitle} is already in database.";
-                    continue;
+                    article.Publisher = existingPublisher;
                 }
                 
-                result.Add(Article.CreateFromJsonModel(articleJsonModel));
+                result.Add(article);
             }
             
             //Create article
