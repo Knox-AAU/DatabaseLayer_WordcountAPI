@@ -46,11 +46,13 @@ namespace WordCount.Controllers
             List<Article> result = new();
             foreach (var articleJsonModel in jsonArticles)
             {
-                if (unitOfWork.ArticleRepository.Find(a => a.Title == articleJsonModel.ArticleTitle) == null)
+                if (unitOfWork.ArticleRepository.Find(a => a.Title == articleJsonModel.ArticleTitle) != null)
                 {
-                    result.Add(Article.CreateFromJsonModel(articleJsonModel));
-                    responseMessage += $"{articleJsonModel.ArticleTitle} is already in database. ";
+                    responseMessage += $"{articleJsonModel.ArticleTitle} is already in database.";
+                    continue;
                 }
+                
+                result.Add(Article.CreateFromJsonModel(articleJsonModel));
             }
             
             //Create article

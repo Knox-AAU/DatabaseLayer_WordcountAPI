@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using WordCount.Data.Models;
 using WordCount.DataAccess;
 using WordCount.Models;
@@ -24,7 +25,12 @@ namespace WordCount.Data
                 .Entity<WordRatio>()
                 .ToView(nameof(WordRatio))
                 .HasNoKey();
+        }
 
+        public override int SaveChanges()
+        {
+            
+            return base.SaveChanges();
         }
     }
 }

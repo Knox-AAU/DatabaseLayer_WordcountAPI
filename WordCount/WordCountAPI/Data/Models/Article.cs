@@ -17,6 +17,7 @@ namespace WordCount.Data.Models
         public string FilePath { get; set; }
         public string Title { get; set; }
         public int TotalWords { get; set; }
+        
         public Publisher Publisher { get; set; }
         public List<Term> Terms { get; set; }
 

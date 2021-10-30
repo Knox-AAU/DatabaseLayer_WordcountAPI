@@ -53,15 +53,15 @@ namespace WordCount.DataAccess
             }
         }
 
-        public Repository<Publisher, long> publisherRepository;
+        public Repository<Publisher, string> publisherRepository;
 
-        public IRepository<Publisher, long> PublisherRepository 
+        public IRepository<Publisher, string> PublisherRepository 
         {
             get
             {
                 if (publisherRepository == null)
                 {
-                    publisherRepository = new Repository<Publisher, long>(context);
+                    publisherRepository = new Repository<Publisher, string>(context);
                 }
 
                 return publisherRepository;
