@@ -78,9 +78,8 @@ namespace WordCount.Controllers
             foreach (var articleJsonModel in jsonArticles)
             {
                 Article article = Article.CreateFromJsonModel(articleJsonModel);
-                Publisher existingPublisher = unitOfWork.publisherRepository.Find(p => p.PublisherName == article.Publisher.PublisherName);
-
-                if (existingPublisher != null)
+                
+                if (unitOfWork.publisherRepository.TryGetEntity(article.Publisher, out Publisher existingPublisher))
                 {
                     article.Publisher = existingPublisher;
                 }

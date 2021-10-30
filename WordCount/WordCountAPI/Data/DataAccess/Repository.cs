@@ -68,5 +68,12 @@ namespace WordCount.DataAccess
             dbSet.RemoveRange(entities);
             Save();
         }
+
+        public bool TryGetEntity(TEntity entity, out TEntity existingEntity)
+        {
+            existingEntity = dbSet.Find(entity);
+
+            return existingEntity != null;
+        }
     }
 }
