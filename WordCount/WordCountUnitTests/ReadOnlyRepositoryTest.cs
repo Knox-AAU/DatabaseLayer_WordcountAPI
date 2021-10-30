@@ -81,13 +81,11 @@ namespace WordCountUnitTests
                 Key = primKey,
                 BoolProp = true
             };
-        
             
-                
             ReadOnlyRepository<DbObject, string> repos = new(new List<DbObject>()
                 {obj});
 
-            Assert.Throws<InvalidOperationException>(() => repos.GetById(" "));
+            Assert.IsNull(repos.GetById(" "));
         }
 
         
