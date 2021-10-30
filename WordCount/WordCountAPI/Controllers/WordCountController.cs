@@ -43,26 +43,13 @@ namespace WordCount.Controllers
             }
 
             string responseMessage = string.Empty;
-            List<Article> result = new();
-            
-            foreach (var articleJsonModel in jsonArticles)
-            {
-                Article article = Article.CreateFromJsonModel(articleJsonModel);
-                Publisher existingPublisher = unitOfWork.publisherRepository.Find(p => p.PublisherName == article.Publisher.PublisherName);
-                
-                if (existingPublisher != null)
-                {
-                    article.Publisher = existingPublisher;
-                }
-                
-                result.Add(article);
-            }
-            
+            IEnumerable<Article> result = RemoveDuplicates(jsonArticles);
+
             //Create article
             unitOfWork.ArticleRepository.Insert(result);
             return Ok(responseMessage);
         }
-        
+
         [HttpGet]
         public IEnumerable<string> GetAll()
         {
@@ -84,5 +71,24 @@ namespace WordCount.Controllers
             }
         }
 
+        private IEnumerable<Article> RemoveDuplicates(IEnumerable<ArticleJsonModel> jsonArticles)
+        {
+            List<Article> result = new();
+
+            foreach (var articleJsonModel in jsonArticles)
+            {
+                Article article = Article.CreateFromJsonModel(articleJsonModel);
+                Publisher existingPublisher = unitOfWork.publisherRepository.Find(p => p.PublisherName == article.Publisher.PublisherName);
+
+                if (existingPublisher != null)
+                {
+                    article.Publisher = existingPublisher;
+                }
+
+                result.Add(article);
+            }
+
+            return result;
+        }
     }
 }
