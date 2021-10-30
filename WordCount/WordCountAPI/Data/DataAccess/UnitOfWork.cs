@@ -10,7 +10,7 @@ namespace WordCount.DataAccess
         private ArticleContext context;
         private Repository<Article, long> articleRepository;
         private Repository<JsonSchemaModel, string> schemaRepository;
-        public IRepository<JsonSchemaModel,string> SchemaRepository 
+        public Repository<JsonSchemaModel,string> SchemaRepository 
         {
             get
             {
@@ -26,7 +26,7 @@ namespace WordCount.DataAccess
 
         private Repository<WordRatio, CompositeKeyTriple<long, long, string>> wordRatioRepository;
 
-        public IRepository<WordRatio, CompositeKeyTriple<long, long, string>> WordRatioRepository
+        public Repository<WordRatio, CompositeKeyTriple<long, long, string>> WordRatioRepository
         {
             get
             {
@@ -40,7 +40,7 @@ namespace WordCount.DataAccess
         }
 
         
-        public IRepository<Article, long> ArticleRepository
+        public Repository<Article, long> ArticleRepository
         {
             get
             {
@@ -53,9 +53,9 @@ namespace WordCount.DataAccess
             }
         }
 
-        public Repository<Publisher, string> publisherRepository;
+        private Repository<Publisher, string> publisherRepository;
 
-        public IRepository<Publisher, string> PublisherRepository 
+        public Repository<Publisher, string> PublisherRepository 
         {
             get
             {

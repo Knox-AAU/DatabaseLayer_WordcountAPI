@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using WordCount.Controllers.JsonInputModels;
 using WordCount.DataAccess;
 using WordCount.JsonModels;
@@ -46,11 +47,12 @@ namespace WordCount.Data.Models
             };
         }
 
-        public static IEnumerable<Article> CreateFromJsonModels(ICollection<ArticleJsonModel> jsonModels)
+        public static IEnumerable<Article> CreateFromJsonModels(IEnumerable<ArticleJsonModel> jsonModels)
         {
-            List<Article> articles = new(jsonModels.Count);
+            IEnumerable<ArticleJsonModel> articleJsonModels = jsonModels as ArticleJsonModel[] ?? jsonModels.ToArray();
+            List<Article> articles = new(articleJsonModels.Count());
 
-            foreach (ArticleJsonModel jsonModel in jsonModels)
+            foreach (ArticleJsonModel jsonModel in articleJsonModels)
             {
                 articles.Add(CreateFromJsonModel(jsonModel));
             }

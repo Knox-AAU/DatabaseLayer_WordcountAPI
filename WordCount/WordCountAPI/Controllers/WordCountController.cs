@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Controllers.JsonInputModels;
@@ -41,13 +42,12 @@ namespace WordCount.Controllers
             {
                 return BadRequest("Wrong body syntax, does not follow schema.");
             }
+            
+            IEnumerable<Article> result = RemoveDuplicates(jsonArticles, out StringBuilder message);
 
-            string responseMessage = string.Empty;
-            IEnumerable<Article> result = RemoveDuplicates(jsonArticles);
-
-            //Create article
+            //Insert article
             unitOfWork.ArticleRepository.Insert(result);
-            return Ok(responseMessage);
+            return Ok(message);
         }
 
         [HttpGet]
@@ -71,19 +71,25 @@ namespace WordCount.Controllers
             }
         }
 
-        private IEnumerable<Article> RemoveDuplicates(IEnumerable<ArticleJsonModel> jsonArticles)
+        private IEnumerable<Article> RemoveDuplicates(IEnumerable<ArticleJsonModel> jsonArticles, out StringBuilder responseMessage)
         {
-            List<Article> result = new();
-
-            foreach (var articleJsonModel in jsonArticles)
+            IEnumerable<ArticleJsonModel> articleJsonModels = jsonArticles as ArticleJsonModel[] ?? jsonArticles.ToArray();
+            List<Article> result = new(articleJsonModels.Count());
+            responseMessage = new StringBuilder();
+            
+            foreach (var articleJsonModel in articleJsonModels)
             {
                 Article article = Article.CreateFromJsonModel(articleJsonModel);
+                if (unitOfWork.ArticleRepository.TryGetEntity(article, out Article existingArticle))
+                {
+                    responseMessage.Append($"{article.Title} is already in database.\n");
+                    continue;
+                }
                 
-                if (unitOfWork.publisherRepository.TryGetEntity(article.Publisher, out Publisher existingPublisher))
+                if (unitOfWork.PublisherRepository.TryGetEntity(article.Publisher, out Publisher existingPublisher))
                 {
                     article.Publisher = existingPublisher;
                 }
-
                 result.Add(article);
             }
 
