@@ -71,7 +71,7 @@ namespace WordCount.DataAccess
 
         public bool TryGetEntity(TEntity entity, out TEntity existingEntity)
         {
-            existingEntity = dbSet.Find(entity);
+            existingEntity = dbSet.Find(entity.PrimaryKey);
 
             return existingEntity != null;
         }

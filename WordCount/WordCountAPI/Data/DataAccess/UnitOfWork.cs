@@ -24,15 +24,15 @@ namespace WordCount.DataAccess
             
         }
 
-        private Repository<WordRatio, CompositeKeyTriple<long, long, string>> wordRatioRepository;
+        private Repository<WordRatio, CompositeKeyTriple<long, string, string>> wordRatioRepository;
 
-        public Repository<WordRatio, CompositeKeyTriple<long, long, string>> WordRatioRepository
+        public Repository<WordRatio, CompositeKeyTriple<long, string, string>> WordRatioRepository
         {
             get
             {
                 if (wordRatioRepository == null)
                 {  
-                    wordRatioRepository = new Repository<WordRatio, CompositeKeyTriple<long, long, string>>(context);
+                    wordRatioRepository = new Repository<WordRatio, CompositeKeyTriple<long, string, string>>(context);
                 }
 
                 return wordRatioRepository;

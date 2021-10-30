@@ -47,7 +47,7 @@ namespace WordCount.Controllers
 
             //Insert article
             unitOfWork.ArticleRepository.Insert(result);
-            return Ok(message);
+            return Ok(message.ToString());
         }
 
         [HttpGet]

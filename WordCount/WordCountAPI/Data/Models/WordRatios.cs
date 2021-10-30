@@ -6,7 +6,7 @@ using WordCount.Data.Models;
 namespace WordCount.DataAccess
 {
 
-    public class WordRatio : DatabaseEntityModel<CompositeKeyTriple<long,long,string>>
+    public class WordRatio : DatabaseEntityModel<CompositeKeyTriple<long,string,string>>
     {
         public long ArticleId { get; set; }
         public string Word { get; set; }
@@ -14,12 +14,11 @@ namespace WordCount.DataAccess
         public string Title { get; set; }
         public string FilePath { get; set; }
         public int TotalWords { get; set; }
-        public long PublisherId { get; set; }
         public string PublisherName { get; set; }
         public float Percent { get; set; }
         
         [JsonIgnore]
-        public override CompositeKeyTriple<long, long, string> PrimaryKey =>
-            new CompositeKeyTriple<long, long, string>(ArticleId, PublisherId, Word);
+        public override CompositeKeyTriple<long, string, string> PrimaryKey =>
+            new (ArticleId, PublisherName, Word);
     }
 }
