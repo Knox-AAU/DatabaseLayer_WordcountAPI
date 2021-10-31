@@ -2,12 +2,12 @@
 
 namespace WordCount.Data.DataAccess
 {
-    public class UnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private ArticleContext context;
         private Repository<Article, long> articleRepository;
         private Repository<JsonSchemaModel, string> schemaRepository;
-        public Repository<JsonSchemaModel,string> SchemaRepository 
+        public IRepository<JsonSchemaModel,string> SchemaRepository 
         {
             get
             {
@@ -23,7 +23,7 @@ namespace WordCount.Data.DataAccess
 
         private Repository<WordRatio, CompositeKeyTriple<long, string, string>> wordRatioRepository;
 
-        public Repository<WordRatio, CompositeKeyTriple<long, string, string>> WordRatioRepository
+        public IRepository<WordRatio, CompositeKeyTriple<long, string, string>> WordRatioRepository
         {
             get
             {
@@ -37,7 +37,7 @@ namespace WordCount.Data.DataAccess
         }
 
         
-        public Repository<Article, long> ArticleRepository
+        public IRepository<Article, long> ArticleRepository
         {
             get
             {
@@ -52,7 +52,7 @@ namespace WordCount.Data.DataAccess
 
         private Repository<Publisher, string> publisherRepository;
 
-        public Repository<Publisher, string> PublisherRepository 
+        public IRepository<Publisher, string> PublisherRepository 
         {
             get
             {

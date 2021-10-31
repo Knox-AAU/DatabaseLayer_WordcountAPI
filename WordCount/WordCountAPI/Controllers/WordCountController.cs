@@ -18,7 +18,7 @@ namespace WordCount.Controllers
     public class WordCountController : ControllerBase
     {
         private const string WordCountSchemaName = "wordcount";
-        private UnitOfWork unitOfWork;
+        private IUnitOfWork unitOfWork;
 
         public WordCountController()
         {
