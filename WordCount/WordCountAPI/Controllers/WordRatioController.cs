@@ -9,7 +9,7 @@ namespace WordCount.Controllers
 {
     public sealed class WordRatioController : Controller
     {
-        private UnitOfWork unitOfWork;
+        private IUnitOfWork unitOfWork;
 
         public WordRatioController()
         {

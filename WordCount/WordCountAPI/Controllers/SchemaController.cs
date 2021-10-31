@@ -14,7 +14,7 @@ namespace WordCount.Controllers
     public class SchemaController: ControllerBase
     {
         
-        private UnitOfWork unitOfWork;
+        private IUnitOfWork unitOfWork;
         
         public SchemaController()
         {
