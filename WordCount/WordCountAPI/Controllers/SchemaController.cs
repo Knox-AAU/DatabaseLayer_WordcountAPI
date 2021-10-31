@@ -2,11 +2,10 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using WordCount.Controllers.JsonInputModels;
 using WordCount.Data;
+using WordCount.Data.DataAccess;
 using WordCount.Data.Models;
-using WordCount.DataAccess;
-using WordCount.JsonModels;
-using WordCount.Models;
 
 namespace WordCount.Controllers
 {

@@ -1,8 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using WordCount.DataAccess;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using WordCount.Data.DataAccess;
 
-namespace WordCount.Models
+namespace WordCount.Data.Models
 {
     [Table("Term")]
     public sealed class Term : DatabaseEntityModel<CompositeKeyPair<long, string>>

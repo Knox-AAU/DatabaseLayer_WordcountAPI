@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace WordCount.Models
+namespace WordCount.Data.Models
 {
     public class CompositeKeyPair<T1, T2 > : IEquatable<CompositeKeyPair<T1,T2>>
     {

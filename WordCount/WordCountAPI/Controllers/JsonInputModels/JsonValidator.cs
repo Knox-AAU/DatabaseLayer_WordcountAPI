@@ -3,7 +3,7 @@ using System.Text.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
-namespace WordCount.JsonModels
+namespace WordCount.Controllers.JsonInputModels
 {
     public sealed class JsonValidator<T> where T : class 
     {

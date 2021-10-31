@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace WordCount.JsonModels
+namespace WordCount.Controllers.JsonInputModels
 {
     public sealed class JsonSchemaInputModel
     {

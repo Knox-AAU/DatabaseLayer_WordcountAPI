@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WordCount.DataAccess
+namespace WordCount.Data.DataAccess
 {
     public abstract class DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>
     {

@@ -1,15 +1,11 @@
-
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using WordCount.Data;
 
-
-namespace WordCount.DataAccess
+namespace WordCount.Data.DataAccess
 {
     public sealed class Repository<TEntity, TKey> 
-        : RepositoryBase<TEntity, TKey>
-        where TEntity : DatabaseEntityModel<TKey>
+        : RepositoryBase<TEntity, TKey>, IRepository<TEntity, TKey> where TEntity : DatabaseEntityModel<TKey>
         where TKey : IEquatable<TKey>
     {
         private readonly ArticleContext context;

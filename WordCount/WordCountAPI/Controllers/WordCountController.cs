@@ -5,11 +5,10 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Controllers.JsonInputModels;
+using WordCount.Controllers.ResponseModels;
 using WordCount.Data;
+using WordCount.Data.DataAccess;
 using WordCount.Data.Models;
-using WordCount.DataAccess;
-using WordCount.JsonModels;
-using WordCount.Models;
 using Article = WordCount.Data.Models.Article;
 
 namespace WordCount.Controllers

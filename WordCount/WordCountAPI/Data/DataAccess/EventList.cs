@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace WordCount.DataAccess
+namespace WordCount.Data.DataAccess
 {
     public sealed class EventList<T> :  IList<T>, IReadOnlyList<T> 
     {

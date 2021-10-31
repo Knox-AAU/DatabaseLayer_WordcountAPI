@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace WordCount.DataAccess
+namespace WordCount.Data.DataAccess
 {
     public interface IReadOnlyRepository<TEntity, in TKey> 
         where TEntity : DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>

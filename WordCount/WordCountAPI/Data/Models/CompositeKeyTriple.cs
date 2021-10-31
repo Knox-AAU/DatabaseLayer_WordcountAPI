@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using WordCount.Models;
 
 namespace WordCount.Data.Models
 {

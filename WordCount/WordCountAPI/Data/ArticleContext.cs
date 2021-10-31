@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using WordCount.Data.Models;
-using WordCount.DataAccess;
-using WordCount.Models;
 
 namespace WordCount.Data
 {

@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Data;
-using WordCount.DataAccess;
+using WordCount.Data.DataAccess;
+using WordCount.Data.Models;
 
 namespace WordCount.Controllers
 {

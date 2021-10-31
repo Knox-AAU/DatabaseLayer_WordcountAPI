@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using WordCount.DataAccess;
+using WordCount.Data.DataAccess;
 
 namespace WordCount.Data.Models
 {

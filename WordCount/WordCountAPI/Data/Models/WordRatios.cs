@@ -1,9 +1,7 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using WordCount.Data.Models;
+using WordCount.Data.DataAccess;
 
-
-namespace WordCount.DataAccess
+namespace WordCount.Data.Models
 {
 
     public class WordRatio : DatabaseEntityModel<CompositeKeyTriple<long,string,string>>

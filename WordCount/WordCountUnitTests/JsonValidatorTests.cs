@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using WordCount.JsonModels;
+using WordCount.Controllers.JsonInputModels;
 
 namespace WordCountUnitTests
 {

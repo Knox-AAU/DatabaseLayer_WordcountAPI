@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.Data.Entity;
 using NSubstitute;
 using NUnit.Framework;
-using WordCount.DataAccess;
+using WordCount.Data.DataAccess;
 
 namespace WordCountUnitTests
 {

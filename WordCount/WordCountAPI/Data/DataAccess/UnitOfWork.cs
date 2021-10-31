@@ -1,9 +1,6 @@
-﻿using Microsoft.Data.Entity;
-using WordCount.Data;
-using WordCount.Data.Models;
-using WordCount.Models;
+﻿using WordCount.Data.Models;
 
-namespace WordCount.DataAccess
+namespace WordCount.Data.DataAccess
 {
     public class UnitOfWork
     {

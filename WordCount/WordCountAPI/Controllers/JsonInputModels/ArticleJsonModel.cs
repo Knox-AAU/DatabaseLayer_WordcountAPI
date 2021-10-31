@@ -1,6 +1,4 @@
-﻿using WordCount.JsonModels;
-
-namespace WordCount.Controllers.JsonInputModels
+﻿namespace WordCount.Controllers.JsonInputModels
 {
     public sealed class ArticleJsonModel
     {

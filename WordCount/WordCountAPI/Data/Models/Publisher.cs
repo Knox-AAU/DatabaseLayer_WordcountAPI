@@ -2,10 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
-using WordCount.Data.Models;
-using WordCount.DataAccess;
+using WordCount.Data.DataAccess;
 
-namespace WordCount.Models
+namespace WordCount.Data.Models
 {
     [Table("Publisher")]
     [Index(nameof(PublisherName), IsUnique = true)]

@@ -1,4 +1,4 @@
-namespace WordCount.Controllers
+namespace WordCount.Controllers.ResponseModels
 {
     public sealed class FileIdResponse
     {

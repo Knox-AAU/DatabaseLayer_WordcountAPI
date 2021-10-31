@@ -3,9 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using WordCount.Controllers.JsonInputModels;
-using WordCount.DataAccess;
-using WordCount.JsonModels;
-using WordCount.Models;
+using WordCount.Data.DataAccess;
 
 namespace WordCount.Data.Models
 {
