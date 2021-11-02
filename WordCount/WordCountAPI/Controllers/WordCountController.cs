@@ -9,7 +9,6 @@ using WordCount.Controllers.ResponseModels;
 using WordCount.Data;
 using WordCount.Data.DataAccess;
 using WordCount.Data.Models;
-using Article = WordCount.Data.Models.Article;
 
 namespace WordCount.Controllers
 {
