@@ -42,15 +42,19 @@ CREATE UNIQUE INDEX "IX_Publisher_PublisherName" ON "Publisher" ("PublisherName"
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20211030100616_initial', '5.0.10');
 
-COMMIT;
-
+CREATE VIEW "WordRatio" AS
+SELECT "ArticleId", "Word", "Count", "Title", "FilePath", "TotalWords","Article"."PublisherName",
+       round("Count"::numeric / "TotalWords"::numeric * 100::numeric, 2) AS "Percent"
+FROM "Article"
+         JOIN "Term" ON "ArticleId" = "Article"."Id"
+         JOIN "Publisher" ON "Article"."PublisherName" = "Publisher"."PublisherName"
 
 CREATE VIEW "WordRatio" AS
 SELECT "ArticleId", "Word", "Count", "Title", "FilePath", "TotalWords","Article"."PublisherName",
        round("Count"::numeric / "TotalWords"::numeric * 100::numeric, 2) AS "Percent"
 FROM "Article"
          JOIN "Term" ON "ArticleId" = "Article"."Id"
-         JOIN "Publisher" ON "Article"."PublisherName" = "Publisher"."PublisherName";
+         JOIN "Publisher" ON "Article"."PublisherName" = "Publisher"."PublisherName"
 
 
 COMMIT;

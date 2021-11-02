@@ -25,10 +25,5 @@ namespace WordCount.Data
                 .HasNoKey();
         }
 
-        public override int SaveChanges()
-        {
-            
-            return base.SaveChanges();
-        }
     }
 }

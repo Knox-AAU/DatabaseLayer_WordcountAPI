@@ -45,6 +45,7 @@ namespace WordCount.Controllers
 
             //Insert article
             unitOfWork.ArticleRepository.Insert(result);
+            
             return Ok(message.ToString());
         }
 
@@ -78,15 +79,20 @@ namespace WordCount.Controllers
             foreach (var articleJsonModel in articleJsonModels)
             {
                 Article article = Article.CreateFromJsonModel(articleJsonModel);
-                if (unitOfWork.ArticleRepository.TryGetEntity(article, out Article existingArticle))
+                if (unitOfWork.ArticleRepository.Find(a => a.Title == articleJsonModel.ArticleTitle) != null)
                 {
                     responseMessage.Append($"{article.Title} is already in database.\n");
                     continue;
                 }
+
                 
                 if (unitOfWork.PublisherRepository.TryGetEntity(article.Publisher, out Publisher existingPublisher))
                 {
                     article.Publisher = existingPublisher;
+                }
+                else
+                {
+                    article.Publisher = new Publisher(){PublisherName =  articleJsonModel.Publication};
                 }
                 result.Add(article);
             }
