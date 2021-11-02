@@ -1,14 +1,16 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
-namespace WordCount.JsonModels
+namespace WordCount.Controllers.JsonInputModels
 {
     public sealed class JsonValidator<T> where T : class 
     {
         private readonly JSchema schema;
         public JsonValidator(string jsonSchemaString)
         {
+            Console.WriteLine(jsonSchemaString);
             schema = JSchema.Parse(jsonSchemaString);
         }
         
