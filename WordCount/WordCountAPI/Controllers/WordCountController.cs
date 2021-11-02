@@ -45,7 +45,10 @@ namespace WordCount.Controllers
             IEnumerable<Article> result = RemoveDuplicates(jsonArticles, out StringBuilder message);
 
             //Insert article
-            
+            foreach (var article in result)
+            {
+                Console.WriteLine(article.Title);
+            }
             unitOfWork.ArticleRepository.Insert(result);
             return Ok(message.ToString());
         }
