@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using WordCount.Data.Models;
@@ -13,7 +14,7 @@ namespace WordCount.Data
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("UserID=postgres;Password=Sysadmins.;Host=db;Port=5432;Database=wordcount;");
+            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("db_connectionString"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
