@@ -27,6 +27,7 @@ namespace WordCount.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] JsonElement jsonElement)
         {
+            Console.WriteLine("Received request post request!");
             JsonSchemaModel? schema = unitOfWork.SchemaRepository.Find(s => s.SchemaName == WordCountSchemaName);
             string jsonInput = jsonElement.GetRawText();
 
@@ -45,7 +46,7 @@ namespace WordCount.Controllers
 
             //Insert article
             
-            
+            unitOfWork.ArticleRepository.Insert(result);
             return Ok(message.ToString());
         }
 
