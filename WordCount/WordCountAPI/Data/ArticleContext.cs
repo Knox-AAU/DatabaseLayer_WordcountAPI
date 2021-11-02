@@ -14,7 +14,7 @@ namespace WordCount.Data
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("db_connectionString"));
+            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("database_connectionString"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
