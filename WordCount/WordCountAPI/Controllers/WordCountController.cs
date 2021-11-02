@@ -27,7 +27,6 @@ namespace WordCount.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] JsonElement jsonElement)
         {
-            Console.WriteLine("Received request post request!");
             JsonSchemaModel? schema = unitOfWork.SchemaRepository.Find(s => s.SchemaName == WordCountSchemaName);
             string jsonInput = jsonElement.GetRawText();
 
@@ -45,18 +44,14 @@ namespace WordCount.Controllers
             IEnumerable<Article> result = RemoveDuplicates(jsonArticles, out StringBuilder message);
 
             //Insert article
-            foreach (var article in result)
-            {
-                Console.WriteLine(article.Title);
-            }
-            unitOfWork.ArticleRepository.Insert(result);
-            return Ok(message.ToString());
-        }
+            IEnumerable<Article> enumerable = result as Article[] ?? result.ToArray();
 
-        [HttpGet]
-        public IEnumerable<string> GetAll()
-        {
-            return new List<string>();
+            unitOfWork.ArticleRepository.Insert(enumerable);
+            foreach (var article in enumerable)
+            {
+                Console.WriteLine("ADDED " + article.Title);
+            }
+            return Ok(message.ToString());
         }
 
         [HttpGet]
@@ -76,33 +71,25 @@ namespace WordCount.Controllers
 
         private IEnumerable<Article> RemoveDuplicates(IEnumerable<ArticleJsonModel> jsonArticles, out StringBuilder responseMessage)
         {
-            IEnumerable<ArticleJsonModel> articleJsonModels = jsonArticles as ArticleJsonModel[] ?? jsonArticles.ToArray();
-            List<Article> result = new(articleJsonModels.Count());
             responseMessage = new StringBuilder();
-            Publisher createdPublisher = null;
+            IEnumerable<ArticleJsonModel> articleJsonModels = jsonArticles as ArticleJsonModel[] ?? jsonArticles.ToArray();
             
+            //Check for existing publisher only once - each post request
+            //contain only articles from same publisher.
+            Publisher publisher = unitOfWork.PublisherRepository.Find(p => p.PublisherName == articleJsonModels.First().Publication);
+            if (publisher == null)
+                publisher = new Publisher(){PublisherName =  articleJsonModels.First().Publication};
+
+            
+            List<Article> result = new(articleJsonModels.Count());
             foreach (var articleJsonModel in articleJsonModels)
             {
                 Article article = Article.CreateFromJsonModel(articleJsonModel);
-                
+                article.Publisher = publisher;
                 if (unitOfWork.ArticleRepository.Find(a => a.Title == articleJsonModel.ArticleTitle) != null)
                 {
                     responseMessage.Append($"{article.Title} is already in database.\n");
                     continue;
-                }
-
-                
-                if (unitOfWork.PublisherRepository.TryGetEntity(article.Publisher, out Publisher existingPublisher))
-                {
-                    article.Publisher = existingPublisher;
-                }
-                else
-                {
-                    if (createdPublisher == null)
-                    {
-                        createdPublisher = new Publisher(){PublisherName =  articleJsonModel.Publication};
-                    } 
-                    article.Publisher = createdPublisher;
                 }
                 result.Add(article);
             }
