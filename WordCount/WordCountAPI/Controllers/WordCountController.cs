@@ -44,7 +44,7 @@ namespace WordCount.Controllers
             IEnumerable<Article> result = RemoveDuplicates(jsonArticles, out StringBuilder message);
 
             //Insert article
-            unitOfWork.ArticleRepository.Insert(result);
+            
             
             return Ok(message.ToString());
         }
@@ -75,10 +75,12 @@ namespace WordCount.Controllers
             IEnumerable<ArticleJsonModel> articleJsonModels = jsonArticles as ArticleJsonModel[] ?? jsonArticles.ToArray();
             List<Article> result = new(articleJsonModels.Count());
             responseMessage = new StringBuilder();
+            Publisher createdPublisher = null;
             
             foreach (var articleJsonModel in articleJsonModels)
             {
                 Article article = Article.CreateFromJsonModel(articleJsonModel);
+                
                 if (unitOfWork.ArticleRepository.Find(a => a.Title == articleJsonModel.ArticleTitle) != null)
                 {
                     responseMessage.Append($"{article.Title} is already in database.\n");
@@ -92,7 +94,11 @@ namespace WordCount.Controllers
                 }
                 else
                 {
-                    article.Publisher = new Publisher(){PublisherName =  articleJsonModel.Publication};
+                    if (createdPublisher == null)
+                    {
+                        createdPublisher = new Publisher(){PublisherName =  articleJsonModel.Publication};
+                    } 
+                    article.Publisher = createdPublisher;
                 }
                 result.Add(article);
             }

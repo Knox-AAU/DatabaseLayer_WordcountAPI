@@ -10,7 +10,6 @@ namespace WordCount.Controllers.JsonInputModels
         private readonly JSchema schema;
         public JsonValidator(string jsonSchemaString)
         {
-            Console.WriteLine(jsonSchemaString);
             schema = JSchema.Parse(jsonSchemaString);
         }
         
