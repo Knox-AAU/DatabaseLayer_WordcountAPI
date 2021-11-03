@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using WordCount.Data;
 
 namespace WordCount
 {
@@ -24,6 +26,17 @@ namespace WordCount
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WordCount", Version = "v1" });
             });
+        }
+
+
+        public void ApplyMigration(ArticleContext context)
+        {
+            /*
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                context.Database.Migrate();
+            }
+            */
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +55,7 @@ namespace WordCount
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            ApplyMigration(new ArticleContext());
         }
     }
 }

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Linq;
-using WordCount.DataAccess;
-
-namespace WordCount.JsonModels
+﻿namespace WordCount.Controllers.JsonInputModels
 {
-    public sealed class Article
+    public sealed class ArticleJsonModel
     {
         public string ArticleTitle { get; set; }
         public string Publication { get; set; }
         public string FilePath { get; set; }
         public int TotalWordsInArticle { get; set; }
-        public WordData[] Words { get; set; }
+        public TermJsonModel[] Words { get; set; }
     }
 }

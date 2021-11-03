@@ -2,17 +2,25 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Data;
-using WordCount.DataAccess;
+using WordCount.Data.DataAccess;
+using WordCount.Data.Models;
 
 namespace WordCount.Controllers
 {
     public sealed class WordRatioController : Controller
     {
+        private IUnitOfWork unitOfWork;
+
+        public WordRatioController()
+        {
+            unitOfWork = new UnitOfWork(new ArticleContext());
+        }
+        
         [HttpGet]
         [Route("/[controller]/all")]
-        public IEnumerable<WordRatios> GetAllWordRatios()
+        public IEnumerable<WordRatio> GetAllWordRatios()
         {
-            return new WordCountDbContext().WordRatios.ToList();
+            return unitOfWork.WordRatioRepository.All();
         }
         
         [HttpGet]
@@ -23,17 +31,13 @@ namespace WordCount.Controllers
             {
                 return BadRequest("No terms given.");
             }
-            
-            List<WordRatios> set = new WordCountDbContext().WordRatios.ToList();
-            IEnumerable<WordRatios> result = set.Where(w => terms.Contains(w.WordName));
-
+            IEnumerable<WordRatio> result = unitOfWork.WordRatioRepository.FindAll(w => terms.Contains(w.Word));
             if (sources.Length != 0)
             {
-                result = result.Where(r => sources.Contains(r.SourceName));
+                result = result.Where(r => sources.Contains(r.PublisherName));
             }
 
-            result = result.OrderBy(a => a.ArticleTitle);
-
+            result = result.OrderBy(a => a.Title);
             return Ok(result);
         }
     }

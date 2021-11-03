@@ -1,8 +1,8 @@
 using System.Text.Json;
 
-namespace WordCount.JsonModels
+namespace WordCount.Controllers.JsonInputModels
 {
-    public sealed class JsonSchemaDataModel
+    public sealed class JsonSchemaInputModel
     {
         public string SchemaName { get; set; }
         public JsonElement SchemaBody { get; set; }

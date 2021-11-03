@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using WordCount.Controllers.JsonInputModels;
+using WordCount.Controllers.ResponseModels;
 using WordCount.Data;
-using WordCount.JsonModels;
-using WordCount.Models;
+using WordCount.Data.DataAccess;
+using WordCount.Data.Models;
 
 namespace WordCount.Controllers
 {
@@ -14,89 +17,41 @@ namespace WordCount.Controllers
     public class WordCountController : ControllerBase
     {
         private const string WordCountSchemaName = "wordcount";
+        private IUnitOfWork unitOfWork;
+
+        public WordCountController()
+        {
+            unitOfWork = new UnitOfWork(new ArticleContext());
+        }
         
         [HttpPost]
         public IActionResult Post([FromBody] JsonElement jsonElement)
         {
-            WordCountDbContext dbContext = new();
-            JsonSchemaModel? schema = dbContext.JsonSchemas.ToList().Find(s => s.SchemaName == WordCountSchemaName);
-
+            JsonSchemaModel? schema = unitOfWork.SchemaRepository.Find(s => s.SchemaName == WordCountSchemaName);
             string jsonInput = jsonElement.GetRawText();
-            string message = string.Empty;
 
-            int statusCode = 200;
-
+            if (schema == null)
+            {
+                return StatusCode(500, $"\"{WordCountSchemaName}\" schema does not exist.");
+            }
+            
             // Get schema and use for validating
-            if (!new JsonValidator<Article[]>(schema.JsonString).IsValid(jsonInput, out Article[] articles))
+            if (!new JsonValidator<ArticleJsonModel[]>(schema.JsonString).IsValid(jsonInput, out ArticleJsonModel[] jsonArticles))
             {
                 return BadRequest("Wrong body syntax, does not follow schema.");
             }
+            
+            IEnumerable<Article> result = RemoveDuplicates(jsonArticles, out StringBuilder message);
 
-            List<AppearsInModel> appearsInModels = new();
-                
-            foreach (Article article in articles)
+            //Insert article
+            IEnumerable<Article> enumerable = result as Article[] ?? result.ToArray();
+
+            unitOfWork.ArticleRepository.Insert(enumerable);
+            foreach (var article in enumerable)
             {
-                
-                if (!dbContext.ExternalSources.ToList().Exists(e => e.SourceName == article.Publication))
-                {
-                    dbContext.ExternalSources.Add(new ExternalSourcesModel { SourceName = article.Publication });
-                    dbContext.SaveChanges();
-                }
-                
-                ExternalSourcesModel sourcesModel = dbContext.ExternalSources.First(source => source.SourceName == article.Publication);
-                
-                FileListModel fileListModel = JsonDbUtility.ArticleToFileList(article, sourcesModel.Id);
-
-                if (dbContext.FileList.ToList().Exists(a => a.ArticleTitle == fileListModel.ArticleTitle))
-                {
-                    statusCode = 206;
-                    message += $"Article with title \"{fileListModel.ArticleTitle}\" already exists in the database.\n";
-                }
-
-                if (dbContext.FileList.ToList().Exists(a => a.FilePath == fileListModel.FilePath))
-                {
-                    statusCode = 206;
-                    message += $"Article with file path \"{fileListModel.FilePath}\" already exists in the database.\n";
-                }
-                    
-                if (statusCode == 206) continue;
-                    
-                List<WordListModel> words = new();
-                appearsInModels = new();
-
-                foreach (WordData articleWord in article.Words)
-                {
-                    WordListModel wordListModel = JsonDbUtility.WordDataToWordList(articleWord);
-                    AppearsInModel appearsInModel = JsonDbUtility.ArticleWordDataToAppearsIn(article, articleWord);
-
-                    if (dbContext.Wordlist.Find(wordListModel.WordName) == null)
-                    {
-                        words.Add(wordListModel);
-                    }
-
-                    appearsInModels.Add(appearsInModel);
-                }
-
-                dbContext.Wordlist.AddRange(words);
-                dbContext.FileList.Add(fileListModel);
+                Console.WriteLine("ADDED " + article.Title);
             }
-                
-            dbContext.SaveChanges();
-            dbContext.AppearsIn.AddRange(appearsInModels);
-            dbContext.SaveChanges();
-
-            Console.WriteLine($"Added {articles.Length} entries.");
-
-            return Ok(message == string.Empty ? "Ok" : message);
-        }
-        
-        [HttpGet]
-        public IEnumerable<string> GetAll()
-        {
-            // Get all words
-            List<string> words = new();
-            new WordCountDbContext().Wordlist.Take(100).ToList().ForEach(wordList => words.Add(wordList.WordName));
-            return words;
+            return Ok(message.ToString());
         }
 
         [HttpGet]
@@ -105,36 +60,40 @@ namespace WordCount.Controllers
         {
             try
             {
-                var x = new WordCountDbContext().FileList.First(e => e.Id == id).FilePath;
-                return new JsonResult(new FileIdResponse(x));
+                string filePath = unitOfWork.ArticleRepository.Find(e => e.Id == id).FilePath;
+                return new JsonResult(new FileIdResponse(filePath));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return BadRequest("No such entity");
+                return BadRequest($"No entity with ID {id} exists");
             }
         }
-
-        [HttpGet]
-        [Route("/[controller]/{word}")]
-        public IActionResult Get(string word)
+        private IEnumerable<Article> RemoveDuplicates(IEnumerable<ArticleJsonModel> jsonArticles, out StringBuilder responseMessage)
         {
-            WordListModel entity = new WordCountDbContext().Wordlist.Find(word);
+            responseMessage = new StringBuilder();
+            IEnumerable<ArticleJsonModel> articleJsonModels = jsonArticles as ArticleJsonModel[] ?? jsonArticles.ToArray();
+            
+            //Check for existing publisher only once - each post request
+            //contain only articles from same publisher.
+            Publisher publisher = unitOfWork.PublisherRepository.Find(p => p.PublisherName == articleJsonModels.First().Publication);
+            if (publisher == null)
+                publisher = new Publisher(){PublisherName =  articleJsonModels.First().Publication};
 
-            if (entity == null)
+            
+            List<Article> result = new(articleJsonModels.Count());
+            foreach (var articleJsonModel in articleJsonModels)
             {
-                return NotFound($"Word \"{word}\" does not exist in the database.");
+                Article article = Article.CreateFromJsonModel(articleJsonModel);
+                article.Publisher = publisher;
+                if (unitOfWork.ArticleRepository.Find(a => a.Title == articleJsonModel.ArticleTitle) != null)
+                {
+                    responseMessage.Append($"{article.Title} is already in database.\n");
+                    continue;
+                }
+                result.Add(article);
             }
 
-            return Ok(entity);
-        }
-    }
-
-    public class FileIdResponse
-    {
-        public string FilePath { get; set; }
-        public FileIdResponse(string s)
-        {
-            FilePath = s;
+            return result;
         }
     }
 }

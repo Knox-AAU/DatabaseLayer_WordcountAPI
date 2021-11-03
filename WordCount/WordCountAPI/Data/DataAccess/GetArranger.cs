@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WordCount.DataAccess
+namespace WordCount.Data.DataAccess
 {
     public sealed class GetArranger<TEntity> : IFilterBuilder<TEntity>, IOrderByBuilder<TEntity>
     {
