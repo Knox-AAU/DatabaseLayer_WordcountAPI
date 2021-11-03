@@ -11,8 +11,9 @@ namespace WordCount.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class SchemaController: ControllerBase
+    public class SchemaController : ControllerBase
     {
+
         
         private IUnitOfWork unitOfWork;
         
@@ -77,6 +78,7 @@ namespace WordCount.Controllers
             });
             return Ok();
         }
+
 
         private JsonSchemaInputModel CreateJsonModel(JsonElement jsonInput)
         {

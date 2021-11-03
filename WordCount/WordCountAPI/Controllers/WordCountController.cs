@@ -68,7 +68,6 @@ namespace WordCount.Controllers
                 return BadRequest($"No entity with ID {id} exists");
             }
         }
-
         private IEnumerable<Article> RemoveDuplicates(IEnumerable<ArticleJsonModel> jsonArticles, out StringBuilder responseMessage)
         {
             responseMessage = new StringBuilder();
