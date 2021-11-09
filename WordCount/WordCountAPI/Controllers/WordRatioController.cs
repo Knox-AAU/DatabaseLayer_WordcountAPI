@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WordCount.Data;
 using WordCount.Data.DataAccess;
 using WordCount.Data.Models;
@@ -9,20 +10,16 @@ namespace WordCount.Controllers
 {
     public sealed class WordRatioController : Controller
     {
-        private IUnitOfWork unitOfWork;
+        private IQueryable<WordRatio> dbSet;
+        //private IUnitOfWork unitOfWork;
+        
 
         public WordRatioController()
         {
-            unitOfWork = new UnitOfWork(new ArticleContext());
+            //unitOfWork = new UnitOfWork(new ArticleContext());
+            dbSet = new ArticleContext().WordRatios.AsQueryable();
         }
-        
-        [HttpGet]
-        [Route("/[controller]/all")]
-        public IEnumerable<WordRatio> GetAllWordRatios()
-        {
-            return unitOfWork.WordRatioRepository.All();
-        }
-        
+
         [HttpGet]
         [Route("/[controller]/")]
         public IActionResult GetMatches(string[] terms, string[] sources)
@@ -31,10 +28,17 @@ namespace WordCount.Controllers
             {
                 return BadRequest("No terms given.");
             }
-            IEnumerable<WordRatio> result = unitOfWork.WordRatioRepository.FindAll(w => terms.Contains(w.Word));
+            //IEnumerable<WordRatio> result = unitOfWork.WordRatioRepository.FindAll(w => terms.Contains(w.Word));
+
+            var result = from ratio in dbSet
+                where terms.Contains(ratio.Word)
+                select ratio;
+            
             if (sources.Length != 0)
             {
-                result = result.Where(r => sources.Contains(r.PublisherName));
+                result = from ratio in result 
+                    where sources.Contains(ratio.PublisherName) 
+                    select ratio;
             }
 
             result = result.OrderBy(a => a.Title);
