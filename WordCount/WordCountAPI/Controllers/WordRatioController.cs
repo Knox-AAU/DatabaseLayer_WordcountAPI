@@ -19,15 +19,7 @@ namespace WordCount.Controllers
             //unitOfWork = new UnitOfWork(new ArticleContext());
             dbSet = new ArticleContext().WordRatios.AsQueryable();
         }
-        
-        [HttpGet]
-        [Route("/[controller]/all")]
-        public IEnumerable<WordRatio> GetAllWordRatios()
-        {
-            return null;
-            // return unitOfWork.WordRatioRepository.All();
-        }
-        
+
         [HttpGet]
         [Route("/[controller]/")]
         public IActionResult GetMatches(string[] terms, string[] sources)
