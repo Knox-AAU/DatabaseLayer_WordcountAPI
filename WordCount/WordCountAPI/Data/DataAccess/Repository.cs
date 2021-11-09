@@ -17,10 +17,10 @@ namespace WordCount.Data.DataAccess
         {
             this.context = context;
             dbSet = context.Set<TEntity>();
-            InternalEntitySet.ItemAdded += Add;
-            InternalEntitySet.ItemsAdded += Add;
-            InternalEntitySet.ItemRemoved += Remove;
-            InternalEntitySet.ItemsRemoved += Remove;
+            internalEntitySet.ItemAdded += Add;
+            internalEntitySet.ItemsAdded += Add;
+            internalEntitySet.ItemRemoved += Remove;
+            internalEntitySet.ItemsRemoved += Remove;
         }
 
         private void Add(IEnumerable<TEntity> obj)

@@ -14,22 +14,22 @@ namespace WordCount.Data.DataAccess
         public RepositoryBase(ArticleContext context)
             : base(context)
         {
-            InternalEntitySet = new EventList<TEntity>(context.Set<TEntity>().ToList());
+            internalEntitySet = new EventList<TEntity>(context.Set<TEntity>().ToList());
         }
 
         public RepositoryBase(DbSet<TEntity> entitySet)
             : base(entitySet)
         {
-            InternalEntitySet = new EventList<TEntity>(entitySet.ToList());
+            internalEntitySet = new EventList<TEntity>(entitySet.ToList());
         }
 
         public RepositoryBase(List<TEntity> internalEntity)
             : base(internalEntity)
         {
-            InternalEntitySet = new EventList<TEntity>(internalEntity);
+            internalEntitySet = new EventList<TEntity>(internalEntity);
         }
 
-        protected new EventList<TEntity> InternalEntitySet;
+        protected new EventList<TEntity> internalEntitySet;
 
         /// <summary>
         /// Insert the entity into the internal list, unless already existing and invokes functions subscribed to
@@ -44,7 +44,7 @@ namespace WordCount.Data.DataAccess
                 throw new ArgumentException("Duplicate entity");
             }
 
-            InternalEntitySet.Add(entity);
+            internalEntitySet.Add(entity);
             ListChanged?.Invoke();
         }
 
@@ -56,7 +56,7 @@ namespace WordCount.Data.DataAccess
         /// <exception cref="ArgumentException"></exception>
         public virtual void Insert(IEnumerable<TEntity> entities)
         {
-            InternalEntitySet.AddRange(entities);
+            internalEntitySet.AddRange(entities);
             ListChanged?.Invoke();
         }
 
@@ -69,14 +69,14 @@ namespace WordCount.Data.DataAccess
         /// <exception cref="ArgumentException"></exception>
         public virtual void Update(TKey entityKey, TEntity newEntity)
         {
-            int index = InternalEntitySet.FindIndex(entity => entity.PrimaryKey.Equals(entityKey));
+            int index = internalEntitySet.FindIndex(entity => entity.PrimaryKey.Equals(entityKey));
 
             if (index == -1)
             {
                 throw new ArgumentException("No entity with such ID");
             }
 
-            InternalEntitySet[index] = newEntity;
+            internalEntitySet[index] = newEntity;
             ListChanged?.Invoke();
         }
 
@@ -98,7 +98,7 @@ namespace WordCount.Data.DataAccess
         /// <param name="entity"></param>
         public virtual void Delete(TEntity entity)
         {
-            InternalEntitySet.Remove(entity);
+            internalEntitySet.Remove(entity);
             ListChanged?.Invoke();
         }
 
@@ -108,7 +108,7 @@ namespace WordCount.Data.DataAccess
         /// <param name="predicate"></param>
         public virtual void Delete(Predicate<TEntity> predicate)
         {
-            InternalEntitySet.Remove(Find(predicate));
+            internalEntitySet.Remove(Find(predicate));
             ListChanged?.Invoke();
         }
     }

@@ -91,7 +91,7 @@ namespace WordCount.Data.DataAccess
             {
                 return InternalEntitySet.ToList().First(e => e.PrimaryKey.Equals(entity.PrimaryKey));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

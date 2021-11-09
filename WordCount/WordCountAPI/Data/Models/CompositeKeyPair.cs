@@ -45,7 +45,8 @@ namespace WordCount.Data.Models
 
         public override int GetHashCode()
         {
-            unchecked // Overflow is fine, just wrap
+            // Overflow is fine, just wrap
+            unchecked
             {
                 int hash = 851153;
                 hash = (hash * 228601) + First.GetHashCode();
