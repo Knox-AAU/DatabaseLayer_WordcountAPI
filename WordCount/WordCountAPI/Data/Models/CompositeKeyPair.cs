@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace WordCount.Data.Models
 {
-    public class CompositeKeyPair<T1, T2 > : IEquatable<CompositeKeyPair<T1,T2>>
+    public class CompositeKeyPair<T1, T2> : IEquatable<CompositeKeyPair<T1, T2>>
     {
         public T1 First { get; }
         public T2 Second { get; }
@@ -12,7 +12,7 @@ namespace WordCount.Data.Models
             if (other == null) return false;
             return this.First.Equals(other.First) && this.Second.Equals(other.Second);
         }
-    
+
         public CompositeKeyPair([NotNull]T1 first, [NotNull]T2 second)
         {
             First = first;
@@ -24,7 +24,7 @@ namespace WordCount.Data.Models
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((CompositeKeyPair<T1, T2>) obj);
+            return Equals((CompositeKeyPair<T1, T2>)obj);
         }
 
         public override int GetHashCode()
@@ -38,6 +38,4 @@ namespace WordCount.Data.Models
             }
         }
     }
-
-    
 }

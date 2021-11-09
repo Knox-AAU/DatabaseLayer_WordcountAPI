@@ -11,12 +11,11 @@ namespace WordCount.Controllers
     public sealed class WordRatioController : Controller
     {
         private IQueryable<WordRatio> dbSet;
-        //private IUnitOfWork unitOfWork;
-        
 
+        // private IUnitOfWork unitOfWork;
         public WordRatioController()
         {
-            //unitOfWork = new UnitOfWork(new ArticleContext());
+            // unitOfWork = new UnitOfWork(new ArticleContext());
             dbSet = new ArticleContext().WordRatios.AsQueryable();
         }
 
@@ -28,16 +27,16 @@ namespace WordCount.Controllers
             {
                 return BadRequest("No terms given.");
             }
-            //IEnumerable<WordRatio> result = unitOfWork.WordRatioRepository.FindAll(w => terms.Contains(w.Word));
 
+            // IEnumerable<WordRatio> result = unitOfWork.WordRatioRepository.FindAll(w => terms.Contains(w.Word));
             var result = from ratio in dbSet
                 where terms.Contains(ratio.Word)
                 select ratio;
-            
+
             if (sources.Length != 0)
             {
-                result = from ratio in result 
-                    where sources.Contains(ratio.PublisherName) 
+                result = from ratio in result
+                    where sources.Contains(ratio.PublisherName)
                     select ratio;
             }
 

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 
 namespace WordCount.Data.DataAccess
 {
-    public interface IRepository<TEntity, in TKey> where TEntity : DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>
+    public interface IRepository<TEntity, in TKey>
+        where TEntity : DatabaseEntityModel<TKey>
+        where TKey : IEquatable<TKey>
     {
         void Update(TEntity entity);
         void Update(IEnumerable<TEntity> entities);

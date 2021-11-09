@@ -3,7 +3,6 @@ using WordCount.Data.DataAccess;
 
 namespace WordCount.Data.Models
 {
-
     public class WordRatio : DatabaseEntityModel<CompositeKeyTriple<long,string,string>>
     {
         public long ArticleId { get; set; }

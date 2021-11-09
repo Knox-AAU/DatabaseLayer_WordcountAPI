@@ -16,7 +16,7 @@ namespace WordCount.Data.Models
         public string FilePath { get; set; }
         public string Title { get; set; }
         public int TotalWords { get; set; }
-        
+
         public Publisher Publisher { get; set; }
         public List<Term> Terms { get; set; }
 
@@ -26,7 +26,7 @@ namespace WordCount.Data.Models
         public static Article CreateFromJsonModel(ArticleJsonModel jsonModel)
         {
             List<Term> terms = new(jsonModel.Words.Length);
-            
+
             foreach (TermJsonModel term in jsonModel.Words)
             {
                 terms.Add(new Term { Count = term.Amount, Word = term.Word });

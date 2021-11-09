@@ -25,7 +25,7 @@ namespace WordCount.Data.DataAccess
         }
 
         protected new EventList<TEntity> InternalEntitySet;
-        
+
         /// <summary>
         /// Insert the entity into the internal list, unless already existing and invokes functions subscribed to
         /// ListChanged.
@@ -41,7 +41,7 @@ namespace WordCount.Data.DataAccess
 
             InternalEntitySet.Add(entity);
             ListChanged?.Invoke();
-            
+
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace WordCount.Data.DataAccess
             {
                 throw new ArgumentException("No entity with such ID");
             }
-            
+
             InternalEntitySet[index] = newEntity;
             ListChanged?.Invoke();
         }

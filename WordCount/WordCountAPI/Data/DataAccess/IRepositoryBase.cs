@@ -4,14 +4,15 @@ using System.Collections.Generic;
 namespace WordCount.Data.DataAccess
 {
     public interface IRepositoryBase<TEntity, in TKey> : IReadOnlyRepository<TEntity, TKey>
-        where TEntity : DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>
+        where TEntity : DatabaseEntityModel<TKey>
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Insert and each of the entities
         /// </summary>
         /// <param name="entities"></param>
         public void Insert(IEnumerable<TEntity> entities);
-        
+
         /// <summary>
         /// Updates entity in the database
         /// </summary>
@@ -29,7 +30,6 @@ namespace WordCount.Data.DataAccess
         /// Inserts and saves entity to database
         /// </summary>
         /// <param name="entity"></param>
-
         public void Insert(TEntity entity);
 
         /// <summary>
@@ -37,7 +37,5 @@ namespace WordCount.Data.DataAccess
         /// </summary>
         /// <param name="predicate"></param>
         public void Delete(Predicate<TEntity> predicate);
-
-
     }
 }
