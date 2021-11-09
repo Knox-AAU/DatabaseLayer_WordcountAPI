@@ -50,7 +50,10 @@ namespace WordCount.Data.DataAccess
 
         bool ICollection<T>.Remove(T item)
         {
-            if (!internalList.Remove(item)) return false;
+            if (!internalList.Remove(item))
+            {
+                return false;
+            }
 
             ItemRemoved?.Invoke(item);
             return true;
@@ -90,7 +93,6 @@ namespace WordCount.Data.DataAccess
 
         public void FindIndex()
         {
-
         }
 
         public int FindIndex(Predicate<T> func)

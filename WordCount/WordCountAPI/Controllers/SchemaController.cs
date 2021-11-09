@@ -54,7 +54,6 @@ namespace WordCount.Controllers
         [Route("/[controller]")]
         public IActionResult PostJsonSchema([FromBody] JsonElement jsonInput)
         {
-
             JsonSchemaInputModel schemaData = CreateJsonModel(jsonInput);
 
             if (schemaData == null)
@@ -83,7 +82,7 @@ namespace WordCount.Controllers
             {
                 PropertyNameCaseInsensitive = true
             };
-            string jsonString = String.Empty;
+            string jsonString = string.Empty;
             JsonSchemaInputModel schemaData = null;
 
             try

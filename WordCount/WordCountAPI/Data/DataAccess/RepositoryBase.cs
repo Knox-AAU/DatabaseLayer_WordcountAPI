@@ -5,21 +5,26 @@ using Microsoft.Data.Entity;
 
 namespace WordCount.Data.DataAccess
 {
-    public class RepositoryBase<TEntity, TKey> : ReadOnlyRepository<TEntity, TKey>, IRepositoryBase<TEntity, TKey> where TEntity : DatabaseEntityModel<TKey> where TKey : IEquatable<TKey>
+    public class RepositoryBase<TEntity, TKey> : ReadOnlyRepository<TEntity, TKey>, IRepositoryBase<TEntity, TKey>
+        where TEntity : DatabaseEntityModel<TKey>
+        where TKey : IEquatable<TKey>
     {
         public event Action ListChanged;
 
-        public RepositoryBase(ArticleContext context) : base(context)
+        public RepositoryBase(ArticleContext context)
+            : base(context)
         {
             InternalEntitySet = new EventList<TEntity>(context.Set<TEntity>().ToList());
         }
 
-        public RepositoryBase(DbSet<TEntity> entitySet) : base(entitySet)
+        public RepositoryBase(DbSet<TEntity> entitySet)
+            : base(entitySet)
         {
             InternalEntitySet = new EventList<TEntity>(entitySet.ToList());
         }
 
-        public RepositoryBase(List<TEntity> internalEntity) : base(internalEntity)
+        public RepositoryBase(List<TEntity> internalEntity)
+            : base(internalEntity)
         {
             InternalEntitySet = new EventList<TEntity>(internalEntity);
         }
@@ -30,7 +35,7 @@ namespace WordCount.Data.DataAccess
         /// Insert the entity into the internal list, unless already existing and invokes functions subscribed to
         /// ListChanged.
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="entity" />
         /// <exception cref="ArgumentException"></exception>
         public virtual void Insert(TEntity entity)
         {
@@ -41,7 +46,6 @@ namespace WordCount.Data.DataAccess
 
             InternalEntitySet.Add(entity);
             ListChanged?.Invoke();
-
         }
 
         /// <summary>

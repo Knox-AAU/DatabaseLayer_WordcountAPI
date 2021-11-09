@@ -20,7 +20,10 @@ namespace WordCount.Controllers.JsonInputModels
 
             data = null;
 
-            if (!jToken.IsValid(schema)) return false;
+            if (!jToken.IsValid(schema))
+            {
+                return false;
+            }
 
             data = DeserializeJsonString(jsonString);
 

@@ -18,7 +18,6 @@ namespace WordCount.Data.DataAccess
 
                 return schemaRepository;
             }
-
         }
 
         private Repository<WordRatio, CompositeKeyTriple<long, string, string>> wordRatioRepository;

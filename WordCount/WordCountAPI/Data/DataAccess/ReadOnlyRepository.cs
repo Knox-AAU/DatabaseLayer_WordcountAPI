@@ -52,7 +52,6 @@ namespace WordCount.Data.DataAccess
             {
                 return null;
             }
-
         }
 
         /// <summary>
@@ -90,7 +89,7 @@ namespace WordCount.Data.DataAccess
         {
             try
             {
-                return InternalEntitySet.ToList().First(e=> e.PrimaryKey.Equals(entity.PrimaryKey));
+                return InternalEntitySet.ToList().First(e => e.PrimaryKey.Equals(entity.PrimaryKey));
             }
             catch (Exception e)
             {

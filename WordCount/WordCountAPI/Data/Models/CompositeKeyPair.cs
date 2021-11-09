@@ -9,7 +9,11 @@ namespace WordCount.Data.Models
         public T2 Second { get; }
         public bool Equals(CompositeKeyPair<T1, T2> other)
         {
-            if (other == null) return false;
+            if (other == null)
+            {
+                return false;
+            }
+
             return this.First.Equals(other.First) && this.Second.Equals(other.Second);
         }
 
@@ -21,9 +25,21 @@ namespace WordCount.Data.Models
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
             return Equals((CompositeKeyPair<T1, T2>)obj);
         }
 
@@ -32,8 +48,8 @@ namespace WordCount.Data.Models
             unchecked // Overflow is fine, just wrap
             {
                 int hash = 851153;
-                hash = hash * 228601 + First.GetHashCode();
-                hash = hash * 826151 + Second.GetHashCode();
+                hash = (hash * 228601) + First.GetHashCode();
+                hash = (hash * 826151) + Second.GetHashCode();
                 return hash;
             }
         }

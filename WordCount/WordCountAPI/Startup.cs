@@ -28,7 +28,6 @@ namespace WordCount
             });
         }
 
-
         public void ApplyMigration(ArticleContext context)
         {
             /*
@@ -49,7 +48,7 @@ namespace WordCount
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WordCount v1"));
-                
+
             app.UseRouting();
 
             app.UseAuthorization();

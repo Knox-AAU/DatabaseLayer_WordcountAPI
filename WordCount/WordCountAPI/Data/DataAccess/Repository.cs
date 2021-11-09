@@ -5,13 +5,15 @@ using Microsoft.EntityFrameworkCore;
 namespace WordCount.Data.DataAccess
 {
     public sealed class Repository<TEntity, TKey>
-        : RepositoryBase<TEntity, TKey>, IRepository<TEntity, TKey> where TEntity : DatabaseEntityModel<TKey>
+        : RepositoryBase<TEntity, TKey>, IRepository<TEntity, TKey>
+        where TEntity : DatabaseEntityModel<TKey>
         where TKey : IEquatable<TKey>
     {
         private readonly ArticleContext context;
         private readonly DbSet<TEntity> dbSet;
 
-        public Repository(ArticleContext context) : base(context)
+        public Repository(ArticleContext context)
+            : base(context)
         {
             this.context = context;
             dbSet = context.Set<TEntity>();
