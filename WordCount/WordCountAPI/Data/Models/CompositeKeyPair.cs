@@ -49,8 +49,8 @@ namespace WordCount.Data.Models
             unchecked
             {
                 int hash = 851153;
-                hash = (hash * 228601) + First.GetHashCode();
-                hash = (hash * 826151) + Second.GetHashCode();
+                hash = hash * 228601 + First.GetHashCode();
+                hash = hash * 826151 + Second.GetHashCode();
                 return hash;
             }
         }

@@ -51,9 +51,9 @@ namespace WordCount.Data.Models
             public override int GetHashCode()
             {
                 int hash = 851153;
-                hash = (hash * 228601) + First.GetHashCode();
-                hash = (hash * 826151) + Second.GetHashCode();
-                hash = (hash * 38299) + Second.GetHashCode();
+                hash = hash * 228601 + First.GetHashCode();
+                hash = hash * 826151 + Second.GetHashCode();
+                hash = hash * 38299 + Second.GetHashCode();
                 return hash;
             }
         }
