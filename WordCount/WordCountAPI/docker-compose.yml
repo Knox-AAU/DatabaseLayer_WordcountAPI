@@ -1,36 +1,35 @@
-﻿version: "3"
-services: 
+﻿services: 
   api:
     build: 
-        context: .
-        dockerfile: ./${ASPNETCORE_ENVIRONMENT}/Dockerfile
+      context: .
+      dockerfile: ./${ASPNETCORE_ENVIRONMENT}/Dockerfile
     ports:
-        - "5000:80"
+      - "5000:80"
     networks: 
-        - wordcount
+      - wordcount
     depends_on: 
-        - db
+      - db
     environment: 
-        - database_host=${db_host}
-        - database_username=${db_username}
-        - database_database=${POSTGRES_DATABASE}
-        - database_password=${POSTGRES_PASSWORD}
-        - database_port=${db_port}
-        - database_connectionString=${db_connectionString}
-        - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - database_host=${db_host}
+      - database_username=${db_username}
+      - database_database=${POSTGRES_DATABASE}
+      - database_password=${POSTGRES_PASSWORD}
+      - database_port=${db_port}
+      - database_connectionString=${db_connectionString}
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
     volumes:
-        - .:/app
+      - .:/app
   db:
     image: postgres
     environment:
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-        - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
     ports:
-        - "5002:5432"
+      - "5002:5432"
     networks:
-        - wordcount
+      - wordcount
     volumes:
-        - dbvolume:/var/lib/postgresql/data
+      - dbvolume:/var/lib/postgresql/data
 
 networks:
   wordcount:
