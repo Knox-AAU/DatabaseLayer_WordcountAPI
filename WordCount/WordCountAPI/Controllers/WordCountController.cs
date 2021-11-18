@@ -84,7 +84,7 @@ namespace WordCount.Controllers
                 return BadRequest($"An error occured: {e.Message}");
             }
         }
-        
+
         private IEnumerable<Article> RemoveDuplicates(IEnumerable<ArticleJsonModel> jsonArticles, out StringBuilder responseMessage)
         {
             responseMessage = new StringBuilder();
