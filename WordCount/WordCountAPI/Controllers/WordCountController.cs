@@ -68,6 +68,22 @@ namespace WordCount.Controllers
                 return BadRequest($"No entity with ID {id} exists");
             }
         }
+        
+        [HttpGet]
+        [Route("/[controller]/fileCount")]
+        public IActionResult GetFileCount()
+        {
+            try
+            {
+                int fileCount = unitOfWork.ArticleRepository.All().Count;
+                return new JsonResult(fileCount);
+            }
+            catch (Exception e)
+            {
+                return BadRequest($"An error occured: {e.Message}");
+            }
+        }
+        
         private IEnumerable<Article> RemoveDuplicates(IEnumerable<ArticleJsonModel> jsonArticles, out StringBuilder responseMessage)
         {
             responseMessage = new StringBuilder();
