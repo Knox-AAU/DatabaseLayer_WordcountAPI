@@ -17,7 +17,8 @@ namespace WordCount.Controllers
     public class WordCountController : ControllerBase
     {
         private const string WordCountSchemaName = "wordcount";
-        private IUnitOfWork unitOfWork;
+
+        private readonly IUnitOfWork unitOfWork;
 
         public WordCountController()
         {
@@ -47,9 +48,10 @@ namespace WordCount.Controllers
             IEnumerable<Article> enumerable = result as Article[] ?? result.ToArray();
 
             unitOfWork.ArticleRepository.Insert(enumerable);
-            foreach (var article in enumerable)
+
+            foreach (Article article in enumerable)
             {
-                Console.WriteLine("ADDED " + article.Title);
+                Console.WriteLine($"Added {article.Title}");
             }
 
             return Ok(message.ToString());
@@ -93,16 +95,19 @@ namespace WordCount.Controllers
             // Check for existing publisher only once - each post request
             // contain only articles from same publisher.
             Publisher publisher = unitOfWork.PublisherRepository.Find(p => p.PublisherName == articleJsonModels.First().Publication);
+
             if (publisher == null)
             {
                 publisher = new Publisher { PublisherName = articleJsonModels.First().Publication };
             }
 
             List<Article> result = new(articleJsonModels.Count());
-            foreach (var articleJsonModel in articleJsonModels)
+
+            foreach (ArticleJsonModel articleJsonModel in articleJsonModels)
             {
                 Article article = Article.CreateFromJsonModel(articleJsonModel);
                 article.Publisher = publisher;
+
                 if (unitOfWork.ArticleRepository.Find(a => a.Title == articleJsonModel.ArticleTitle) != null)
                 {
                     responseMessage.Append($"{article.Title} is already in database.\n");
