@@ -8,9 +8,9 @@ namespace WordCountUnitTests
         private sealed class UserModel
         {
             public string Name { get; set; }
-            public string[] Roles { get; set; } 
+            public string[] Roles { get; set; }
         }
-        
+
         private const string JsonObjectSchema = @"{
             ""type"": ""object"",
             ""required"": [
@@ -45,15 +45,15 @@ namespace WordCountUnitTests
                 ""name"": ""Arnie Admin"",
                 ""roles"": [""Developer"", ""Administrator""]
             }";
-        
+
             Assert.True(new JsonValidator<UserModel>(JsonObjectSchema).IsValid(jsonObject, out UserModel userModel));
-            
+
             Assert.That(userModel.Name == "Arnie Admin");
             Assert.That(userModel.Roles.Length == 2);
             Assert.That(userModel.Roles[0] == "Developer");
             Assert.That(userModel.Roles[1] == "Administrator");
         }
-      
+
         [Test]
         public void IsJsonArrayValid_CorrectFormat_Success()
         {
@@ -67,9 +67,9 @@ namespace WordCountUnitTests
                     ""roles"": [""Manager""]
                 }
             ]";
-            
+
             Assert.True(new JsonValidator<UserModel[]>(JsonArraySchema).IsValid(jsonArray, out UserModel[] nameModels));
-            
+
             Assert.That(nameModels.Length == 2);
             Assert.That(nameModels[0].Name == "Jason");
             Assert.That(nameModels[1].Name == "Jack");
@@ -82,10 +82,10 @@ namespace WordCountUnitTests
                 ""bames"": ""Arnie Admin"",
                 ""roles"": [""Developer"", ""Administrator""]
             }";
-            
+
             Assert.False(new JsonValidator<UserModel>(JsonObjectSchema).IsValid(jsonObject, out UserModel userModel));
         }
-      
+
         [Test]
         public void IsJsonArrayValid_IncorrectKeys_Failure()
         {
@@ -99,7 +99,7 @@ namespace WordCountUnitTests
                     ""roles"": [""Manager""]
                 }
             ]";
-            
+
             Assert.False(new JsonValidator<UserModel[]>(JsonArraySchema).IsValid(jsonArray, out UserModel[] nameModels));
         }
     }

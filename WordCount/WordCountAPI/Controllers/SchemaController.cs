@@ -13,10 +13,8 @@ namespace WordCount.Controllers
     [Route("[controller]")]
     public class SchemaController : ControllerBase
     {
-
-        
         private IUnitOfWork unitOfWork;
-        
+
         public SchemaController()
         {
             unitOfWork = new UnitOfWork(new ArticleContext());
@@ -43,7 +41,7 @@ namespace WordCount.Controllers
         {
             return Ok(unitOfWork.SchemaRepository.All());
         }
-        
+
         /// <summary>
         /// Method for posting a JSON schema to the database which can then be used later for validation of input.
         /// </summary>
@@ -56,15 +54,14 @@ namespace WordCount.Controllers
         [Route("/[controller]")]
         public IActionResult PostJsonSchema([FromBody] JsonElement jsonInput)
         {
-
             JsonSchemaInputModel schemaData = CreateJsonModel(jsonInput);
 
             if (schemaData == null)
             {
-                // 400 Unprocessable entity 
+                // 400 Unprocessable entity
                 return BadRequest("Wrong body syntax, cannot parse to JSON.");
             }
-            
+
             if (unitOfWork.SchemaRepository.GetById(schemaData.SchemaName) != null)
             {
                 // 403 forbidden
@@ -79,16 +76,15 @@ namespace WordCount.Controllers
             return Ok();
         }
 
-
         private JsonSchemaInputModel CreateJsonModel(JsonElement jsonInput)
         {
             JsonSerializerOptions options = new()
             {
                 PropertyNameCaseInsensitive = true
             };
-            string jsonString = String.Empty;
+            string jsonString = string.Empty;
             JsonSchemaInputModel schemaData = null;
-            
+
             try
             {
                 jsonString = jsonInput.GetRawText();

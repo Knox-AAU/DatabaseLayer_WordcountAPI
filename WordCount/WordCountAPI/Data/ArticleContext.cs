@@ -11,7 +11,7 @@ namespace WordCount.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<JsonSchemaModel> JsonSchemas { get; set; }
         public DbSet<WordRatio> WordRatios { get; set; }
-        
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("database_connectionString"));
@@ -25,6 +25,5 @@ namespace WordCount.Data
                 .ToView(nameof(WordRatio))
                 .HasNoKey();
         }
-
     }
 }

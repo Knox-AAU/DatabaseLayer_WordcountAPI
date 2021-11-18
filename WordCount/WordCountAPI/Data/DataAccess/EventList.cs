@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace WordCount.Data.DataAccess
 {
-    public sealed class EventList<T> :  IList<T>, IReadOnlyList<T> 
+    public sealed class EventList<T> : IList<T>, IReadOnlyList<T>
     {
         public event Action<T> ItemAdded;
         public event Action<IEnumerable<T>> ItemsAdded;
         public event Action<int, T> ItemInserted;
         public event Action<T> ItemRemoved;
         public event Action ListCleared;
-        
+
         public T this[int index]
         {
             get => internalList[index];
@@ -24,7 +24,7 @@ namespace WordCount.Data.DataAccess
         }
 
         public bool IsReadOnly => false;
-        
+
         int ICollection<T>.Count => internalList.Count;
 
         int IReadOnlyCollection<T>.Count => internalList.Count;
@@ -50,12 +50,15 @@ namespace WordCount.Data.DataAccess
 
         bool ICollection<T>.Remove(T item)
         {
-            if (!internalList.Remove(item)) return false;
-            
+            if (!internalList.Remove(item))
+            {
+                return false;
+            }
+
             ItemRemoved?.Invoke(item);
             return true;
         }
-        
+
         public void Remove(T item)
         {
             internalList.Remove(item);
@@ -63,7 +66,7 @@ namespace WordCount.Data.DataAccess
         }
 
         public IEnumerator<T> GetEnumerator() => internalList.GetEnumerator();
-        
+
         IEnumerator IEnumerable.GetEnumerator() => internalList.GetEnumerator();
 
         public int IndexOf(T item) => internalList.IndexOf(item);
@@ -77,7 +80,7 @@ namespace WordCount.Data.DataAccess
         public void RemoveAt(int index)
         {
             T item = this[index];
-            
+
             internalList.RemoveAt(index);
             ItemRemoved?.Invoke(item);
         }
@@ -90,7 +93,6 @@ namespace WordCount.Data.DataAccess
 
         public void FindIndex()
         {
-            
         }
 
         public int FindIndex(Predicate<T> func)

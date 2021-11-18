@@ -5,13 +5,13 @@ using Microsoft.Data.Entity;
 
 namespace WordCount.Data.DataAccess
 {
-    public class ReadOnlyRepository<T, TKey> : IReadOnlyRepository<T, TKey> 
-        where T : DatabaseEntityModel<TKey> 
+    public class ReadOnlyRepository<T, TKey> : IReadOnlyRepository<T, TKey>
+        where T : DatabaseEntityModel<TKey>
         where TKey : IEquatable<TKey>
     {
         public IReadOnlyList<T> EntitySet => InternalEntitySet;
         protected List<T> InternalEntitySet { get; }
-        
+
         public ReadOnlyRepository(ArticleContext context)
         {
             InternalEntitySet = context.Set<T>().ToList();
@@ -23,19 +23,19 @@ namespace WordCount.Data.DataAccess
             {
                 throw new NullReferenceException();
             }
-            
+
             InternalEntitySet = entitySet.ToList();
         }
-        
+
         public ReadOnlyRepository(List<T> internalEntity)
         {
             if (internalEntity == null)
             {
                 throw new NullReferenceException();
             }
+
             InternalEntitySet = internalEntity;
         }
-
 
         /// <summary>
         /// Find first entity with matching id
@@ -52,9 +52,8 @@ namespace WordCount.Data.DataAccess
             {
                 return null;
             }
-            
         }
-        
+
         /// <summary>
         /// Get all elements of the entities
         /// </summary>
@@ -80,7 +79,7 @@ namespace WordCount.Data.DataAccess
                 return null;
             }
         }
-        
+
         /// <summary>
         /// Finds entity with equal primary key
         /// </summary>
@@ -90,9 +89,9 @@ namespace WordCount.Data.DataAccess
         {
             try
             {
-                return InternalEntitySet.ToList().First(e=> e.PrimaryKey.Equals(entity.PrimaryKey));
+                return InternalEntitySet.ToList().First(e => e.PrimaryKey.Equals(entity.PrimaryKey));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

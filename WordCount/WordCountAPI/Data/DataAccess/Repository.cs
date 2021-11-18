@@ -4,21 +4,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WordCount.Data.DataAccess
 {
-    public sealed class Repository<TEntity, TKey> 
-        : RepositoryBase<TEntity, TKey>, IRepository<TEntity, TKey> where TEntity : DatabaseEntityModel<TKey>
+    public sealed class Repository<TEntity, TKey>
+        : RepositoryBase<TEntity, TKey>, IRepository<TEntity, TKey>
+        where TEntity : DatabaseEntityModel<TKey>
         where TKey : IEquatable<TKey>
     {
         private readonly ArticleContext context;
         private readonly DbSet<TEntity> dbSet;
-        
-        public Repository(ArticleContext context) : base(context)
+
+        public Repository(ArticleContext context)
+            : base(context)
         {
             this.context = context;
             dbSet = context.Set<TEntity>();
-            InternalEntitySet.ItemAdded += Add;
-            InternalEntitySet.ItemsAdded += Add;
-            InternalEntitySet.ItemRemoved += Remove;
-            InternalEntitySet.ItemsRemoved += Remove;
+            internalEntitySet.ItemAdded += Add;
+            internalEntitySet.ItemsAdded += Add;
+            internalEntitySet.ItemRemoved += Remove;
+            internalEntitySet.ItemsRemoved += Remove;
         }
 
         private void Add(IEnumerable<TEntity> obj)
@@ -32,7 +34,6 @@ namespace WordCount.Data.DataAccess
             dbSet.Add(obj);
             Save();
         }
-        
 
         /// <summary>
         /// Saves the elements in the DbSet to the database.
@@ -47,18 +48,19 @@ namespace WordCount.Data.DataAccess
             dbSet.Update(entity);
             Save();
         }
-        
+
         public void Update(IEnumerable<TEntity> entities)
         {
             dbSet.UpdateRange(entities);
             Save();
         }
-        
+
         public void Remove(TEntity entities)
         {
             dbSet.Remove(entities);
             Save();
         }
+
         public void Remove(IEnumerable<TEntity> entities)
         {
             dbSet.RemoveRange(entities);

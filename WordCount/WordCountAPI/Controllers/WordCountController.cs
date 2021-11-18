@@ -23,7 +23,7 @@ namespace WordCount.Controllers
         {
             unitOfWork = new UnitOfWork(new ArticleContext());
         }
-        
+
         [HttpPost]
         public IActionResult Post([FromBody] JsonElement jsonElement)
         {
@@ -34,16 +34,16 @@ namespace WordCount.Controllers
             {
                 return StatusCode(500, $"\"{WordCountSchemaName}\" schema does not exist.");
             }
-            
+
             // Get schema and use for validating
             if (!new JsonValidator<ArticleJsonModel[]>(schema.JsonString).IsValid(jsonInput, out ArticleJsonModel[] jsonArticles))
             {
                 return BadRequest("Wrong body syntax, does not follow schema.");
             }
-            
+
             IEnumerable<Article> result = RemoveDuplicates(jsonArticles, out StringBuilder message);
 
-            //Insert article
+            // Insert article
             IEnumerable<Article> enumerable = result as Article[] ?? result.ToArray();
 
             unitOfWork.ArticleRepository.Insert(enumerable);
@@ -51,6 +51,7 @@ namespace WordCount.Controllers
             {
                 Console.WriteLine("ADDED " + article.Title);
             }
+
             return Ok(message.ToString());
         }
 
@@ -68,7 +69,7 @@ namespace WordCount.Controllers
                 return BadRequest($"No entity with ID {id} exists");
             }
         }
-        
+
         [HttpGet]
         [Route("/[controller]/fileCount")]
         public IActionResult GetFileCount()
@@ -83,19 +84,20 @@ namespace WordCount.Controllers
                 return BadRequest($"An error occured: {e.Message}");
             }
         }
-        
+
         private IEnumerable<Article> RemoveDuplicates(IEnumerable<ArticleJsonModel> jsonArticles, out StringBuilder responseMessage)
         {
             responseMessage = new StringBuilder();
             IEnumerable<ArticleJsonModel> articleJsonModels = jsonArticles as ArticleJsonModel[] ?? jsonArticles.ToArray();
-            
-            //Check for existing publisher only once - each post request
-            //contain only articles from same publisher.
+
+            // Check for existing publisher only once - each post request
+            // contain only articles from same publisher.
             Publisher publisher = unitOfWork.PublisherRepository.Find(p => p.PublisherName == articleJsonModels.First().Publication);
             if (publisher == null)
-                publisher = new Publisher(){PublisherName =  articleJsonModels.First().Publication};
+            {
+                publisher = new Publisher { PublisherName = articleJsonModels.First().Publication };
+            }
 
-            
             List<Article> result = new(articleJsonModels.Count());
             foreach (var articleJsonModel in articleJsonModels)
             {
@@ -106,6 +108,7 @@ namespace WordCount.Controllers
                     responseMessage.Append($"{article.Title} is already in database.\n");
                     continue;
                 }
+
                 result.Add(article);
             }
 

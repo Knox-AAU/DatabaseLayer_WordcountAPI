@@ -8,7 +8,6 @@ namespace WordCountUnitTests
 {
     public sealed class ReadOnlyRepositoryTest
     {
-        
         private sealed class DbObject : DatabaseEntityModel<string>
         {
             public override string PrimaryKey
@@ -19,22 +18,24 @@ namespace WordCountUnitTests
             public bool BoolProp { get; init; }
             public string Key { get; init; }
         }
-        
+
         [Test]
         public void Repository_GivesNotNullAndSameCountAsInput()
         {
-            //Arrange
-            //Act
+            // Arrange
+            // Act
             List<DbObject> objList = new List<DbObject>()
             {
-                new DbObject() {
+                new DbObject()
+                {
                     Key = "one",
                     BoolProp = true
                 }
             };
             ReadOnlyRepository<DbObject, string> repos = new(objList);
             IEnumerable<DbObject> reposResult = repos.All();
-            //Assert
+
+            // Assert
             Assert.NotNull(reposResult);
             Assert.AreEqual(reposResult.Count(), objList.Count());
             Assert.AreEqual(reposResult, objList);
@@ -43,12 +44,13 @@ namespace WordCountUnitTests
         [Test]
         public void Repository_NewListGivesNoObjects()
         {
-            //Arrange
+            // Arrange
             ReadOnlyRepository<DbObject, string> repos = new(new List<DbObject>());
-            //Act
+
+            // Act
             IEnumerable<DbObject> reposResult = repos.All();
 
-            //Assert
+            // Assert
             Assert.NotNull(reposResult);
         }
 
@@ -61,16 +63,14 @@ namespace WordCountUnitTests
                 Key = primKey,
                 BoolProp = true
             };
-        
-            
-                
+
             ReadOnlyRepository<DbObject, string> repos = new(new List<DbObject>()
-                {obj});
+                { obj });
             var res = repos.GetById(primKey);
             Assert.IsNotNull(res);
-            Assert.AreEqual(obj,res);
+            Assert.AreEqual(obj, res);
         }
-        
+
         [Test]
         public void GetByKey_GivesNullOnNoEntity()
         {
@@ -80,34 +80,34 @@ namespace WordCountUnitTests
                 Key = primKey,
                 BoolProp = true
             };
-            
+
             ReadOnlyRepository<DbObject, string> repos = new(new List<DbObject>()
-                {obj});
+                { obj });
 
             Assert.IsNull(repos.GetById(" "));
         }
 
-        
-
         [Test]
         public void Repository_FindAll_FindDataOnKey()
         {
-            //Arrange
+            // Arrange
             List<DbObject> objList = new List<DbObject>()
             {
-                new DbObject() {
+                new DbObject()
+                {
                     Key = "two",
                     BoolProp = true
                 }
             };
-   
+
             ReadOnlyRepository<DbObject, string> repos = new(objList);
-            //Act
+
+            // Act
             IEnumerable<DbObject> p = repos.FindAll(a => a.BoolProp);
 
-            //Assert
+            // Assert
             Assert.NotNull(p);
-            Assert.AreEqual(1,p.Count());
+            Assert.AreEqual(1, p.Count());
         }
 
         [Test]
@@ -115,33 +115,35 @@ namespace WordCountUnitTests
         {
             List<DbObject> objList = new List<DbObject>()
             {
-                new DbObject() {
+                new DbObject()
+                {
                     Key = "two",
                     BoolProp = true
                 }
             };
-   
+
             ReadOnlyRepository<DbObject, string> repos = new(objList);
-            //Act
+
+            // Act
             DbObject p = repos.Find(a => a.BoolProp == false);
 
-            //Assert
+            // Assert
             Assert.IsNull(p);
         }
-        
+
         [Test]
         public void Find_GivesNullOnNoPredicateMatch()
         {
-            //Arrange
+            // Arrange
             string key = "123";
             List<DbObject> objList = new List<DbObject>();
-            DbObject testObj = new DbObject {Key = key};
-            ReadOnlyRepository<DbObject, string> repos = new(new List<DbObject>(){testObj});
-            
-            //Act
+            DbObject testObj = new DbObject { Key = key };
+            ReadOnlyRepository<DbObject, string> repos = new(new List<DbObject> { testObj });
+
+            // Act
             DbObject res = repos.Find(a => a.Key == "123");
-            
-            //Assert
+
+            // Assert
             Assert.NotNull(res);
             Assert.AreEqual(testObj, res);
         }

@@ -34,3 +34,8 @@ dotnet_diagnostic.SA1201.severity = None
 # Use trailing comma in multi-line initializers
 dotnet_diagnostic.SA1413.severity = None
 
+# Field should be private
+dotnet_diagnostic.SA1401.severity = None
+
+# Arithmetic expressions should declare precedence
+dotnet_diagnostic.SA1407.severity = None

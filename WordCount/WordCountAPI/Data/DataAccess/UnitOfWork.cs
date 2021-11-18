@@ -7,18 +7,17 @@ namespace WordCount.Data.DataAccess
         private ArticleContext context;
         private Repository<Article, long> articleRepository;
         private Repository<JsonSchemaModel, string> schemaRepository;
-        public IRepository<JsonSchemaModel,string> SchemaRepository 
+        public IRepository<JsonSchemaModel, string> SchemaRepository
         {
             get
             {
                 if (schemaRepository == null)
-                {  
+                {
                     schemaRepository = new Repository<JsonSchemaModel, string>(context);
                 }
 
                 return schemaRepository;
             }
-            
         }
 
         private Repository<WordRatio, CompositeKeyTriple<long, string, string>> wordRatioRepository;
@@ -28,7 +27,7 @@ namespace WordCount.Data.DataAccess
             get
             {
                 if (wordRatioRepository == null)
-                {  
+                {
                     wordRatioRepository = new Repository<WordRatio, CompositeKeyTriple<long, string, string>>(context);
                 }
 
@@ -36,7 +35,6 @@ namespace WordCount.Data.DataAccess
             }
         }
 
-        
         public IRepository<Article, long> ArticleRepository
         {
             get
@@ -52,7 +50,7 @@ namespace WordCount.Data.DataAccess
 
         private Repository<Publisher, string> publisherRepository;
 
-        public IRepository<Publisher, string> PublisherRepository 
+        public IRepository<Publisher, string> PublisherRepository
         {
             get
             {
@@ -62,10 +60,9 @@ namespace WordCount.Data.DataAccess
                 }
 
                 return publisherRepository;
-            }  
+            }
         }
 
-        
         public UnitOfWork(ArticleContext context)
         {
             this.context = context;
