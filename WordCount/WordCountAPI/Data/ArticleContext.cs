@@ -34,8 +34,8 @@ namespace WordCount.Data
 
     public class ArticleContextOld : DbContext
     {
-        public DbSet<Publisher> Publishers { get; set; }
-        public DbSet<Article> Articles { get; set; }
+        public DbSet<Publisher_OLD> Publishers { get; set; }
+        public DbSet<Article_OLD> Articles { get; set; }
         public DbSet<JsonSchemaModel> JsonSchemas { get; set; }
         public DbSet<WordRatio> WordRatios { get; set; }
 
