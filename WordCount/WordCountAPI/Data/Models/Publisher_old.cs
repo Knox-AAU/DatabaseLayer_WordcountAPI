@@ -15,6 +15,6 @@ namespace WordCount.Data.Models
         public string PublisherName { get; set; }
         public override string PrimaryKey => PublisherName;
 
-        public List<Article> Articles { get; set; }
+        public List<Article_old> Articles { get; set; }
     }
 }
