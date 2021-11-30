@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Data;
 
@@ -20,7 +21,13 @@ namespace WordCount.Controllers
             if (pw != "please_do_migration")
                 return BadRequest();
 
-            
+            var oldArticles = OldContext.Articles;
+            var oldPublishers = OldContext.Publishers;
+
+            var articles = NewContext.Articles;
+            var publishers = NewContext.Publishers;
+
+            oldArticles.AsQueryable().
 
 
             return null;
