@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Controllers.JsonInputModels;
