@@ -19,9 +19,9 @@ namespace WordCount.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Term>().HasKey(a => a.Literal);
-            modelBuilder.Entity<Article>().HasMany<WordOccurance>(a => a.Words).WithOne(w => w.Article);
-            modelBuilder.Entity<WordOccurance>().HasKey(occurance => occurance.Id);
+            modelBuilder.Entity<Word>().HasKey(a => a.Literal);
+            modelBuilder.Entity<Article>().HasMany(a => a.WordOccurrences).WithOne(w => w.Article);
+            modelBuilder.Entity<WordOccurrence>().HasKey(occurance => new { occurance.ArticleId, occurance.Word.Literal });
             modelBuilder
                 .Entity<WordRatio>()
                 .ToView(nameof(WordRatio))
@@ -29,11 +29,10 @@ namespace WordCount.Data
         }
     }
 
-
     public class ArticleContextOld : DbContext
     {
-        public DbSet<Publisher_OLD> Publishers { get; set; }
-        public DbSet<Article_OLD> Articles { get; set; }
+        public DbSet<Publisher_old> Publishers { get; set; }
+        public DbSet<Article_old> Articles { get; set; }
         public DbSet<JsonSchemaModel> JsonSchemas { get; set; }
         public DbSet<WordRatio> WordRatios { get; set; }
 
