@@ -58,31 +58,27 @@ namespace WordCount.Controllers
                 while (articlesToAggregate.Any()); // if any articles are left
             }
 
-            return null;
+            return Ok();
         }
 
         private void AggregateArticles(IEnumerable<Article_old> firstArticles,  Publisher newPublisher)
         {
             foreach (Article_old oldArticle in firstArticles)
             {
-                // The publisher is a root of the data base structure.
-                // It is not possible to have duplicates of it, thus no need to check in DB first.
-                // Publishers have guaranteed unique articles, therefore no need to check if articles exist
-                // in new database.
                 var createdArticle = new Article()
                 {
-                    Id = oldArticle.Id,
+                    Id = oldArticle.Id, // Guaranteed unique articles for each publisher, therefore no need to check if articles exist in DB
                     TotalWords = oldArticle.TotalWords,
                     FilePath = oldArticle.FilePath,
                     Title = oldArticle.Title,
-                    Publisher = newPublisher
+                    Publisher = newPublisher // The publisher is a root of the data base structure. Thus, no duplicates in database. No check needed.
                 };
 
-                AggregateWordOccurance(createdArticle, oldArticle.Terms);
+                AggregateWordOccurence(createdArticle, oldArticle.Terms);
             }
         }
 
-        private void AggregateWordOccurance(Article createdArticle, List<Term> oldArticleTerms)
+        private void AggregateWordOccurence(Article createdArticle, List<Term> oldArticleTerms)
         {
             foreach (Term term in oldArticleTerms)
             {
