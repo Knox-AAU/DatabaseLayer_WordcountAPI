@@ -84,7 +84,7 @@ namespace WordCount.Controllers
             {
                 // We risk duplicate words in database, therefore check if it is already added.
                 // If it is added, then use that reference!
-                Word wordToAdd = NewContext.Words.Find(term.Word) ?? new Word { Literal = term.Word };
+                Word wordToAdd = NewContext.Words.First(a => a.Literal == term.Word) ?? new Word { Literal = term.Word };
                 createdArticle.WordOccurrences.Add(new WordOccurrence
                 {
                     ArticleId = createdArticle.Id,
