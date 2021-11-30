@@ -1,21 +1,16 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using WordCount.Data.DataAccess;
 
 namespace WordCount.Data.Models
 {
     [Table("Term")]
-<<<<<<< Updated upstream:WordCount/WordCountAPI/Data/Models/Term_old.cs
-    public sealed class Term_OLD : DatabaseEntityModel<CompositeKeyPair<long, string>>
-=======
-    public sealed class Term : DatabaseEntityModel<string>
->>>>>>> Stashed changes:WordCount/WordCountAPI/Data/Models/Term.cs
+    public sealed class Term_old : DatabaseEntityModel<CompositeKeyPair<long, string>>
     {
-        [Key]
-        public string Literal { get; set; }
-        public List<WordOccurance> Occurances { get; set; }
+        public long ArticleId { get; set; }
+        public string Word { get; set; }
+        public int Count { get; set; }
 
-        public override string PrimaryKey => Literal;
+        public override CompositeKeyPair<long, string> PrimaryKey =>
+            new CompositeKeyPair<long, string>(ArticleId, Word);
     }
 }

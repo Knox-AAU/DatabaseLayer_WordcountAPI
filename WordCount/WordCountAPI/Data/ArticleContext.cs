@@ -1,6 +1,4 @@
-using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
 using WordCount.Data.Models;
 
 namespace WordCount.Data

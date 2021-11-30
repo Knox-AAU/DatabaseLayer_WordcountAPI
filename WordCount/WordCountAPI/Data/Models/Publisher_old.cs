@@ -8,7 +8,7 @@ namespace WordCount.Data.Models
 {
     [Table("Publisher")]
     [Index(nameof(PublisherName), IsUnique = true)]
-    public sealed class Publisher : DatabaseEntityModel<string>
+    public sealed class Publisher_old : DatabaseEntityModel<string>
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

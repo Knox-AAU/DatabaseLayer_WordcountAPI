@@ -18,18 +18,22 @@ namespace WordCount.Data.Models
         public int TotalWords { get; set; }
 
         public Publisher Publisher { get; set; }
-        public List<Term> Terms { get; set; }
+        public List<WordOccurrence> WordOccurrences { get; set; }
 
         [NotMapped]
         public override long PrimaryKey => Id;
 
         public static Article CreateFromJsonModel(ArticleJsonModel jsonModel)
         {
-            List<Term> terms = new(jsonModel.Words.Length);
+            List<WordOccurrence> wordOccurrences = new(jsonModel.Words.Length);
 
             foreach (TermJsonModel term in jsonModel.Words)
             {
-                terms.Add(new Term { Count = term.Amount, Word = term.Word });
+                wordOccurrences.Add(new WordOccurrence()
+                {
+                    Word = new Word() { Literal = term.Word},
+                    Count = term.Amount
+                });
             }
 
             return new Article
@@ -41,7 +45,7 @@ namespace WordCount.Data.Models
                 {
                     PublisherName = jsonModel.Publication
                 },
-                Terms = terms
+                WordOccurrences = wordOccurrences
             };
         }
 
