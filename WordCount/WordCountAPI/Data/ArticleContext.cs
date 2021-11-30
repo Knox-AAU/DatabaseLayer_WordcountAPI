@@ -8,6 +8,7 @@ namespace WordCount.Data
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<JsonSchemaModel> JsonSchemas { get; set; }
+        public DbSet<Word> Words { get; set; }
         public DbSet<WordRatio> WordRatios { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -32,6 +33,7 @@ namespace WordCount.Data
     public class ArticleContextOld : DbContext
     {
         public DbSet<Publisher_old> Publishers { get; set; }
+        public DbSet<Term> Terms { get; set; }
         public DbSet<Article_old> Articles { get; set; }
         public DbSet<JsonSchemaModel> JsonSchemas { get; set; }
         public DbSet<WordRatio> WordRatios { get; set; }
