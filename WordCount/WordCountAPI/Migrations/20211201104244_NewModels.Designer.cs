@@ -9,8 +9,8 @@ using WordCount.Data;
 namespace WordCount.Migrations
 {
     [DbContext(typeof(ArticleContext))]
-    [Migration("20211130124857_test")]
-    partial class test
+    [Migration("20211201104244_NewModels")]
+    partial class NewModels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,7 +43,7 @@ namespace WordCount.Migrations
 
                     b.HasIndex("PublisherName");
 
-                    b.ToTable("Article");
+                    b.ToTable("new_article");
                 });
 
             modelBuilder.Entity("WordCount.Data.Models.JsonSchemaModel", b =>
@@ -69,23 +69,42 @@ namespace WordCount.Migrations
                     b.HasIndex("PublisherName")
                         .IsUnique();
 
-                    b.ToTable("Publisher");
+                    b.ToTable("new_publisher");
                 });
 
-            modelBuilder.Entity("WordCount.Data.Models.Term", b =>
+            modelBuilder.Entity("WordCount.Data.Models.Word", b =>
                 {
+                    b.Property<string>("Literal")
+                        .HasColumnType("text");
+
+                    b.HasKey("Literal");
+
+                    b.ToTable("Word");
+                });
+
+            modelBuilder.Entity("WordCount.Data.Models.WordOccurrence", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
                     b.Property<long>("ArticleId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Word")
-                        .HasColumnType("text");
 
                     b.Property<int>("Count")
                         .HasColumnType("integer");
 
-                    b.HasKey("ArticleId", "Word");
+                    b.Property<string>("WordLiteral")
+                        .HasColumnType("text");
 
-                    b.ToTable("Term");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("WordLiteral");
+
+                    b.ToTable("WordOccurrence");
                 });
 
             modelBuilder.Entity("WordCount.Data.Models.WordRatio", b =>
@@ -126,18 +145,26 @@ namespace WordCount.Migrations
                     b.Navigation("Publisher");
                 });
 
-            modelBuilder.Entity("WordCount.Data.Models.Term", b =>
+            modelBuilder.Entity("WordCount.Data.Models.WordOccurrence", b =>
                 {
-                    b.HasOne("WordCount.Data.Models.Article", null)
-                        .WithMany("Terms")
+                    b.HasOne("WordCount.Data.Models.Article", "Article")
+                        .WithMany("WordOccurrences")
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("WordCount.Data.Models.Word", "Word")
+                        .WithMany()
+                        .HasForeignKey("WordLiteral");
+
+                    b.Navigation("Article");
+
+                    b.Navigation("Word");
                 });
 
             modelBuilder.Entity("WordCount.Data.Models.Article", b =>
                 {
-                    b.Navigation("Terms");
+                    b.Navigation("WordOccurrences");
                 });
 
             modelBuilder.Entity("WordCount.Data.Models.Publisher", b =>

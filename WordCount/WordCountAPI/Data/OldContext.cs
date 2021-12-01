@@ -3,7 +3,7 @@ using WordCount.Data.Models;
 
 namespace WordCount.Data
 {
-    public class ArticleContextOld : DbContext
+    public class OldContext : DbContext
     {
         public DbSet<Publisher_old> Publishers { get; set; }
         public DbSet<Term_old> Terms { get; set; }

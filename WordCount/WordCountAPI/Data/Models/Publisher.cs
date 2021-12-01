@@ -6,7 +6,7 @@ using WordCount.Data.DataAccess;
 
 namespace WordCount.Data.Models
 {
-    [Table("Publisher")]
+    [Table("new_publisher")]
     [Index(nameof(PublisherName), IsUnique = true)]
     public sealed class Publisher : DatabaseEntityModel<string>
     {

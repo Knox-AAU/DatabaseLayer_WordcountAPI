@@ -7,7 +7,7 @@ using WordCount.Data.DataAccess;
 
 namespace WordCount.Data.Models
 {
-    [Table("Article")]
+    [Table("new_article")]
     public sealed class Article : DatabaseEntityModel<long>
     {
         [Key]

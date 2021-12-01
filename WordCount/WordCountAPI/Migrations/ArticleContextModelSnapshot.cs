@@ -5,9 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WordCount.Data;
 
-#nullable disable
-
-namespace WebApplication1.Migrations
+namespace WordCount.Migrations
 {
     [DbContext(typeof(ArticleContext))]
     partial class ArticleContextModelSnapshot : ModelSnapshot
@@ -16,29 +14,24 @@ namespace WebApplication1.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63)
+                .HasAnnotation("ProductVersion", "5.0.10")
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("WordCount.Data.Models.Article", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("FilePath")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PublisherName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("TotalWords")
@@ -48,7 +41,7 @@ namespace WebApplication1.Migrations
 
                     b.HasIndex("PublisherName");
 
-                    b.ToTable("Article");
+                    b.ToTable("new_article");
                 });
 
             modelBuilder.Entity("WordCount.Data.Models.JsonSchemaModel", b =>
@@ -57,7 +50,6 @@ namespace WebApplication1.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("JsonString")
-                        .IsRequired()
                         .HasColumnType("jsonb");
 
                     b.HasKey("SchemaName");
@@ -75,7 +67,7 @@ namespace WebApplication1.Migrations
                     b.HasIndex("PublisherName")
                         .IsUnique();
 
-                    b.ToTable("Publisher");
+                    b.ToTable("new_publisher");
                 });
 
             modelBuilder.Entity("WordCount.Data.Models.Word", b =>
@@ -85,16 +77,15 @@ namespace WebApplication1.Migrations
 
                     b.HasKey("Literal");
 
-                    b.ToTable("Words");
+                    b.ToTable("Word");
                 });
 
             modelBuilder.Entity("WordCount.Data.Models.WordOccurrence", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<long>("ArticleId")
                         .HasColumnType("bigint");
@@ -123,25 +114,21 @@ namespace WebApplication1.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("FilePath")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<float>("Percent")
                         .HasColumnType("real");
 
                     b.Property<string>("PublisherName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("TotalWords")
                         .HasColumnType("integer");
 
                     b.Property<string>("Word")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.ToView("WordRatio");
@@ -151,9 +138,7 @@ namespace WebApplication1.Migrations
                 {
                     b.HasOne("WordCount.Data.Models.Publisher", "Publisher")
                         .WithMany("Articles")
-                        .HasForeignKey("PublisherName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PublisherName");
 
                     b.Navigation("Publisher");
                 });

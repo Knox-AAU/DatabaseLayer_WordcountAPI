@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-#nullable disable
-
-namespace WebApplication1.Migrations
+namespace WordCount.Migrations
 {
     public partial class NewModels : Migration
     {
@@ -14,7 +12,7 @@ namespace WebApplication1.Migrations
                 columns: table => new
                 {
                     SchemaName = table.Column<string>(type: "text", nullable: false),
-                    JsonString = table.Column<string>(type: "jsonb", nullable: false)
+                    JsonString = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -22,47 +20,47 @@ namespace WebApplication1.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Publisher",
+                name: "new_publisher",
                 columns: table => new
                 {
                     PublisherName = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Publisher", x => x.PublisherName);
+                    table.PrimaryKey("PK_new_publisher", x => x.PublisherName);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Words",
+                name: "Word",
                 columns: table => new
                 {
                     Literal = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Words", x => x.Literal);
+                    table.PrimaryKey("PK_Word", x => x.Literal);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Article",
+                name: "new_article",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FilePath = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
+                    FilePath = table.Column<string>(type: "text", nullable: true),
+                    Title = table.Column<string>(type: "text", nullable: true),
                     TotalWords = table.Column<int>(type: "integer", nullable: false),
-                    PublisherName = table.Column<string>(type: "text", nullable: false)
+                    PublisherName = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Article", x => x.Id);
+                    table.PrimaryKey("PK_new_article", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Article_Publisher_PublisherName",
+                        name: "FK_new_article_new_publisher_PublisherName",
                         column: x => x.PublisherName,
-                        principalTable: "Publisher",
+                        principalTable: "new_publisher",
                         principalColumn: "PublisherName",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,26 +77,27 @@ namespace WebApplication1.Migrations
                 {
                     table.PrimaryKey("PK_WordOccurrence", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_WordOccurrence_Article_ArticleId",
+                        name: "FK_WordOccurrence_new_article_ArticleId",
                         column: x => x.ArticleId,
-                        principalTable: "Article",
+                        principalTable: "new_article",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_WordOccurrence_Words_WordLiteral",
+                        name: "FK_WordOccurrence_Word_WordLiteral",
                         column: x => x.WordLiteral,
-                        principalTable: "Words",
-                        principalColumn: "Literal");
+                        principalTable: "Word",
+                        principalColumn: "Literal",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Article_PublisherName",
-                table: "Article",
+                name: "IX_new_article_PublisherName",
+                table: "new_article",
                 column: "PublisherName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Publisher_PublisherName",
-                table: "Publisher",
+                name: "IX_new_publisher_PublisherName",
+                table: "new_publisher",
                 column: "PublisherName",
                 unique: true);
 
@@ -122,13 +121,13 @@ namespace WebApplication1.Migrations
                 name: "WordOccurrence");
 
             migrationBuilder.DropTable(
-                name: "Article");
+                name: "new_article");
 
             migrationBuilder.DropTable(
-                name: "Words");
+                name: "Word");
 
             migrationBuilder.DropTable(
-                name: "Publisher");
+                name: "new_publisher");
         }
     }
 }
