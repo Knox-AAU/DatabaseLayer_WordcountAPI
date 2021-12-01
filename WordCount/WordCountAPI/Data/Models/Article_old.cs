@@ -17,7 +17,7 @@ namespace WordCount.Data.Models
         public int TotalWords { get; set; }
 
         public Publisher Publisher { get; set; }
-        public List<Term> Terms { get; set; }
+        public List<Term_old> Terms { get; set; }
 
         [NotMapped] public override long PrimaryKey => Id;
     }

@@ -15,10 +15,10 @@ namespace WordCount.Controllers
         public OldModelToNewModelController()
         {
             this.OldContext = new ArticleContextOld();
-            this.NewContext = new ArticleContext();
+            this.Context = new ArticleContext();
         }
 
-        public ArticleContext NewContext { get; set; }
+        public ArticleContext Context { get; set; }
 
         public ArticleContextOld OldContext { get; set; }
 
@@ -34,8 +34,8 @@ namespace WordCount.Controllers
             var oldArticles = OldContext.Articles;
             DbSet<Publisher_old> oldPublishers = OldContext.Publishers;
 
-            var newArticles = NewContext.Articles;
-            var newPublishers = NewContext.Publishers;
+            var newArticles = Context.Articles;
+            var newPublishers = Context.Publishers;
             oldArticles.AsQueryable();
 
             foreach (var oldPublisher in oldPublishers)
@@ -52,7 +52,7 @@ namespace WordCount.Controllers
                     AggregateArticles(articlesToAggregate, newPublisher);
 
                     // Save the first 50
-                    NewContext.SaveChanges();
+                    Context.SaveChanges();
                     addedArticles += 50;
                 }
                 while (articlesToAggregate.Any()); // if any articles are left
@@ -78,13 +78,13 @@ namespace WordCount.Controllers
             }
         }
 
-        private void AggregateWordOccurence(Article createdArticle, List<Term> oldArticleTerms)
+        private void AggregateWordOccurence(Article createdArticle, List<Term_old> oldArticleTerms)
         {
-            foreach (Term term in oldArticleTerms)
+            foreach (Term_old term in oldArticleTerms)
             {
                 // We risk duplicate words in database, therefore check if it is already added.
                 // If it is added, then use that reference!
-                Word wordToAdd = NewContext.Words.First(a => a.Literal == term.Word) ?? new Word { Literal = term.Word };
+                Word wordToAdd = Context.Words.First(a => a.Literal == term.Word) ?? new Word { Literal = term.Word };
                 createdArticle.WordOccurrences.Add(new WordOccurrence
                 {
                     ArticleId = createdArticle.Id,
