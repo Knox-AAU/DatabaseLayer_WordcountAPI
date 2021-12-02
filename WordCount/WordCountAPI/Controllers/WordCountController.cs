@@ -18,11 +18,12 @@ namespace WordCount.Controllers
     {
         private const string WordCountSchemaName = "wordcount";
 
+        private readonly ArticleContext databaseContext = new();
         private readonly IUnitOfWork unitOfWork;
 
         public WordCountController()
         {
-            unitOfWork = new UnitOfWork(new ArticleContext());
+            unitOfWork = new UnitOfWork(databaseContext);
         }
 
         [HttpPost]
@@ -85,6 +86,17 @@ namespace WordCount.Controllers
             {
                 return BadRequest($"An error occured: {e.Message}");
             }
+        }
+
+        [HttpGet]
+        public IActionResult Status()
+        {
+            if (databaseContext.Database.CanConnect())
+            {
+                return Ok();
+            }
+
+            return StatusCode(503, "Connection to database could not be established.");
         }
 
         private IEnumerable<Article> RemoveDuplicates(IEnumerable<ArticleJsonModel> jsonArticles, out StringBuilder responseMessage)
