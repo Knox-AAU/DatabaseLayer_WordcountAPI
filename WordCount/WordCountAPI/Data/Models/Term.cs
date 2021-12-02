@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace WordCount.Data.Models
+﻿namespace WordCount.Data.Models
 {
-    [Table("Term")]
-    public sealed class Term
+    public sealed class HasWord
     {
         public long ArticleId { get; set; }
-        public string Word { get; set; }
+
+        public Word Word { get; set; }
         public int Count { get; set; }
     }
 }

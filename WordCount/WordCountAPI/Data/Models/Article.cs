@@ -17,15 +17,15 @@ namespace WordCount.Data.Models
         public int TotalWords { get; set; }
 
         public Publisher Publisher { get; set; }
-        public List<Term> Terms { get; set; }
+        public List<HasWord> Terms { get; set; }
 
         public static Article CreateFromJsonModel(ArticleJsonModel jsonModel)
         {
-            List<Term> terms = new(jsonModel.Words.Length);
+            List<HasWord> terms = new(jsonModel.Words.Length);
 
             foreach (TermJsonModel term in jsonModel.Words)
             {
-                terms.Add(new Term { Count = term.Amount, Word = term.Word });
+                terms.Add(new HasWord { Count = term.Amount, Word = new Word(term.Word) });
             }
 
             return new Article

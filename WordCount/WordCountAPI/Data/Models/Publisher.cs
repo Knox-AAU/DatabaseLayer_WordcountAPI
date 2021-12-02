@@ -12,7 +12,6 @@ namespace WordCount.Data.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string PublisherName { get; set; }
-        public string PrimaryKey => PublisherName;
 
         public List<Article> Articles { get; set; }
     }
