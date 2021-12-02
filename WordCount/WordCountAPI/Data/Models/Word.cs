@@ -1,15 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WordCount.Data.Models
 {
     public sealed class Word
     {
-        [Column(TypeName = "citext")]
+        [Key]
         public string Text { get; set; }
 
         public Word()
         {
-            
         }
 
         public Word(string text)

@@ -112,13 +112,27 @@ namespace WordCount.Controllers
             foreach (ArticleJsonModel articleJsonModel in articleJsonModels)
             {
                 Article article = Article.CreateFromJsonModel(articleJsonModel);
-                article.Publisher = publisher;
 
                 if (databaseContext.Articles.First(a => a.Title == articleJsonModel.ArticleTitle) != null)
                 {
                     responseMessage.Append($"{article.Title} is already in database.\n");
                     continue;
                 }
+
+                List<HasWord> words = new List<HasWord>(articleJsonModel.TotalWordsInArticle);
+                foreach (var word in articleJsonModel.Words)
+                {
+                    var x = databaseContext.Words.First(w => word.Word == w.Text);
+                    if (x == null)
+                    {
+                        x = new Word(x.Text);
+                    }
+
+                    words.Add(new HasWord() { Word = x, Article = article });
+                }
+
+                article.ContainedWords = words;
+                article.Publisher = publisher;
 
                 result.Add(article);
             }

@@ -17,7 +17,7 @@ namespace WordCount.Data.Models
         public int TotalWords { get; set; }
 
         public Publisher Publisher { get; set; }
-        public List<HasWord> Terms { get; set; }
+        public List<HasWord> ContainedWords { get; set; }
 
         public static Article CreateFromJsonModel(ArticleJsonModel jsonModel)
         {
@@ -37,7 +37,7 @@ namespace WordCount.Data.Models
                 {
                     PublisherName = jsonModel.Publication
                 },
-                Terms = terms
+                ContainedWords = terms
             };
         }
 

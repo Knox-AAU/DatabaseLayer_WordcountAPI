@@ -1,6 +1,4 @@
-using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
 using WordCount.Data.Models;
 
 namespace WordCount.Data
@@ -11,15 +9,16 @@ namespace WordCount.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<JsonSchemaModel> JsonSchemas { get; set; }
         public DbSet<WordRatio> WordRatios { get; set; }
+        public DbSet<Word> Words { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("database_connectionString"));
+            optionsBuilder.UseNpgsql("UserID=postgres;Password=Sysadmins.;Host=localhost;Port=5002;Database=wordcount;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<HasWord>().HasKey(a => new { a.ArticleId, a.Word });
+            modelBuilder.Entity<HasWord>().HasKey(a => a.Id);
             modelBuilder
                 .Entity<WordRatio>()
                 .ToView(nameof(WordRatio))
