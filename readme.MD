@@ -1,7 +1,5 @@
-# Layer 3 - Group E - Knox Database APIs
+# Knox WordCount API
 
-## Project structure (modules)
-- WordCountAPI (Word count write API for layer 2)
-- input_api_module (HDT write API for layer 2)
+API for handling insertion and retrieval of WordCount data in a relational database.
 
-**Remember only open the neccesary module as a project in IntelliJ IDEA**
+Documentation is located on the Knox wiki.
