@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using WordCount.Controllers.JsonInputModels;
 using WordCount.Controllers.ResponseModels;
 using WordCount.Data;
-using WordCount.Data.DataAccess;
 using WordCount.Data.Models;
 
 namespace WordCount.Controllers
@@ -19,17 +18,11 @@ namespace WordCount.Controllers
         private const string WordCountSchemaName = "wordcount";
 
         private readonly ArticleContext databaseContext = new();
-        private readonly IUnitOfWork unitOfWork;
-
-        public WordCountController()
-        {
-            unitOfWork = new UnitOfWork(databaseContext);
-        }
 
         [HttpPost]
         public IActionResult Post([FromBody] JsonElement jsonElement)
         {
-            JsonSchemaModel? schema = unitOfWork.SchemaRepository.Find(s => s.SchemaName == WordCountSchemaName);
+            JsonSchemaModel? schema = databaseContext.JsonSchemas.First(s => s.SchemaName == WordCountSchemaName);
             string jsonInput = jsonElement.GetRawText();
 
             if (schema == null)
@@ -48,13 +41,14 @@ namespace WordCount.Controllers
             // Insert article
             IEnumerable<Article> enumerable = result as Article[] ?? result.ToArray();
 
-            unitOfWork.ArticleRepository.Insert(enumerable);
+            databaseContext.Articles.AddRange(enumerable);
 
             foreach (Article article in enumerable)
             {
                 Console.WriteLine($"Added {article.Title}");
             }
 
+            databaseContext.SaveChanges();
             return Ok(message.ToString());
         }
 
@@ -64,7 +58,7 @@ namespace WordCount.Controllers
         {
             try
             {
-                string filePath = unitOfWork.ArticleRepository.Find(e => e.Id == id).FilePath;
+                string filePath = databaseContext.Articles.First(e => e.Id == id).FilePath;
                 return new JsonResult(new FileIdResponse(filePath));
             }
             catch (Exception)
@@ -79,7 +73,7 @@ namespace WordCount.Controllers
         {
             try
             {
-                int fileCount = unitOfWork.ArticleRepository.All().Count;
+                int fileCount = databaseContext.Articles.Count();
                 return new JsonResult(fileCount);
             }
             catch (Exception e)
@@ -106,7 +100,7 @@ namespace WordCount.Controllers
 
             // Check for existing publisher only once - each post request
             // contain only articles from same publisher.
-            Publisher publisher = unitOfWork.PublisherRepository.Find(p => p.PublisherName == articleJsonModels.First().Publication);
+            Publisher publisher = databaseContext.Publishers.First(p => p.PublisherName == articleJsonModels.First().Publication);
 
             if (publisher == null)
             {
@@ -120,7 +114,7 @@ namespace WordCount.Controllers
                 Article article = Article.CreateFromJsonModel(articleJsonModel);
                 article.Publisher = publisher;
 
-                if (unitOfWork.ArticleRepository.Find(a => a.Title == articleJsonModel.ArticleTitle) != null)
+                if (databaseContext.Articles.First(a => a.Title == articleJsonModel.ArticleTitle) != null)
                 {
                     responseMessage.Append($"{article.Title} is already in database.\n");
                     continue;
