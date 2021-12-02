@@ -14,13 +14,13 @@ namespace WordCount.Controllers
     {
         public OldModelToNewModelController()
         {
-            this.OldContext = new ArticleContextOld();
+            this.OldContext = new OldContext();
             this.Context = new ArticleContext();
         }
 
         public ArticleContext Context { get; set; }
 
-        public ArticleContextOld OldContext { get; set; }
+        public OldContext OldContext { get; set; }
 
         [HttpGet]
         [Route("/[controller]")]
@@ -75,6 +75,7 @@ namespace WordCount.Controllers
                 };
 
                 AggregateWordOccurence(createdArticle, oldArticle.Terms);
+                newPublisher.Articles.Add(createdArticle);
             }
         }
 
