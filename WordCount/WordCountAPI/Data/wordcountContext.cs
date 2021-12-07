@@ -29,7 +29,7 @@ namespace WordCount
             if (!optionsBuilder.IsConfigured)
             {
                 // optionsBuilder.UseNpgsql("UserID=postgres;Password=Sysadmins.;Host=localhost;Port=5002;Database=wordcount;");
-                optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("database_connectionString"));
+                optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("database_connectionString") + "include error detail=true;");
             }
         }
 

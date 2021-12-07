@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WordCount.Controllers.JsonInputModels;
 using WordCount.Controllers.ResponseModels;
 
@@ -103,6 +104,7 @@ namespace WordCount.Controllers
             if (publisher == null)
             {
                 publisher = new Publisher { PublisherName = articleJsonModels.First().Publication };
+                databaseContext.Publishers.Add(publisher);
             }
 
             List<Article> result = new(articleJsonModels.Count());
@@ -118,19 +120,28 @@ namespace WordCount.Controllers
                     continue;
                 }
 
-                List<OccursIn> words = new List<OccursIn>(articleJsonModel.TotalWordsInArticle);
+                List<Word> words = new List<Word>(articleJsonModel.TotalWordsInArticle);
+                List<OccursIn> occursIns = new List<OccursIn>();
                 foreach (var word in articleJsonModel.Words)
                 {
                     var x = databaseContext.Words.FirstOrDefault(w => word.Word == w.Text);
                     if (x == null)
                     {
                         x = new Word(word.Word);
+                        words.Add(x);
                     }
-
-                    words.Add(new OccursIn() { Word = x.Text, Article = article });
+                    
+                    occursIns.Add(new OccursIn()
+                    {
+                        Article = article,
+                        Word = x.Text,
+                        Count = word.Amount
+                    });
                 }
-
-                article.OccursIns = words;
+                
+                databaseContext.Words.AddRange(words);
+                
+                article.OccursIns = occursIns;
                 article.PublisherName = publisher.PublisherName;
 
                 result.Add(article);
