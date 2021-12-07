@@ -6,8 +6,6 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Controllers.JsonInputModels;
 using WordCount.Controllers.ResponseModels;
-using WordCount.Data;
-using WordCount.Data.Models;
 
 namespace WordCount.Controllers
 {
@@ -17,12 +15,12 @@ namespace WordCount.Controllers
     {
         private const string WordCountSchemaName = "wordcount";
 
-        private readonly ArticleContext databaseContext = new();
+        private readonly wordcountContext databaseContext = new();
 
         [HttpPost]
         public IActionResult Post([FromBody] JsonElement jsonElement)
         {
-            JsonSchemaModel? schema = databaseContext.JsonSchemas.First(s => s.SchemaName == WordCountSchemaName);
+            JsonSchema? schema = databaseContext.JsonSchemas.First(s => s.SchemaName == WordCountSchemaName);
             string jsonInput = jsonElement.GetRawText();
 
             if (schema == null)
@@ -100,7 +98,7 @@ namespace WordCount.Controllers
 
             // Check for existing publisher only once - each post request
             // contain only articles from same publisher.
-            Publisher publisher = databaseContext.Publishers.First(p => p.PublisherName == articleJsonModels.First().Publication);
+            Publisher publisher = databaseContext.Publishers.FirstOrDefault(p => p.PublisherName == articleJsonModels.First().Publication);
 
             if (publisher == null)
             {
@@ -112,27 +110,28 @@ namespace WordCount.Controllers
             foreach (ArticleJsonModel articleJsonModel in articleJsonModels)
             {
                 Article article = Article.CreateFromJsonModel(articleJsonModel);
+                article.Id = databaseContext.Articles.OrderBy(x => x.Id).Last().Id + 1;
 
-                if (databaseContext.Articles.First(a => a.Title == articleJsonModel.ArticleTitle) != null)
+                if (databaseContext.Articles.FirstOrDefault(a => a.Title == articleJsonModel.ArticleTitle) != null)
                 {
                     responseMessage.Append($"{article.Title} is already in database.\n");
                     continue;
                 }
 
-                List<HasWord> words = new List<HasWord>(articleJsonModel.TotalWordsInArticle);
+                List<OccursIn> words = new List<OccursIn>(articleJsonModel.TotalWordsInArticle);
                 foreach (var word in articleJsonModel.Words)
                 {
-                    var x = databaseContext.Words.First(w => word.Word == w.Text);
+                    var x = databaseContext.Words.FirstOrDefault(w => word.Word == w.Text);
                     if (x == null)
                     {
-                        x = new Word(x.Text);
+                        x = new Word(word.Word);
                     }
 
-                    words.Add(new HasWord() { Word = x, Article = article });
+                    words.Add(new OccursIn() { Word = x.Text, Article = article });
                 }
 
-                article.ContainedWords = words;
-                article.Publisher = publisher;
+                article.OccursIns = words;
+                article.PublisherName = publisher.PublisherName;
 
                 result.Add(article);
             }

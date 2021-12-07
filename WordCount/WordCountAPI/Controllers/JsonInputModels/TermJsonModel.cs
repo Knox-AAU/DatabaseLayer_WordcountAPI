@@ -1,6 +1,4 @@
-﻿using WordCount.Data.Models;
-
-namespace WordCount.Controllers.JsonInputModels
+﻿namespace WordCount.Controllers.JsonInputModels
 {
     public sealed class TermJsonModel
     {

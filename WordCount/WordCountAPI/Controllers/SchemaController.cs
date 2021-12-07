@@ -2,8 +2,6 @@ using System.Linq;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Controllers.JsonInputModels;
-using WordCount.Data;
-using WordCount.Data.Models;
 
 namespace WordCount.Controllers
 {
@@ -11,11 +9,11 @@ namespace WordCount.Controllers
     [Route("[controller]")]
     public class SchemaController : ControllerBase
     {
-        private ArticleContext ArticleContext { get; set; }
+        private wordcountContext ArticleContext { get; set; }
 
         public SchemaController()
         {
-            ArticleContext = new ArticleContext();
+            ArticleContext = new wordcountContext();
         }
         
         /// <summary>
@@ -66,7 +64,7 @@ namespace WordCount.Controllers
                 return Forbid("Duplicate value.");
             }
 
-            ArticleContext.JsonSchemas.Add(new JsonSchemaModel
+            ArticleContext.JsonSchemas.Add(new JsonSchema
             {
                 SchemaName = schemaData.SchemaName,
                 JsonString = schemaData.SchemaBody.GetRawText()

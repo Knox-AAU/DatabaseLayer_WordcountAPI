@@ -1,19 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace WordCount.Data.Models
+#nullable disable
+
+namespace WordCount
 {
-    public sealed class Word
+    public partial class Word
     {
-        [Key]
-        public string Text { get; set; }
-
         public Word()
         {
+            OccursIns = new HashSet<OccursIn>();
         }
 
         public Word(string text)
         {
+            OccursIns = new HashSet<OccursIn>();
             Text = text;
         }
+
+        public string Text { get; set; }
+
+        public virtual ICollection<OccursIn> OccursIns { get; set; }
     }
 }
