@@ -1,20 +1,19 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-using WordCount.Data.DataAccess;
+﻿using System;
+using System.Collections.Generic;
 
-namespace WordCount.Data.Models
+#nullable disable
+
+namespace WordCount
 {
-    [Table("Publisher")]
-    [Index(nameof(PublisherName), IsUnique = true)]
-    public sealed class Publisher : DatabaseEntityModel<string>
+    public partial class Publisher
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string PublisherName { get; set; }
-        public override string PrimaryKey => PublisherName;
+        public Publisher()
+        {
+            Articles = new HashSet<Article>();
+        }
 
-        public List<Article> Articles { get; set; }
+        public string PublisherName { get; set; }
+
+        public virtual ICollection<Article> Articles { get; set; }
     }
 }

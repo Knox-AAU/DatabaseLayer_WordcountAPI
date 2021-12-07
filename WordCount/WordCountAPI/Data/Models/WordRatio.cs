@@ -1,21 +1,19 @@
-using System.Text.Json.Serialization;
-using WordCount.Data.DataAccess;
+﻿using System;
+using System.Collections.Generic;
 
-namespace WordCount.Data.Models
+#nullable disable
+
+namespace WordCount
 {
-    public class WordRatio : DatabaseEntityModel<CompositeKeyTriple<long, string, string>>
+    public partial class WordRatio
     {
-        public long ArticleId { get; set; }
+        public long? ArticleId { get; set; }
         public string Word { get; set; }
-        public int Count { get; set; }
+        public int? Count { get; set; }
         public string Title { get; set; }
         public string FilePath { get; set; }
-        public int TotalWords { get; set; }
+        public int? TotalWords { get; set; }
         public string PublisherName { get; set; }
-        public float Percent { get; set; }
-
-        [JsonIgnore]
-        public override CompositeKeyTriple<long, string, string> PrimaryKey =>
-            new(ArticleId, PublisherName, Word);
+        public decimal? Percent { get; set; }
     }
 }

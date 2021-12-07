@@ -1,10 +1,5 @@
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WordCount.Data;
-using WordCount.Data.DataAccess;
-using WordCount.Data.Models;
 
 namespace WordCount.Controllers
 {
@@ -16,7 +11,7 @@ namespace WordCount.Controllers
         public WordRatioController()
         {
             // unitOfWork = new UnitOfWork(new ArticleContext());
-            dbSet = new ArticleContext().WordRatios.AsQueryable();
+            dbSet = new wordcountContext().WordRatios.AsQueryable();
         }
 
         [HttpGet]

@@ -1,11 +1,7 @@
-using System;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WordCount.Controllers.JsonInputModels;
-using WordCount.Data;
-using WordCount.Data.DataAccess;
-using WordCount.Data.Models;
 
 namespace WordCount.Controllers
 {
@@ -13,13 +9,13 @@ namespace WordCount.Controllers
     [Route("[controller]")]
     public class SchemaController : ControllerBase
     {
-        private IUnitOfWork unitOfWork;
+        private wordcountContext ArticleContext { get; set; }
 
         public SchemaController()
         {
-            unitOfWork = new UnitOfWork(new ArticleContext());
+            ArticleContext = new wordcountContext();
         }
-
+        
         /// <summary>
         /// Get JSON schema with given name.
         /// </summary>
@@ -29,7 +25,7 @@ namespace WordCount.Controllers
         [Route("/[controller]/{schemaName}")]
         public IActionResult GetSchema(string schemaName)
         {
-            return Ok(unitOfWork.SchemaRepository.Find(schema => schema.SchemaName == schemaName));
+            return Ok(ArticleContext.JsonSchemas.First(schema => schema.SchemaName == schemaName));
         }
 
         /// <summary>
@@ -39,7 +35,7 @@ namespace WordCount.Controllers
         [Route("/[controller]")]
         public IActionResult GetAllSchemas()
         {
-            return Ok(unitOfWork.SchemaRepository.All());
+            return Ok(ArticleContext.JsonSchemas);
         }
 
         /// <summary>
@@ -62,17 +58,20 @@ namespace WordCount.Controllers
                 return BadRequest("Wrong body syntax, cannot parse to JSON.");
             }
 
-            if (unitOfWork.SchemaRepository.GetById(schemaData.SchemaName) != null)
+            if (ArticleContext.JsonSchemas.Find(schemaData.SchemaName) != null)
             {
                 // 403 forbidden
                 return Forbid("Duplicate value.");
             }
 
-            unitOfWork.SchemaRepository.Insert(new JsonSchemaModel()
+            ArticleContext.JsonSchemas.Add(new JsonSchema
             {
                 SchemaName = schemaData.SchemaName,
                 JsonString = schemaData.SchemaBody.GetRawText()
             });
+
+            ArticleContext.SaveChanges();
+
             return Ok();
         }
 

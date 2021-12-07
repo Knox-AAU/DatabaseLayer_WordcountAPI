@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WordCount.Controllers.JsonInputModels;
 using WordCount.Controllers.ResponseModels;
-using WordCount.Data;
-using WordCount.Data.DataAccess;
-using WordCount.Data.Models;
 
 namespace WordCount.Controllers
 {
@@ -18,18 +16,12 @@ namespace WordCount.Controllers
     {
         private const string WordCountSchemaName = "wordcount";
 
-        private readonly ArticleContext databaseContext = new();
-        private readonly IUnitOfWork unitOfWork;
-
-        public WordCountController()
-        {
-            unitOfWork = new UnitOfWork(databaseContext);
-        }
+        private readonly wordcountContext databaseContext = new();
 
         [HttpPost]
         public IActionResult Post([FromBody] JsonElement jsonElement)
         {
-            JsonSchemaModel? schema = unitOfWork.SchemaRepository.Find(s => s.SchemaName == WordCountSchemaName);
+            JsonSchema? schema = databaseContext.JsonSchemas.First(s => s.SchemaName == WordCountSchemaName);
             string jsonInput = jsonElement.GetRawText();
 
             if (schema == null)
@@ -48,13 +40,14 @@ namespace WordCount.Controllers
             // Insert article
             IEnumerable<Article> enumerable = result as Article[] ?? result.ToArray();
 
-            unitOfWork.ArticleRepository.Insert(enumerable);
+            databaseContext.Articles.AddRange(enumerable);
 
             foreach (Article article in enumerable)
             {
                 Console.WriteLine($"Added {article.Title}");
             }
 
+            databaseContext.SaveChanges();
             return Ok(message.ToString());
         }
 
@@ -64,7 +57,7 @@ namespace WordCount.Controllers
         {
             try
             {
-                string filePath = unitOfWork.ArticleRepository.Find(e => e.Id == id).FilePath;
+                string filePath = databaseContext.Articles.First(e => e.Id == id).FilePath;
                 return new JsonResult(new FileIdResponse(filePath));
             }
             catch (Exception)
@@ -79,7 +72,7 @@ namespace WordCount.Controllers
         {
             try
             {
-                int fileCount = unitOfWork.ArticleRepository.All().Count;
+                int fileCount = databaseContext.Articles.Count();
                 return new JsonResult(fileCount);
             }
             catch (Exception e)
@@ -106,11 +99,12 @@ namespace WordCount.Controllers
 
             // Check for existing publisher only once - each post request
             // contain only articles from same publisher.
-            Publisher publisher = unitOfWork.PublisherRepository.Find(p => p.PublisherName == articleJsonModels.First().Publication);
+            Publisher publisher = databaseContext.Publishers.FirstOrDefault(p => p.PublisherName == articleJsonModels.First().Publication);
 
             if (publisher == null)
             {
                 publisher = new Publisher { PublisherName = articleJsonModels.First().Publication };
+                databaseContext.Publishers.Add(publisher);
             }
 
             List<Article> result = new(articleJsonModels.Count());
@@ -118,13 +112,37 @@ namespace WordCount.Controllers
             foreach (ArticleJsonModel articleJsonModel in articleJsonModels)
             {
                 Article article = Article.CreateFromJsonModel(articleJsonModel);
-                article.Publisher = publisher;
+                article.Id = databaseContext.Articles.OrderBy(x => x.Id).Last().Id + 1;
 
-                if (unitOfWork.ArticleRepository.Find(a => a.Title == articleJsonModel.ArticleTitle) != null)
+                if (databaseContext.Articles.FirstOrDefault(a => a.Title == articleJsonModel.ArticleTitle) != null)
                 {
                     responseMessage.Append($"{article.Title} is already in database.\n");
                     continue;
                 }
+
+                List<Word> words = new List<Word>(articleJsonModel.TotalWordsInArticle);
+                List<OccursIn> occursIns = new List<OccursIn>();
+                foreach (var word in articleJsonModel.Words)
+                {
+                    var x = databaseContext.Words.FirstOrDefault(w => word.Word == w.Text);
+                    if (x == null)
+                    {
+                        x = new Word(word.Word);
+                        words.Add(x);
+                    }
+                    
+                    occursIns.Add(new OccursIn()
+                    {
+                        Article = article,
+                        Word = x.Text,
+                        Count = word.Amount
+                    });
+                }
+                
+                databaseContext.Words.AddRange(words);
+                
+                article.OccursIns = occursIns;
+                article.PublisherName = publisher.PublisherName;
 
                 result.Add(article);
             }
