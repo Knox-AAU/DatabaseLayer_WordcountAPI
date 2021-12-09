@@ -34,12 +34,9 @@ namespace IntegrationTests
             // Setup mock set
             kernel.GetMock<DbSet<WordRatio>>()
                 .SetupData(data);
-
-            // Get a BlogsController and invoke the Index action
-            var controller = kernel.Get<WordCount.Controllers.WordRatioController>();
-            var result = controller.GetMatches(new[] {"hello"}, new[] {"NJ"});
-            // Check the result
             
+            var controller = kernel.Get<WordCount.Controllers.WordRatioController>();
+
             
             var expected = controller.Ok(data);
             var expectedTypeAsString = expected.Value.ToString();
@@ -66,10 +63,9 @@ namespace IntegrationTests
             // Setup mock set
             kernel.GetMock<DbSet<WordRatio>>()
                 .SetupData(data);
-
-            // Get a BlogsController and invoke the Index action
+            
             var controller = kernel.Get<WordCount.Controllers.WordRatioController>();
-            var result = controller.GetMatches(new[] {""}, new[] {"NJ"});
+            controller.GetMatches(new[] {""}, new[] {"NJ"});
             // Check the result
             
             

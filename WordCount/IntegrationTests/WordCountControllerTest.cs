@@ -44,10 +44,8 @@ namespace IntegrationTests
             // Setup mock set
             kernel.GetMock<DbSet<Article>>()
                 .SetupData(data);
-
-            // Get a BlogsController and invoke the Index action
+            
             var controller = kernel.Get<WordCountController>();
-            var result = controller.GetFilepath(1);
             // Check the results
 
             Assert.AreEqual("CorrectPath", data[0].FilePath);
