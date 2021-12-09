@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WordCount.Controllers.JsonInputModels;
 using WordCount.Controllers.ResponseModels;
 
@@ -82,14 +83,14 @@ namespace WordCount.Controllers
         }
 
         [HttpGet]
-        public IActionResult Status()
+        public async Task<IActionResult> Status()
         {
-            if (databaseContext.Database.CanConnect())
+            if (await databaseContext.Database.CanConnectAsync())
             {
                 return Ok();
             }
 
-            return StatusCode(503, "Connection to database could not be established.");
+            return StatusCode((int)HttpStatusCode.InternalServerError, "Connection to database could not be established.");
         }
 
         private IEnumerable<Article> RemoveDuplicates(IEnumerable<ArticleJsonModel> jsonArticles, out StringBuilder responseMessage)
@@ -130,7 +131,7 @@ namespace WordCount.Controllers
                         x = new Word(word.Word);
                         words.Add(x);
                     }
-                    
+
                     occursIns.Add(new OccursIn()
                     {
                         Article = article,
@@ -138,9 +139,9 @@ namespace WordCount.Controllers
                         Count = word.Amount
                     });
                 }
-                
+
                 databaseContext.Words.AddRange(words);
-                
+
                 article.OccursIns = occursIns;
                 article.PublisherName = publisher.PublisherName;
 
