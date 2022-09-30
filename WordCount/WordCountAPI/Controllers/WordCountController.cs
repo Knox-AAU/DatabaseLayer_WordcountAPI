@@ -36,7 +36,8 @@ namespace WordCount.Controllers
                 return BadRequest("Wrong body syntax, does not follow schema.");
             }
 
-            IEnumerable<Article> result = RemoveDuplicates(jsonArticles, out StringBuilder message);
+            StringBuilder messageBuilder = new StringBuilder();
+            IEnumerable<Article> result = RemoveDuplicates(jsonArticles, messageBuilder);
 
             // Insert article
             IEnumerable<Article> enumerable = result as Article[] ?? result.ToArray();
@@ -49,7 +50,7 @@ namespace WordCount.Controllers
             }
 
             databaseContext.SaveChanges();
-            return Ok(message.ToString());
+            return Ok(messageBuilder.ToString());
         }
 
         [HttpGet]
@@ -93,9 +94,8 @@ namespace WordCount.Controllers
             return StatusCode((int)HttpStatusCode.InternalServerError, "Connection to database could not be established.");
         }
 
-        private IEnumerable<Article> RemoveDuplicates(IEnumerable<ArticleJsonModel> jsonArticles, out StringBuilder responseMessage)
+        private IEnumerable<Article> RemoveDuplicates(IEnumerable<ArticleJsonModel> jsonArticles, StringBuilder responseMessage)
         {
-            responseMessage = new StringBuilder();
             IEnumerable<ArticleJsonModel> articleJsonModels = jsonArticles as ArticleJsonModel[] ?? jsonArticles.ToArray();
 
             // Check for existing publisher only once - each post request
