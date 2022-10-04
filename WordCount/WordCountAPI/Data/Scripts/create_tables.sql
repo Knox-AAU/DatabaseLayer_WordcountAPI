@@ -26,3 +26,9 @@ create table if not exists ${schema}.word_ratios (
     constraint fk_documents foreign key (documents_id) references ${schema}.documents(id),
     constraint pk_files_id_word primary key (documents_id, word)
 )
+
+create table if not exists ${schema}.document_contents (
+    documents_id    bigint not null,
+    content         text not null,
+    constraint fk_documents foreign key (documents_id) references ${schema}.documents(id)
+)
