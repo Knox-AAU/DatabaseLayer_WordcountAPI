@@ -6,4 +6,4 @@ WORKDIR /app
 COPY . /app
 
 RUN dotnet dev-certs https --trust
-ENTRYPOINT dotnet watch run --urls=http://*:80
+ENTRYPOINT ["dotnet", "watch", "run", "--urls=http://*:80"]

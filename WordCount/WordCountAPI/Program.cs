@@ -13,7 +13,14 @@ namespace WordCount
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            if (args.Contains("-deploy"))
+            {
+                new DeployDatabaseHelper().Deploy();
+            }
+            else
+            {
+                CreateHostBuilder(args).Build().Run();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
