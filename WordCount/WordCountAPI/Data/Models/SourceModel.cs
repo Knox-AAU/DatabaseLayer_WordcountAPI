@@ -2,6 +2,16 @@ namespace WordCount.Data.Models;
 
 public class SourceModel
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
+    public SourceModel()
+    {
+    }
+
+    public SourceModel(int id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
+
+    public int Id { get; init; }
+    public string Name { get; init; }
 }
